@@ -1,0 +1,32 @@
+package com.jichan.dto;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+public class ContactDto {
+
+    public record ContactListResponse(
+            Long expertId,
+            String expertName,
+            String gender,
+            String region,
+            String introduction,
+            Boolean hasEmailView,
+            Boolean hasPhoneView,
+            Integer rating
+    ) {}
+
+    public record RatingRequest(
+            @NotNull(message = "전문가 ID는 필수입니다") Long expertId,
+            @NotNull(message = "점수는 필수입니다") @Min(value = 1, message = "점수는 1 이상이어야 합니다") @Max(value = 5, message = "점수는 5 이하여야 합니다") Integer score,
+            String comment
+    ) {}
+
+    public record RatingResponse(
+            Long id,
+            Long expertId,
+            Integer score,
+            String comment
+    ) {}
+}

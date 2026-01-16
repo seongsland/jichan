@@ -1,0 +1,122 @@
+.profile {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.profile-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #333;
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.profile-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee2e6;
+}
+
+.profile-card h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.specialties {
+  margin-bottom: 1rem;
+}
+
+.specialty {
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.introduction {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.contact-info {
+  padding: 0.75rem;
+  background-color: #e7f3ff;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.phone-message {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #b3d9ff;
+  color: #666;
+  font-style: italic;
+}
+
+.load-more {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

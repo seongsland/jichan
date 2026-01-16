@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: jichan
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/jichan?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:_jichan_jichan_jichan_jichan_jichan_}
+  access-token-expiration: 3600000
+  refresh-token-expiration: 86400000
+
+email:
+  verification:
+    encryption:
+      key: _ji_ch_an_1_ji_ch_an_1_
+
+logging:
+  level:
+    com.jichan: DEBUG
+    org.springframework.web: INFO
+    org.springframework.boot.context.config: DEBUG
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
