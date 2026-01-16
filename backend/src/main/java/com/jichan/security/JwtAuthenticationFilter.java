@@ -31,9 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
 
             if (jwtUtil.validateToken(token)) {
-                String email = jwtUtil.getEmailFromToken(token);
+                Long userId = jwtUtil.getUserIdFromToken(token);
                 UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                        .username(email)
+                        .username(userId.toString())
                         .authorities("ROLE_USER")
                         .build();
 
@@ -47,7 +47,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-
-
-
-

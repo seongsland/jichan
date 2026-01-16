@@ -31,14 +31,9 @@ public class ProfileController {
     public ResponseEntity<ContactViewResponse> viewContact(
             Authentication authentication,
             @Valid @RequestBody ContactViewRequest request) {
-        Long viewerId = getUserIdFromAuthentication(authentication);
+        Long viewerId = Long.valueOf(authentication.getName());
         ContactType contactType = ContactType.valueOf(request.contactType());
         ContactViewResponse response = profileService.viewContact(viewerId, request.expertId(), contactType);
         return ResponseEntity.ok(response);
-    }
-
-    private Long getUserIdFromAuthentication(Authentication authentication) {
-        String email = authentication.getName();
-        return profileService.getUserIdByEmail(email);
     }
 }

@@ -80,8 +80,8 @@ public class AuthService {
             throw new IllegalArgumentException("이메일 인증이 완료되지 않았습니다. 이메일을 확인해주세요.");
         }
 
-        String accessToken = jwtUtil.generateAccessToken(user.getEmail());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail());
+        String accessToken = jwtUtil.generateAccessToken(user.getId());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId());
 
         return new AuthResponse(accessToken, refreshToken);
     }
@@ -91,8 +91,8 @@ public class AuthService {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
 
-        String email = jwtUtil.getEmailFromToken(refreshToken);
-        return jwtUtil.generateAccessToken(email);
+        Long userId = jwtUtil.getUserIdFromToken(refreshToken);
+        return jwtUtil.generateAccessToken(userId);
     }
 
     private String generateEmailVerificationToken(Long userId) {

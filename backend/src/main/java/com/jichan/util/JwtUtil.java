@@ -26,33 +26,33 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateAccessToken(String email) {
-        return generateToken(email, accessTokenExpiration);
+    public String generateAccessToken(Long userId) {
+        return generateToken(userId, accessTokenExpiration);
     }
 
-    public String generateRefreshToken(String email) {
-        return generateToken(email, refreshTokenExpiration);
+    public String generateRefreshToken(Long userId) {
+        return generateToken(userId, refreshTokenExpiration);
     }
 
-    private String generateToken(String email, Long expiration) {
+    private String generateToken(Long userId, Long expiration) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
-                .subject(email)
+                .subject(userId.toString())
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    public String getEmailFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return claims.getSubject();
+        return Long.valueOf(claims.getSubject());
     }
 
     public boolean validateToken(String token) {
@@ -67,7 +67,3 @@ public class JwtUtil {
         }
     }
 }
-
-
-
-
