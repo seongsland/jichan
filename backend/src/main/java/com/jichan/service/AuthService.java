@@ -5,8 +5,8 @@ import com.jichan.dto.AuthDto.LoginRequest;
 import com.jichan.dto.AuthDto.SignupRequest;
 import com.jichan.entity.User;
 import com.jichan.repository.UserRepository;
+import com.jichan.util.Encryptor;
 import com.jichan.util.JwtUtil;
-import com.jichan.util.TokenEncryptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +23,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final EmailService emailService;
-    private final TokenEncryptor tokenEncryptor; // Added this field
+    private final Encryptor encryptor; // Added this field
 
     public void signup(SignupRequest request) {
 
@@ -47,12 +47,12 @@ public class AuthService {
 
         // 이메일 인증 토큰 생성 및 전송
         String token = generateEmailVerificationToken(user.getId());
-        String encryptedToken = tokenEncryptor.encrypt(token); // Encrypt the token
+        String encryptedToken = encryptor.encrypt(token); // Encrypt the token
         emailService.sendVerificationEmail(user.getEmail(), encryptedToken);
     }
 
     public void verifyEmail(String token) {
-        String decryptedToken = tokenEncryptor.decrypt(token); // Decrypt the token
+        String decryptedToken = encryptor.decrypt(token); // Decrypt the token
         Long[] tokenData = parseEmailVerificationToken(decryptedToken);
         Long userId = tokenData[0];
         Long tokenTimestamp = tokenData[1];
