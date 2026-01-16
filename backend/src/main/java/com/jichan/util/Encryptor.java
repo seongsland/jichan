@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.Base64;
 
 @Component
-public class TokenEncryptor {
+public class Encryptor {
 
     private static final String ALGORITHM = "AES";
     private SecretKeySpec secretKey;
 
-    @Value("${email.verification.encryption.key}")
+    @Value("${encryption.key}")
     public void setSecret(String secret) {
         try {
             byte[] key = secret.getBytes(StandardCharsets.UTF_8);

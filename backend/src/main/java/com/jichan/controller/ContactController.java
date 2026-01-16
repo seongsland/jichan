@@ -22,7 +22,7 @@ public class ContactController {
 
     @GetMapping
     public ResponseEntity<List<ContactListResponse>> getContacts(Authentication authentication) {
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = Long.valueOf(authentication.getName());
         List<ContactListResponse> response = contactService.getContacts(userId);
         return ResponseEntity.ok(response);
     }
@@ -31,13 +31,8 @@ public class ContactController {
     public ResponseEntity<RatingResponse> createRating(
             Authentication authentication,
             @Valid @RequestBody RatingRequest request) {
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = Long.valueOf(authentication.getName());
         RatingResponse response = contactService.createRating(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    private Long getUserIdFromAuthentication(Authentication authentication) {
-        String email = authentication.getName();
-        return contactService.getUserIdByEmail(email);
     }
 }

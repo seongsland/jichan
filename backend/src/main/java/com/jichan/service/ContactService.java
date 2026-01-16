@@ -27,12 +27,6 @@ public class ContactService {
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
 
-    public Long getUserIdByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(User::getId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    }
-
     public List<ContactListResponse> getContacts(Long viewerId) {
         List<ContactLog> contactLogs = contactLogRepository.findByViewerId(viewerId);
 

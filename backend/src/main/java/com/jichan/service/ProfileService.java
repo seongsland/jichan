@@ -29,11 +29,6 @@ public class ProfileService {
     private final RatingRepository ratingRepository;
     private static final int PAGE_SIZE = 11; // 더보기 기능을 위해 11개씩 조회
 
-    public Long getUserIdByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(User::getId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-    }
 
     public ProfileListResponse getProfiles(Long specialtyId, String sortBy, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
@@ -55,14 +50,14 @@ public class ProfileService {
 
         if ("rating".equals(sortBy)) {
             users.sort((u1, u2) -> {
-                Double avgRating1 = ratingRepository.findByExpertId(u1.getId()).stream().mapToInt(Rating::getScore).average().orElse(0.0);
-                Double avgRating2 = ratingRepository.findByExpertId(u2.getId()).stream().mapToInt(Rating::getScore).average().orElse(0.0);
+                double avgRating1 = ratingRepository.findByExpertId(u1.getId()).stream().mapToInt(Rating::getScore).average().orElse(0.0);
+                double avgRating2 = ratingRepository.findByExpertId(u2.getId()).stream().mapToInt(Rating::getScore).average().orElse(0.0);
                 return Double.compare(avgRating2, avgRating1);
             });
         } else if ("price".equals(sortBy)) {
             users.sort((u1, u2) -> {
-                Integer minPrice1 = userSpecialtyRepository.findByUserId(u1.getId()).stream().mapToInt(UserSpecialty::getHourlyRate).min().orElse(Integer.MAX_VALUE);
-                Integer minPrice2 = userSpecialtyRepository.findByUserId(u2.getId()).stream().mapToInt(UserSpecialty::getHourlyRate).min().orElse(Integer.MAX_VALUE);
+                int minPrice1 = userSpecialtyRepository.findByUserId(u1.getId()).stream().mapToInt(UserSpecialty::getHourlyRate).min().orElse(Integer.MAX_VALUE);
+                int minPrice2 = userSpecialtyRepository.findByUserId(u2.getId()).stream().mapToInt(UserSpecialty::getHourlyRate).min().orElse(Integer.MAX_VALUE);
                 return Integer.compare(minPrice1, minPrice2);
             });
         } else {

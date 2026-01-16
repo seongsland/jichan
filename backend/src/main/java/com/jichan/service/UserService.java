@@ -17,8 +17,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public ProfileResponse getProfile(String email) {
-        User user = userRepository.findByEmail(email)
+    public ProfileResponse getProfile(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         return new ProfileResponse(
@@ -33,8 +33,8 @@ public class UserService {
         );
     }
 
-    public ProfileResponse updateProfile(String email, ProfileUpdateRequest request) {
-        User user = userRepository.findByEmail(email)
+    public ProfileResponse updateProfile(Long userId, ProfileUpdateRequest request) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         user.updateProfile(

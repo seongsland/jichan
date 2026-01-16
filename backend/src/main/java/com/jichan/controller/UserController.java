@@ -18,8 +18,8 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<ProfileResponse> getProfile(Authentication authentication) {
-        String email = authentication.getName();
-        ProfileResponse response = userService.getProfile(email);
+        Long userId = Long.valueOf(authentication.getName());
+        ProfileResponse response = userService.getProfile(userId);
         return ResponseEntity.ok(response);
     }
 
@@ -27,8 +27,8 @@ public class UserController {
     public ResponseEntity<ProfileResponse> updateProfile(
             Authentication authentication,
             @Valid @RequestBody ProfileUpdateRequest request) {
-        String email = authentication.getName();
-        ProfileResponse response = userService.updateProfile(email, request);
+        Long userId = Long.valueOf(authentication.getName());
+        ProfileResponse response = userService.updateProfile(userId, request);
         return ResponseEntity.ok(response);
     }
 }
