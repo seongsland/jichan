@@ -12,7 +12,7 @@ const Login = () => {
     email: '',
     password: '',
   });
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
 
   const handleChange = (e) => {
     setFormData({
@@ -23,7 +23,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: '', text: '' });
+    setMessage({ type: '', text: '', timestamp: Date.now() });
 
     try {
       const response = await api.post('/auth/login', formData);
@@ -35,6 +35,7 @@ const Login = () => {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '로그인에 실패했습니다.',
+        timestamp: Date.now(),
       });
     }
   };
@@ -46,7 +47,8 @@ const Login = () => {
         <Message
           type={message.type}
           message={message.text}
-          onClose={() => setMessage({ type: '', text: '' })}
+          timestamp={message.timestamp}
+          onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
         />
         <form onSubmit={handleSubmit}>
           <div className="form-group">

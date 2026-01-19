@@ -53,10 +53,7 @@ class ProfileControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private User viewer;
     private User expert1;
-    private User expert2;
-    private SpecialtyCategory category;
     private SpecialtyDetail detail;
 
     @BeforeEach
@@ -65,7 +62,7 @@ class ProfileControllerTest {
         specialtyCategoryRepository.deleteAll();
         ratingRepository.deleteAll();
 
-        viewer = User.builder()
+        User viewer = User.builder()
                 .name("조회자")
                 .email("viewer@example.com")
                 .password(passwordEncoder.encode("password123"))
@@ -86,7 +83,7 @@ class ProfileControllerTest {
                 .build();
         userRepository.save(expert1);
 
-        expert2 = User.builder()
+        User expert2 = User.builder()
                 .name("전문가2")
                 .email("expert2@example.com")
                 .password(passwordEncoder.encode("password123"))
@@ -99,7 +96,7 @@ class ProfileControllerTest {
                 .build();
         userRepository.save(expert2);
 
-        category = SpecialtyCategory.builder()
+        SpecialtyCategory category = SpecialtyCategory.builder()
                 .name("카테고리1")
                 .build();
         specialtyCategoryRepository.save(category);
@@ -112,14 +109,14 @@ class ProfileControllerTest {
 
         UserSpecialty userSpecialty1 = UserSpecialty.builder()
                 .userId(expert1.getId())
-                .specialtyDetail(detail)
+                .specialtyDetailId(detail.getId())
                 .hourlyRate(50000)
                 .build();
         userSpecialtyRepository.save(userSpecialty1);
 
         UserSpecialty userSpecialty2 = UserSpecialty.builder()
                 .userId(expert2.getId())
-                .specialtyDetail(detail)
+                .specialtyDetailId(detail.getId())
                 .hourlyRate(30000)
                 .build();
         userSpecialtyRepository.save(userSpecialty2);

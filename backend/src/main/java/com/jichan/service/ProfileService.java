@@ -25,6 +25,7 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final UserSpecialtyRepository userSpecialtyRepository;
+    private final SpecialtyService specialtyService;
     private final ContactLogRepository contactLogRepository;
     private final RatingRepository ratingRepository;
     private static final int PAGE_SIZE = 11; // 더보기 기능을 위해 11개씩 조회
@@ -102,7 +103,10 @@ public class ProfileService {
         // UserSpecialty 조회
         List<UserSpecialty> userSpecialties = userSpecialtyRepository.findByUserId(user.getId());
         List<SpecialtyInfo> specialties = userSpecialties.stream()
-                .map(us -> new SpecialtyInfo(us.getSpecialtyDetail().getName(), us.getHourlyRate()))
+                .map(us -> {
+                    var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
+                    return new SpecialtyInfo(detail.name(), us.getHourlyRate());
+                })
                 .collect(Collectors.toList());
 
         // 평균 평점 계산

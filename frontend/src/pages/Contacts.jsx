@@ -11,7 +11,7 @@ const Contacts = () => {
   const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
   const [contacts, setContacts] = useState([]);
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
   const [ratingForms, setRatingForms] = useState({});
 
   useEffect(() => {
@@ -34,6 +34,7 @@ const Contacts = () => {
       setMessage({
         type: 'error',
         text: '전문가 목록을 불러오는데 실패했습니다.',
+        timestamp: Date.now(),
       });
     } finally {
       hideLoading();
@@ -53,6 +54,7 @@ const Contacts = () => {
       setMessage({
         type: 'success',
         text: '평가가 등록되었습니다.',
+        timestamp: Date.now(),
       });
       setRatingForms({
         ...ratingForms,
@@ -63,6 +65,7 @@ const Contacts = () => {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '평가 등록에 실패했습니다.',
+        timestamp: Date.now(),
       });
     }
   };
@@ -83,7 +86,8 @@ const Contacts = () => {
       <Message
         type={message.type}
         message={message.text}
-        onClose={() => setMessage({ type: '', text: '' })}
+        timestamp={message.timestamp}
+        onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
       />
 
       {contacts.length === 0 ? (

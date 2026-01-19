@@ -62,3 +62,63 @@
   padding: 2rem;
   color: #666;
 }
+
+.specialty-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.specialty-input-group select,
+.specialty-input-group input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.specialty-input-group button {
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.specialty-input-group button:hover {
+  background-color: #5a6268;
+}
+
+.specialty-list {
+  margin-top: 1rem;
+}
+
+.specialty-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.specialty-item span {
+  flex: 1;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}

@@ -15,7 +15,7 @@ const Profile = () => {
   const [page, setPage] = useState(0);
   const [specialty, setSpecialty] = useState('');
   const [sortBy, setSortBy] = useState('');
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
   const [contactViews, setContactViews] = useState({});
 
   useEffect(() => {
@@ -51,6 +51,7 @@ const Profile = () => {
       setMessage({
         type: 'error',
         text: '프로필을 불러오는데 실패했습니다.',
+        timestamp: Date.now(),
       });
     } finally {
       hideLoading();
@@ -80,6 +81,7 @@ const Profile = () => {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '연락처를 불러오는데 실패했습니다.',
+        timestamp: Date.now(),
       });
     }
   };
@@ -90,7 +92,8 @@ const Profile = () => {
       <Message
         type={message.type}
         message={message.text}
-        onClose={() => setMessage({ type: '', text: '' })}
+        timestamp={message.timestamp}
+        onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
       />
 
       <div className="profile-filters">
