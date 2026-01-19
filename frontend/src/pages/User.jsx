@@ -3,11 +3,13 @@ import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
 import {useAuth} from '../context/AuthContext';
+import {useLoading} from '../context/LoadingContext';
 import './User.css';
 
 const User = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -18,7 +20,6 @@ const User = () => {
     phoneMessage: '',
   });
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 인증 상태 확인 후 로그인되지 않았으면 로그인 페이지로 이동
@@ -32,6 +33,7 @@ const User = () => {
   }, [authLoading, isAuthenticated, navigate]);
 
   const fetchProfile = async () => {
+    showLoading();
     try {
       const response = await api.get('/user/profile');
       const data = response.data;
@@ -50,7 +52,7 @@ const User = () => {
         text: '프로필을 불러오는데 실패했습니다.',
       });
     } finally {
-      setLoading(false);
+      hideLoading();
     }
   };
 
@@ -65,6 +67,7 @@ const User = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
+    showLoading();
 
     try {
       await api.put('/user/profile', formData);
@@ -72,20 +75,17 @@ const User = () => {
         type: 'success',
         text: '프로필이 업데이트되었습니다.',
       });
-      setTimeout(() => {
-        navigate('/user');
-      }, 1500);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '프로필 업데이트에 실패했습니다.',
       });
+    } finally {
+      hideLoading();
     }
   };
-
-  if (loading) {
-    return <div className="loading">로딩 중...</div>;
-  }
 
   return (
     <div className="user">

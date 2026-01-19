@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import api from '../utils/api';
+import {useLoading} from '../context/LoadingContext';
 import './ApiTest.css';
 
 const API_GROUPS = [
@@ -35,7 +36,7 @@ const ApiTest = () => {
   const [requestBody, setRequestBody] = useState('');
   const [queryParams, setQueryParams] = useState('');
   const [response, setResponse] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, showLoading, hideLoading } = useLoading();
 
   const selectEndpoint = (endpoint) => {
     setSelectedEndpoint(endpoint);
@@ -45,7 +46,7 @@ const ApiTest = () => {
   };
 
   const handleExecute = async () => {
-    setLoading(true);
+    showLoading();
     setResponse(null);
     try {
       let url = selectedEndpoint.path;
@@ -72,7 +73,7 @@ const ApiTest = () => {
         data: err.response?.data || err.message
       });
     } finally {
-      setLoading(false);
+      hideLoading();
     }
   };
 
@@ -129,8 +130,8 @@ const ApiTest = () => {
                 </div>
               )}
 
-              <button 
-                className="execute-btn" 
+              <button
+                className="execute-btn"
                 onClick={handleExecute}
                 disabled={loading}
               >
