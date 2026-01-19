@@ -2,9 +2,11 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
+import {useAuth} from '../context/AuthContext';
 import './User.css';
 
 const User = () => {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -19,31 +21,38 @@ const User = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await api.get('/user/profile');
-        const data = response.data;
-        setFormData({
-          name: data.name || '',
-          gender: data.gender || '',
-          region: data.region || '',
-          introduction: data.introduction || '',
-          isVisible: data.isVisible || false,
-          phone: data.phone || '',
-          phoneMessage: data.phoneMessage || '',
-        });
-      } catch (error) {
-        setMessage({
-          type: 'error',
-          text: '프로필을 불러오는데 실패했습니다.',
-        });
-      } finally {
-        setLoading(false);
+    // 인증 상태 확인 후 로그인되지 않았으면 로그인 페이지로 이동
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        navigate('/login');
+        return;
       }
-    };
+      fetchProfile();
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
-    fetchProfile();
-  }, []);
+  const fetchProfile = async () => {
+    try {
+      const response = await api.get('/user/profile');
+      const data = response.data;
+      setFormData({
+        name: data.name || '',
+        gender: data.gender || '',
+        region: data.region || '',
+        introduction: data.introduction || '',
+        isVisible: data.isVisible || false,
+        phone: data.phone || '',
+        phoneMessage: data.phoneMessage || '',
+      });
+    } catch (error) {
+      setMessage({
+        type: 'error',
+        text: '프로필을 불러오는데 실패했습니다.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -64,7 +73,7 @@ const User = () => {
         text: '프로필이 업데이트되었습니다.',
       });
       setTimeout(() => {
-        navigate('/profile');
+        navigate('/user');
       }, 1500);
     } catch (error) {
       setMessage({

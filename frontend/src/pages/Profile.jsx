@@ -1,9 +1,13 @@
 import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
+import {useAuth} from '../context/AuthContext';
 import './Profile.css';
 
 const Profile = () => {
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasNext, setHasNext] = useState(false);
@@ -14,8 +18,15 @@ const Profile = () => {
   const [contactViews, setContactViews] = useState({});
 
   useEffect(() => {
-    fetchProfiles(0, true);
-  }, [specialty, sortBy]);
+    // 인증 상태 확인 후 로그인되지 않았으면 로그인 페이지로 이동
+    if (!authLoading) {
+      if (!isAuthenticated) {
+        navigate('/login');
+        return;
+      }
+      fetchProfiles(0, true);
+    }
+  }, [authLoading, isAuthenticated, navigate, specialty, sortBy]);
 
   const fetchProfiles = async (pageNum, reset = false) => {
     setLoading(true);

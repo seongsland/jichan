@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("handleIllegalArgumentException", e);
         Map<String, String> error = new HashMap<>();
         error.put("message", e.getMessage());
         
@@ -31,6 +32,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> handleIllegalStateException(IllegalStateException e) {
+        log.error("handleIllegalStateException", e);
         Map<String, String> error = new HashMap<>();
         error.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
@@ -38,6 +40,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        log.error("handleUsernameNotFoundException", e);
         Map<String, String> error = new HashMap<>();
         error.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
@@ -45,6 +48,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException e) {
+        log.error("handleValidationExceptions", e);
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -56,7 +60,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception e) {
-        log.error("Unhandled exception occurred", e);
+        log.error("handleGenericException", e);
         Map<String, String> error = new HashMap<>();
         error.put("message", "서버 오류가 발생했습니다.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
