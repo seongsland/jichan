@@ -3,13 +3,14 @@ import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
 import {useAuth} from '../context/AuthContext';
+import {useLoading} from '../context/LoadingContext';
 import './Profile.css';
 
 const Profile = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { loading, showLoading, hideLoading } = useLoading();
   const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [hasNext, setHasNext] = useState(false);
   const [page, setPage] = useState(0);
   const [specialty, setSpecialty] = useState('');
@@ -29,7 +30,7 @@ const Profile = () => {
   }, [authLoading, isAuthenticated, navigate, specialty, sortBy]);
 
   const fetchProfiles = async (pageNum, reset = false) => {
-    setLoading(true);
+    showLoading();
     try {
       const params = {
         page: pageNum,
@@ -52,7 +53,7 @@ const Profile = () => {
         text: '프로필을 불러오는데 실패했습니다.',
       });
     } finally {
-      setLoading(false);
+      hideLoading();
     }
   };
 
@@ -117,79 +118,73 @@ const Profile = () => {
         </div>
       </div>
 
-      {loading && profiles.length === 0 ? (
-        <div className="loading">로딩 중...</div>
-      ) : (
-        <>
-          <div className="profile-grid">
-            {profiles.map((profile) => (
-              <div key={profile.id} className="profile-card">
-                <h3>{profile.name}</h3>
-                <div className="profile-info">
-                  {profile.gender && <span>성별: {profile.gender}</span>}
-                  {profile.region && <span>지역: {profile.region}</span>}
-                  {profile.averageRating && (
-                    <span>평점: {profile.averageRating.toFixed(1)}</span>
-                  )}
-                </div>
-                {profile.specialties && profile.specialties.length > 0 && (
-                  <div className="specialties">
-                    {profile.specialties.map((spec, idx) => (
-                      <div key={idx} className="specialty">
-                        {spec.name} - {spec.hourlyRate?.toLocaleString()}원/시간
-                      </div>
-                    ))}
+      <div className="profile-grid">
+        {profiles.map((profile) => (
+          <div key={profile.id} className="profile-card">
+            <h3>{profile.name}</h3>
+            <div className="profile-info">
+              {profile.gender && <span>성별: {profile.gender}</span>}
+              {profile.region && <span>지역: {profile.region}</span>}
+              {profile.averageRating && (
+                <span>평점: {profile.averageRating.toFixed(1)}</span>
+              )}
+            </div>
+            {profile.specialties && profile.specialties.length > 0 && (
+              <div className="specialties">
+                {profile.specialties.map((spec, idx) => (
+                  <div key={idx} className="specialty">
+                    {spec.name} - {spec.hourlyRate?.toLocaleString()}원/시간
                   </div>
-                )}
-                {profile.introduction && (
-                  <p className="introduction">{profile.introduction}</p>
-                )}
-                <div className="profile-actions">
-                  <button
-                    onClick={() => handleContactView(profile.id, 'EMAIL')}
-                    className="btn btn-outline"
-                  >
-                    이메일 보기
-                  </button>
-                  <button
-                    onClick={() => handleContactView(profile.id, 'PHONE')}
-                    className="btn btn-outline"
-                  >
-                    핸드폰 보기
-                  </button>
-                </div>
-                {contactViews[`${profile.id}-EMAIL`] && (
-                  <div className="contact-info">
-                    <strong>이메일:</strong>{' '}
-                    {contactViews[`${profile.id}-EMAIL`].contact}
-                  </div>
-                )}
-                {contactViews[`${profile.id}-PHONE`] && (
-                  <div className="contact-info">
-                    <strong>핸드폰:</strong>{' '}
-                    {contactViews[`${profile.id}-PHONE`].contact}
-                    {contactViews[`${profile.id}-PHONE`].phoneMessage && (
-                      <div className="phone-message">
-                        {contactViews[`${profile.id}-PHONE`].phoneMessage}
-                      </div>
-                    )}
+                ))}
+              </div>
+            )}
+            {profile.introduction && (
+              <p className="introduction">{profile.introduction}</p>
+            )}
+            <div className="profile-actions">
+              <button
+                onClick={() => handleContactView(profile.id, 'EMAIL')}
+                className="btn btn-outline"
+              >
+                이메일 보기
+              </button>
+              <button
+                onClick={() => handleContactView(profile.id, 'PHONE')}
+                className="btn btn-outline"
+              >
+                핸드폰 보기
+              </button>
+            </div>
+            {contactViews[`${profile.id}-EMAIL`] && (
+              <div className="contact-info">
+                <strong>이메일:</strong>{' '}
+                {contactViews[`${profile.id}-EMAIL`].contact}
+              </div>
+            )}
+            {contactViews[`${profile.id}-PHONE`] && (
+              <div className="contact-info">
+                <strong>핸드폰:</strong>{' '}
+                {contactViews[`${profile.id}-PHONE`].contact}
+                {contactViews[`${profile.id}-PHONE`].phoneMessage && (
+                  <div className="phone-message">
+                    {contactViews[`${profile.id}-PHONE`].phoneMessage}
                   </div>
                 )}
               </div>
-            ))}
+            )}
           </div>
-          {hasNext && (
-            <div className="load-more">
-              <button
-                onClick={handleLoadMore}
-                className="btn btn-secondary"
-                disabled={loading}
-              >
-                {loading ? '로딩 중...' : '더보기'}
-              </button>
-            </div>
-          )}
-        </>
+        ))}
+      </div>
+      {hasNext && (
+        <div className="load-more">
+          <button
+            onClick={handleLoadMore}
+            className="btn btn-secondary"
+            disabled={loading}
+          >
+            {loading ? '로딩 중...' : '더보기'}
+          </button>
+        </div>
       )}
     </div>
   );

@@ -3,13 +3,14 @@ import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
 import {useAuth} from '../context/AuthContext';
+import {useLoading} from '../context/LoadingContext';
 import './Contacts.css';
 
 const Contacts = () => {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
   const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [ratingForms, setRatingForms] = useState({});
 
@@ -25,7 +26,7 @@ const Contacts = () => {
   }, [authLoading, isAuthenticated, navigate]);
 
   const fetchContacts = async () => {
-    setLoading(true);
+    showLoading();
     try {
       const response = await api.get('/contact');
       setContacts(response.data);
@@ -35,7 +36,7 @@ const Contacts = () => {
         text: '전문가 목록을 불러오는데 실패했습니다.',
       });
     } finally {
-      setLoading(false);
+      hideLoading();
     }
   };
 
@@ -75,10 +76,6 @@ const Contacts = () => {
       },
     });
   };
-
-  if (loading) {
-    return <div className="loading">로딩 중...</div>;
-  }
 
   return (
     <div className="contacts">
