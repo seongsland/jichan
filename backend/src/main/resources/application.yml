@@ -32,12 +32,12 @@ server:
   port: 8080
 
 jwt:
-  secret: ${JWT_SECRET:_jichan_jichan_jichan_jichan_jichan_}
+  secret: ${JWT_SECRET}
   access-token-expiration: 3600000
   refresh-token-expiration: 86400000
 
 encryption:
-  key: _ji_ch_an_1_ji_ch_an_1_
+  key: ${ENC_KEY}
 
 logging:
   level:

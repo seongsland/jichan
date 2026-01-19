@@ -1,4 +1,5 @@
 import {createContext, useContext, useEffect, useState} from 'react';
+import axios from 'axios';
 import api, {clearAccessToken, setAccessToken} from '../utils/api';
 
 const AuthContext = createContext(null);
@@ -16,11 +17,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // accessToken은 메모리에만 저장되므로 페이지 새로고침 시 초기 상태는 false
-    // refreshToken은 httpOnly 쿠키에 저장되어 JavaScript에서 접근 불가
-    // 초기 인증 상태는 서버에 요청을 보내서 확인하거나, 로그인 시에만 true로 설정
-    setIsAuthenticated(false);
-    setLoading(false);
+    // 앱 초기 로드 시 accessToken이 없으면 refreshToken으로 갱신 시도
+    const initializeAuth = async () => {
+      try {
+        // refreshToken으로 accessToken 갱신 시도 (axios 직접 사용으로 인터셉터 회피)
+        const response = await axios.post('/api/auth/token_refresh', {}, {
+          withCredentials: true
+        });
+        const { accessToken } = response.data;
+        setAccessToken(accessToken);
+        setIsAuthenticated(true);
+      } catch (error) {
+        // refreshToken이 없거나 유효하지 않으면 인증되지 않은 상태
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const login = (accessToken) => {
