@@ -1,15 +1,14 @@
 package com.jichan.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "user_specialty")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 public class UserSpecialty {
 
     @Id
@@ -19,21 +18,9 @@ public class UserSpecialty {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "specialty_detail_id", nullable = false)
-    private SpecialtyDetail specialtyDetail;
+    @Column(name = "specialty_detail_id", nullable = false)
+    private Long specialtyDetailId;
 
     @Column(name = "hourly_rate", nullable = false)
     private Integer hourlyRate;
-
-    @Builder
-    public UserSpecialty(Long userId, SpecialtyDetail specialtyDetail, Integer hourlyRate) {
-        this.userId = userId;
-        this.specialtyDetail = specialtyDetail;
-        this.hourlyRate = hourlyRate;
-    }
-
-    public void updateHourlyRate(Integer hourlyRate) {
-        this.hourlyRate = hourlyRate;
-    }
 }

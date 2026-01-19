@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
@@ -45,14 +46,11 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
-    //useJUnitPlatform()
-    enabled = false
-}
-tasks.withType(Test) {
-    systemProperty "file.encoding", "UTF-8"
-}
-test {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
     systemProperty "file.encoding", "UTF-8"
+}
+
+tasks.named('test') {
+    enabled = false
 }

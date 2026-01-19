@@ -1,6 +1,13 @@
+import { useEffect } from 'react';
 import './Message.css';
 
-const Message = ({ type, message, onClose }) => {
+const Message = ({ type, message, onClose, timestamp }) => {
+  useEffect(() => {
+    if (message) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [timestamp]);
+
   if (!message) return null;
 
   return (
@@ -16,5 +23,3 @@ const Message = ({ type, message, onClose }) => {
 };
 
 export default Message;
-
-
