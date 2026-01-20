@@ -23,7 +23,7 @@ const Home = () => {
         </div>
         <div className="feature-card">
           <h3>쉬운 전문가 찾기</h3>
-          <p>주특기별 검색 및 정렬 기능</p>
+          <p>특기별 검색 및 정렬 기능</p>
         </div>
       </div>
 

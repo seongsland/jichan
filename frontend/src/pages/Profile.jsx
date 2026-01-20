@@ -14,9 +14,30 @@ const Profile = () => {
   const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
   const [contactViews, setContactViews] = useState({});
 
+  const [categories, setCategories] = useState([]);
+  const [details, setDetails] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
   useEffect(() => {
-    fetchProfiles(0, true);
+    void fetchSpecialties();
+  }, []);
+
+  useEffect(() => {
+    void fetchProfiles(0, true);
   }, [specialty, sortBy]);
+
+  const fetchSpecialties = async () => {
+    try {
+      const [categoriesResponse, detailsResponse] = await Promise.all([
+        api.get('/specialty/categories'),
+        api.get('/specialty/details')
+      ]);
+      setCategories(categoriesResponse.data);
+      setDetails(detailsResponse.data);
+    } catch (error) {
+      console.error('특기 정보를 불러오는데 실패했습니다.', error);
+    }
+  };
 
   const fetchProfiles = async (pageNum, reset = false) => {
     showLoading();
@@ -28,11 +49,12 @@ const Profile = () => {
       };
       const response = await api.get('/profile', { params });
       const data = response.data;
+      console.log(data);
 
       if (reset) {
         setProfiles(data.content);
       } else {
-        setProfiles([...profiles, ...data.content]);
+        setProfiles(prevProfiles=> [...prevProfiles, ...data.content]);
       }
       setHasNext(data.hasNext);
       setPage(pageNum);
@@ -75,6 +97,8 @@ const Profile = () => {
     }
   };
 
+  const filteredDetails = details.filter(detail => !selectedCategory || detail.categoryId === parseInt(selectedCategory));
+
   return (
     <div className="profile">
       <h2>전문가 검색</h2>
@@ -87,14 +111,35 @@ const Profile = () => {
 
       <div className="profile-filters">
         <div className="filter-group">
-          <label htmlFor="specialty">주특기 ID</label>
-          <input
-            type="number"
-            id="specialty"
-            value={specialty}
-            onChange={(e) => setSpecialty(e.target.value)}
-            placeholder="주특기 ID (선택사항)"
-          />
+          <label>특기</label>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setSpecialty('');
+              }}
+            >
+              <option value="">카테고리 선택</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            <select
+              value={specialty}
+              onChange={(e) => setSpecialty(e.target.value)}
+              disabled={!selectedCategory}
+            >
+              <option value="">세부항목 선택</option>
+              {filteredDetails.map(detail => (
+                <option key={detail.id} value={detail.id}>
+                  {detail.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="filter-group">
           <label htmlFor="sortBy">정렬</label>
@@ -123,11 +168,21 @@ const Profile = () => {
             </div>
             {profile.specialties && profile.specialties.length > 0 && (
               <div className="specialties">
-                {profile.specialties.map((spec, idx) => (
-                  <div key={idx} className="specialty">
-                    {spec.name} - {spec.hourlyRate?.toLocaleString()}원/시간
-                  </div>
-                ))}
+                {profile.specialties.map((spec, idx) => {
+                  let name = spec.name;
+                  if (!name && spec.specialtyDetailId) {
+                    const detail = details.find(d => d.id === spec.specialtyDetailId);
+                    if (detail) {
+                      const category = categories.find(c => c.id === detail.categoryId);
+                      name = category ? `${category.name} - ${detail.name}` : detail.name;
+                    }
+                  }
+                  return (
+                    <div key={idx} className="specialty">
+                      {name} - {spec.hourlyRate?.toLocaleString()}원/시간
+                    </div>
+                  );
+                })}
               </div>
             )}
             {profile.introduction && (
