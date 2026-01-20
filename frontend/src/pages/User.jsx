@@ -1,14 +1,10 @@
 import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
-import {useAuth} from '../context/AuthContext';
 import {useLoading} from '../context/LoadingContext';
 import './User.css';
 
 const User = () => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState({
     name: '',
@@ -28,16 +24,9 @@ const User = () => {
   const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
 
   useEffect(() => {
-    // 인증 상태 확인 후 로그인되지 않았으면 로그인 페이지로 이동
-    if (!authLoading) {
-      if (!isAuthenticated) {
-        navigate('/login');
-        return;
-      }
-      fetchProfile();
-      fetchSpecialties();
-    }
-  }, [authLoading, isAuthenticated, navigate]);
+    fetchProfile();
+    fetchSpecialties();
+  }, []);
 
   const fetchSpecialties = async () => {
     try {

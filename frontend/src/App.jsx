@@ -10,6 +10,7 @@ import User from './pages/User';
 import Profile from './pages/Profile';
 import Contacts from './pages/Contacts';
 import ApiTest from './pages/ApiTest';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -22,9 +23,30 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/verify_email" element={<VerifyEmail />} />
-              <Route path="/user" element={<User />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/contacts" element={<Contacts />} />
+              <Route
+                path="/user"
+                element={
+                  <ProtectedRoute>
+                    <User />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/contacts"
+                element={
+                  <ProtectedRoute>
+                    <Contacts />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/test/api" element={<ApiTest />} />
             </Routes>
           </Layout>

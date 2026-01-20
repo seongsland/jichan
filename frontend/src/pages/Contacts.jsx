@@ -2,12 +2,10 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
-import {useAuth} from '../context/AuthContext';
 import {useLoading} from '../context/LoadingContext';
 import './Contacts.css';
 
 const Contacts = () => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
   const [contacts, setContacts] = useState([]);
@@ -15,15 +13,8 @@ const Contacts = () => {
   const [ratingForms, setRatingForms] = useState({});
 
   useEffect(() => {
-    // 인증 상태 확인 후 로그인되지 않았으면 로그인 페이지로 이동
-    if (!authLoading) {
-      if (!isAuthenticated) {
-        navigate('/login');
-        return;
-      }
-      fetchContacts();
-    }
-  }, [authLoading, isAuthenticated, navigate]);
+    fetchContacts();
+  }, []);
 
   const fetchContacts = async () => {
     showLoading();
