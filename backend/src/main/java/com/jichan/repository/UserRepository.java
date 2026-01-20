@@ -19,15 +19,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId = :specialtyId)")
     Slice<User> findBySpecialtyIdAndIsVisibleTrue(@Param("specialtyId") Long specialtyId, Pageable pageable);
 
-    @Query("SELECT u FROM User u LEFT JOIN Rating r ON u.id = r.expertId WHERE u.isVisible = true GROUP BY u.id ORDER BY AVG(r.score) DESC")
-    Slice<User> findByIsVisibleTrueOrderByRatingDesc(Pageable pageable);
+    Slice<User> findByIsVisibleTrueOrderByAverageRatingDesc(Pageable pageable);
 
-    @Query("SELECT u FROM User u JOIN UserSpecialty us ON u.id = us.userId WHERE u.isVisible = true GROUP BY u.id ORDER BY MIN(us.hourlyRate) ASC")
-    Slice<User> findByIsVisibleTrueOrderByPriceAsc(Pageable pageable);
+    Slice<User> findByIsVisibleTrueOrderByMinHourlyRateAsc(Pageable pageable);
 
-    @Query("SELECT u FROM User u LEFT JOIN Rating r ON u.id = r.expertId WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId = :specialtyId) GROUP BY u.id ORDER BY AVG(r.score) DESC")
-    Slice<User> findBySpecialtyIdAndIsVisibleTrueOrderByRatingDesc(@Param("specialtyId") Long specialtyId, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId = :specialtyId) ORDER BY u.averageRating DESC")
+    Slice<User> findBySpecialtyIdAndIsVisibleTrueOrderByAverageRatingDesc(@Param("specialtyId") Long specialtyId, Pageable pageable);
 
-    @Query("SELECT u FROM User u JOIN UserSpecialty us ON u.id = us.userId WHERE u.isVisible = true AND us.specialtyDetailId = :specialtyId ORDER BY us.hourlyRate ASC")
-    Slice<User> findBySpecialtyIdAndIsVisibleTrueOrderByPriceAsc(@Param("specialtyId") Long specialtyId, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId = :specialtyId) ORDER BY u.minHourlyRate ASC")
+    Slice<User> findBySpecialtyIdAndIsVisibleTrueOrderByMinHourlyRateAsc(@Param("specialtyId") Long specialtyId, Pageable pageable);
 }

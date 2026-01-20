@@ -74,6 +74,15 @@ public class ContactService {
 
         rating = ratingRepository.save(rating);
 
+        // Update expert's rating stats
+        User expert = userRepository.findById(request.expertId())
+                .orElseThrow(() -> new IllegalArgumentException("전문가를 찾을 수 없습니다."));
+        List<Rating> expertRatings = ratingRepository.findByExpertId(request.expertId());
+        int reviewCount = expertRatings.size();
+        int averageRating = (int) Math.round(expertRatings.stream().mapToInt(Rating::getScore).average().orElse(0.0));
+        expert.updateRating(averageRating, reviewCount);
+        userRepository.save(expert);
+
         return new RatingResponse(
                 rating.getId(),
                 request.expertId(),

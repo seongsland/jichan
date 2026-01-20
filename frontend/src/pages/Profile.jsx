@@ -58,6 +58,26 @@ const Profile = () => {
       }
       setHasNext(data.hasNext);
       setPage(pageNum);
+
+      // 이미 본 연락처 정보가 있다면 상태 업데이트
+      const newContactViews = {};
+      data.content.forEach(profile => {
+        if (profile.isEmailViewed) {
+          newContactViews[`${profile.id}-EMAIL`] = { contact: profile.email };
+        }
+        if (profile.isPhoneViewed) {
+          newContactViews[`${profile.id}-PHONE`] = { 
+            contact: profile.phone,
+            phoneMessage: profile.phoneMessage
+          };
+        }
+      });
+      
+      setContactViews(prev => ({
+        ...prev,
+        ...newContactViews
+      }));
+
     } catch (error) {
       setMessage({
         type: 'error',
@@ -81,13 +101,23 @@ const Profile = () => {
       });
       const { contact, phoneMessage } = response.data;
 
-      setContactViews({
-        ...contactViews,
+      setContactViews(prev => ({
+        ...prev,
         [`${expertId}-${contactType}`]: {
           contact,
           phoneMessage,
         },
-      });
+      }));
+
+      // 조회수 증가 반영
+      setProfiles(prevProfiles => 
+        prevProfiles.map(profile => 
+          profile.id === expertId 
+            ? { ...profile, reviewCount: (profile.reviewCount || 0) + 1 }
+            : profile
+        )
+      );
+
     } catch (error) {
       setMessage({
         type: 'error',
@@ -158,13 +188,20 @@ const Profile = () => {
       <div className="profile-grid">
         {profiles.map((profile) => (
           <div key={profile.id} className="profile-card">
-            <h3>{profile.name}</h3>
+            <div className="profile-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h3>{profile.name}</h3>
+                <div className="profile-stats">
+                  {profile.averageRating !== null && (
+                    <span className="rating">★ {profile.averageRating.toFixed(1)}</span>
+                  )}
+                  <span className="review-count"> ({profile.reviewCount || 0})</span>
+                </div>
+              </div>
+            </div>
             <div className="profile-info">
               {profile.gender && <span>성별: {profile.gender}</span>}
               {profile.region && <span>지역: {profile.region}</span>}
-              {profile.averageRating && (
-                <span>평점: {profile.averageRating.toFixed(1)}</span>
-              )}
             </div>
             {profile.specialties && profile.specialties.length > 0 && (
               <div className="specialties">
@@ -189,18 +226,22 @@ const Profile = () => {
               <p className="introduction">{profile.introduction}</p>
             )}
             <div className="profile-actions">
-              <button
-                onClick={() => handleContactView(profile.id, 'EMAIL')}
-                className="btn btn-outline"
-              >
-                이메일 보기
-              </button>
-              <button
-                onClick={() => handleContactView(profile.id, 'PHONE')}
-                className="btn btn-outline"
-              >
-                핸드폰 보기
-              </button>
+              {!contactViews[`${profile.id}-EMAIL`] && (
+                <button
+                  onClick={() => handleContactView(profile.id, 'EMAIL')}
+                  className="btn btn-outline"
+                >
+                  이메일 보기
+                </button>
+              )}
+              {!contactViews[`${profile.id}-PHONE`] && (
+                <button
+                  onClick={() => handleContactView(profile.id, 'PHONE')}
+                  className="btn btn-outline"
+                >
+                  핸드폰 보기
+                </button>
+              )}
             </div>
             {contactViews[`${profile.id}-EMAIL`] && (
               <div className="contact-info">
