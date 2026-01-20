@@ -28,7 +28,13 @@ public class ProfileDto {
             String region,
             List<SpecialtyInfo> specialties,
             String introduction,
-            Double averageRating
+            Double averageRating,
+            Integer viewCount,
+            boolean isEmailViewed,
+            boolean isPhoneViewed,
+            String email,
+            String phone,
+            String phoneMessage
     ) {}
 
     public record ProfileListResponse(

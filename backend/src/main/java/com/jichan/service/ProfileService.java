@@ -13,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,12 +34,8 @@ public class ProfileService {
     private static final int PAGE_SIZE = 10;
 
 
-    public ProfileListResponse getProfiles(Long specialtyId, String sortBy, int page) {
+    public ProfileListResponse getProfiles(Long viewerId, Long specialtyId, String sortBy, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        
-        if (sortBy == null || sortBy.isEmpty()) {
-            pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("name").ascending());
-        }
 
         Slice<User> userSlice;
 
@@ -74,8 +70,34 @@ public class ProfileService {
         Map<Long, List<Rating>> ratingMap = ratingRepository.findByExpertIdIn(userIds).stream()
                 .collect(Collectors.groupingBy(Rating::getExpertId));
 
+        // ContactLog 조회 (현재 사용자가 본 기록)
+        List<ContactLog> viewerContactLogs = contactLogRepository.findByViewerIdAndExpertIdIn(viewerId, userIds);
+        Set<Long> emailViewedExperts = viewerContactLogs.stream()
+                .filter(log -> log.getContactType() == ContactType.EMAIL)
+                .map(ContactLog::getExpertId)
+                .collect(Collectors.toSet());
+        Set<Long> phoneViewedExperts = viewerContactLogs.stream()
+                .filter(log -> log.getContactType() == ContactType.PHONE)
+                .map(ContactLog::getExpertId)
+                .collect(Collectors.toSet());
+
+        // ContactLog 조회 (전체 조회수 계산용) - DB에서 카운트만 가져오기
+        List<Object[]> viewCounts = contactLogRepository.countByExpertIdIn(userIds);
+        Map<Long, Long> viewCountMap = viewCounts.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (Long) row[1]
+                ));
+
         List<ProfileItem> content = users.stream()
-                .map(user -> convertToProfileItem(user, userSpecialtyMap.getOrDefault(user.getId(), List.of()), ratingMap.getOrDefault(user.getId(), List.of())))
+                .map(user -> convertToProfileItem(
+                        user,
+                        userSpecialtyMap.getOrDefault(user.getId(), List.of()),
+                        ratingMap.getOrDefault(user.getId(), List.of()),
+                        viewCountMap.getOrDefault(user.getId(), 0L).intValue(),
+                        emailViewedExperts.contains(user.getId()),
+                        phoneViewedExperts.contains(user.getId())
+                ))
                 .collect(Collectors.toList());
 
         return new ProfileListResponse(content, hasNext);
@@ -106,7 +128,7 @@ public class ProfileService {
     }
 
 
-    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, List<Rating> ratings) {
+    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, List<Rating> ratings, int viewCount, boolean isEmailViewed, boolean isPhoneViewed) {
         List<SpecialtyInfo> specialties = userSpecialties.stream()
                 .map(us -> {
                     var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
@@ -127,7 +149,13 @@ public class ProfileService {
                 user.getRegion(),
                 specialties,
                 user.getIntroduction(),
-                averageRating
+                averageRating,
+                viewCount,
+                isEmailViewed,
+                isPhoneViewed,
+                isEmailViewed ? user.getEmail() : null,
+                isPhoneViewed ? user.getPhone() : null,
+                isPhoneViewed ? user.getPhoneMessage() : null
         );
     }
 }
