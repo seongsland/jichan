@@ -15,7 +15,7 @@ const Profile = () => {
   const [contactViews, setContactViews] = useState({});
 
   useEffect(() => {
-    fetchProfiles(0, true);
+    void fetchProfiles(0, true);
   }, [specialty, sortBy]);
 
   const fetchProfiles = async (pageNum, reset = false) => {

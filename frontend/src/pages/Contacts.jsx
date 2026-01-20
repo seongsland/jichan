@@ -13,7 +13,7 @@ const Contacts = () => {
   const [ratingForms, setRatingForms] = useState({});
 
   useEffect(() => {
-    fetchContacts();
+    void fetchContacts();
   }, []);
 
   const fetchContacts = async () => {
