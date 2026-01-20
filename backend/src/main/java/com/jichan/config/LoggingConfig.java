@@ -13,11 +13,12 @@ public class LoggingConfig {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter() {
             @Override
             protected void beforeRequest(HttpServletRequest request, String message) {
-                logger.debug("REQUEST DATA : " + message);
+
             }
 
             @Override
             protected void afterRequest(HttpServletRequest request, String message) {
+                logger.debug("REQUEST DATA : " + message);
             }
         };
 

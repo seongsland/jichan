@@ -8,13 +8,17 @@ import com.jichan.entity.User;
 import com.jichan.entity.UserSpecialty;
 import com.jichan.repository.UserRepository;
 import com.jichan.repository.UserSpecialtyRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,30 +34,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        List<SpecialtyResponse> specialties = userSpecialtyRepository.findByUserId(userId).stream()
-                .map(us -> {
-                    var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
-                    var category = specialtyService.getCategory(detail.categoryId());
-                    return new SpecialtyResponse(
-                            detail.id(),
-                            detail.name(),
-                            category.name(),
-                            us.getHourlyRate()
-                    );
-                })
-                .toList();
-
-        return new ProfileResponse(
-                user.getId(),
-                user.getName(),
-                user.getGender(),
-                user.getRegion(),
-                user.getIntroduction(),
-                user.getIsVisible(),
-                user.getPhone(),
-                user.getPhoneMessage(),
-                specialties
-        );
+        return getProfileResponse(user, null);
     }
 
     public ProfileResponse updateProfile(Long userId, ProfileUpdateRequest request) {
@@ -77,21 +58,12 @@ public class UserService {
             }
         }
 
-        user.updateProfile(
-                request.name(),
-                request.gender(),
-                request.region(),
-                request.introduction(),
-                request.isVisible(),
-                request.phone(),
-                request.phoneMessage()
-        );
-
         // Delete existing specialties
         userSpecialtyRepository.deleteAllByUserId(userId);
 
         // Save new specialties and calculate min hourly rate
         int minHourlyRate = 0;
+        List<UserSpecialty> userSpecialties = new ArrayList<>();
         if (request.specialties() != null && !request.specialties().isEmpty()) {
             minHourlyRate = Integer.MAX_VALUE;
             for (SpecialtyRequest specialtyRequest : request.specialties()) {
@@ -102,15 +74,33 @@ public class UserService {
                         .hourlyRate(specialtyRequest.hourlyRate())
                         .build();
                 userSpecialtyRepository.save(userSpecialty);
+                userSpecialties.add(userSpecialty);
+
                 if (specialtyRequest.hourlyRate() < minHourlyRate) {
                     minHourlyRate = specialtyRequest.hourlyRate();
                 }
             }
         }
-        user.updateMinHourlyRate(minHourlyRate);
-        userRepository.save(user);
 
-        List<SpecialtyResponse> specialties = userSpecialtyRepository.findByUserId(userId).stream()
+        user.updateProfile(
+                request.name(),
+                request.gender(),
+                request.region(),
+                request.introduction(),
+                request.isVisible(),
+                request.phone(),
+                request.phoneMessage()
+        );
+        user.updateMinHourlyRate(minHourlyRate);
+
+        return getProfileResponse(user, userSpecialties);
+    }
+
+    private @NonNull ProfileResponse getProfileResponse(User user, List<UserSpecialty> userSpecialties) {
+        List<SpecialtyResponse> specialties = Optional.ofNullable(userSpecialties)
+                .orElseGet(() -> userSpecialtyRepository.findByUserId(user.getId()))
+                .stream()
+                .filter(Objects::nonNull)
                 .map(us -> {
                     var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
                     var category = specialtyService.getCategory(detail.categoryId());
