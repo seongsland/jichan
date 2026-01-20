@@ -13,7 +13,7 @@ public interface UserSpecialtyRepository extends JpaRepository<UserSpecialty, Lo
     List<UserSpecialty> findByUserId(Long userId);
     List<UserSpecialty> findByUserIdIn(List<Long> userIds);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("delete from UserSpecialty us where us.userId = :userId")
     void deleteAllByUserId(Long userId);
 }
