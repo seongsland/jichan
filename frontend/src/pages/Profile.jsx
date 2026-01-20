@@ -23,7 +23,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    fetchProfiles(0, true);
+    void fetchProfiles(0, true);
   }, [specialty, sortBy]);
 
   const fetchSpecialties = async () => {

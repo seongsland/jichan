@@ -24,8 +24,8 @@ const User = () => {
   const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
 
   useEffect(() => {
-    fetchProfile();
-    fetchSpecialties();
+    void fetchProfile();
+    void fetchSpecialties();
   }, []);
 
   const fetchSpecialties = async () => {
