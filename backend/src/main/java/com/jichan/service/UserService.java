@@ -73,7 +73,7 @@ public class UserService {
             }
 
             if (request.specialties() == null || request.specialties().isEmpty()) {
-                throw new IllegalArgumentException("프로필을 공개하려면 최소 1개 이상의 주특기를 등록해야 합니다.");
+                throw new IllegalArgumentException("프로필을 공개하려면 최소 1개 이상의 특기를 등록해야 합니다.");
             }
         }
 
