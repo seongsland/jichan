@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface UserSpecialtyRepository extends JpaRepository<UserSpecialty, Long> {
     List<UserSpecialty> findByUserId(Long userId);
+    List<UserSpecialty> findByUserIdIn(List<Long> userIds);
 
     @Modifying(clearAutomatically = true)
     @Query("delete from UserSpecialty us where us.userId = :userId")

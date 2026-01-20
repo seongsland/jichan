@@ -152,6 +152,36 @@ const User = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: '', text: '', timestamp: Date.now() });
+
+    if (formData.isVisible) {
+      if (!formData.name || !formData.gender || !formData.region || !formData.introduction) {
+        setMessage({
+          type: 'error',
+          text: '프로필을 공개하려면 이름, 성별, 지역, 소개글을 모두 입력해야 합니다.',
+          timestamp: Date.now(),
+        });
+        return;
+      }
+
+      if (formData.phone && !formData.phoneMessage) {
+        setMessage({
+          type: 'error',
+          text: '핸드폰 번호를 입력한 경우 연락 가능 시간 메모를 입력해야 합니다.',
+          timestamp: Date.now(),
+        });
+        return;
+      }
+
+      if (!formData.specialties || formData.specialties.length === 0) {
+        setMessage({
+          type: 'error',
+          text: '프로필을 공개하려면 최소 1개 이상의 특기를 등록해야 합니다.',
+          timestamp: Date.now(),
+        });
+        return;
+      }
+    }
+
     showLoading();
 
     try {

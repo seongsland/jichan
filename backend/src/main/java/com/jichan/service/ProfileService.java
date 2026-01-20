@@ -13,11 +13,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,37 +36,46 @@ public class ProfileService {
 
     public ProfileListResponse getProfiles(Long specialtyId, String sortBy, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        List<User> users;
-        boolean hasNext;
+        
+        if (sortBy == null || sortBy.isEmpty()) {
+            pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("name").ascending());
+        }
+
+        Slice<User> userSlice;
 
         if (specialtyId != null) {
-            Slice<User> userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrue(specialtyId, pageable);
-            users = new ArrayList<>(userSlice.getContent());
-            hasNext = userSlice.hasNext();
+            if ("rating".equals(sortBy)) {
+                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByRatingDesc(specialtyId, pageable);
+            } else if ("price".equals(sortBy)) {
+                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByPriceAsc(specialtyId, pageable);
+            } else {
+                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrue(specialtyId, pageable);
+            }
         } else {
-            Slice<User> userSlice = userRepository.findByIsVisibleTrue(pageable);
-            users = new ArrayList<>(userSlice.getContent());
-            hasNext = userSlice.hasNext();
+            if ("rating".equals(sortBy)) {
+                userSlice = userRepository.findByIsVisibleTrueOrderByRatingDesc(pageable);
+            } else if ("price".equals(sortBy)) {
+                userSlice = userRepository.findByIsVisibleTrueOrderByPriceAsc(pageable);
+            } else {
+                userSlice = userRepository.findByIsVisibleTrue(pageable);
+            }
         }
 
-        if ("rating".equals(sortBy)) {
-            users.sort((u1, u2) -> {
-                double avgRating1 = ratingRepository.findByExpertId(u1.getId()).stream().mapToInt(Rating::getScore).average().orElse(0.0);
-                double avgRating2 = ratingRepository.findByExpertId(u2.getId()).stream().mapToInt(Rating::getScore).average().orElse(0.0);
-                return Double.compare(avgRating2, avgRating1);
-            });
-        } else if ("price".equals(sortBy)) {
-            users.sort((u1, u2) -> {
-                int minPrice1 = userSpecialtyRepository.findByUserId(u1.getId()).stream().mapToInt(UserSpecialty::getHourlyRate).min().orElse(Integer.MAX_VALUE);
-                int minPrice2 = userSpecialtyRepository.findByUserId(u2.getId()).stream().mapToInt(UserSpecialty::getHourlyRate).min().orElse(Integer.MAX_VALUE);
-                return Integer.compare(minPrice1, minPrice2);
-            });
-        } else {
-            users.sort(java.util.Comparator.comparing(User::getName));
-        }
+        List<User> users = userSlice.getContent();
+        boolean hasNext = userSlice.hasNext();
+
+        // ID 목록 추출
+        List<Long> userIds = users.stream().map(User::getId).collect(Collectors.toList());
+
+        // 한 번의 쿼리로 필요한 데이터 조회
+        Map<Long, List<UserSpecialty>> userSpecialtyMap = userSpecialtyRepository.findByUserIdIn(userIds).stream()
+                .collect(Collectors.groupingBy(UserSpecialty::getUserId));
+
+        Map<Long, List<Rating>> ratingMap = ratingRepository.findByExpertIdIn(userIds).stream()
+                .collect(Collectors.groupingBy(Rating::getExpertId));
 
         List<ProfileItem> content = users.stream()
-                .map(this::convertToProfileItem)
+                .map(user -> convertToProfileItem(user, userSpecialtyMap.getOrDefault(user.getId(), List.of()), ratingMap.getOrDefault(user.getId(), List.of())))
                 .collect(Collectors.toList());
 
         return new ProfileListResponse(content, hasNext);
@@ -96,9 +106,7 @@ public class ProfileService {
     }
 
 
-    private ProfileItem convertToProfileItem(User user) {
-        // UserSpecialty 조회
-        List<UserSpecialty> userSpecialties = userSpecialtyRepository.findByUserId(user.getId());
+    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, List<Rating> ratings) {
         List<SpecialtyInfo> specialties = userSpecialties.stream()
                 .map(us -> {
                     var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
@@ -106,8 +114,6 @@ public class ProfileService {
                 })
                 .collect(Collectors.toList());
 
-        // 평균 평점 계산
-        List<Rating> ratings = ratingRepository.findByExpertId(user.getId());
         Double averageRating = ratings.isEmpty() ? null :
                 ratings.stream()
                         .mapToInt(Rating::getScore)
