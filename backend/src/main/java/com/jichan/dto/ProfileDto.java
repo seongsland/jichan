@@ -29,7 +29,7 @@ public class ProfileDto {
             List<SpecialtyInfo> specialties,
             String introduction,
             Double averageRating,
-            Integer viewCount,
+            Integer reviewCount,
             boolean isEmailViewed,
             boolean isPhoneViewed,
             String email,

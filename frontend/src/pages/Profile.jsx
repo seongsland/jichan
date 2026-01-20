@@ -108,6 +108,16 @@ const Profile = () => {
           phoneMessage,
         },
       }));
+
+      // 조회수 증가 반영
+      setProfiles(prevProfiles => 
+        prevProfiles.map(profile => 
+          profile.id === expertId 
+            ? { ...profile, reviewCount: (profile.reviewCount || 0) + 1 }
+            : profile
+        )
+      );
+
     } catch (error) {
       setMessage({
         type: 'error',
@@ -185,7 +195,7 @@ const Profile = () => {
                   {profile.averageRating !== null && (
                     <span className="rating">★ {profile.averageRating.toFixed(1)}</span>
                   )}
-                  <span className="view-count">👁 {profile.viewCount || 0}</span>
+                  <span className="review-count"> ({profile.reviewCount || 0})</span>
                 </div>
               </div>
             </div>

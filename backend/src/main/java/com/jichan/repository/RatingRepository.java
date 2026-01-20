@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     Optional<Rating> findByUserIdAndExpertId(Long userId, Long expertId);
     boolean existsByUserIdAndExpertId(Long userId, Long expertId);
-    List<Rating> findByExpertIdIn(List<Long> expertIds);
+    List<Rating> findByExpertId(Long expertId);
 }

@@ -87,13 +87,13 @@ public class UserService {
                 request.phoneMessage()
         );
 
-        userRepository.save(user);
-
         // Delete existing specialties
         userSpecialtyRepository.deleteAllByUserId(userId);
 
-        // Save new specialties
-        if (request.specialties() != null) {
+        // Save new specialties and calculate min hourly rate
+        int minHourlyRate = 0;
+        if (request.specialties() != null && !request.specialties().isEmpty()) {
+            minHourlyRate = Integer.MAX_VALUE;
             for (SpecialtyRequest specialtyRequest : request.specialties()) {
                 // Validate that the specialty detail exists
                 UserSpecialty userSpecialty = UserSpecialty.builder()
@@ -102,8 +102,13 @@ public class UserService {
                         .hourlyRate(specialtyRequest.hourlyRate())
                         .build();
                 userSpecialtyRepository.save(userSpecialty);
+                if (specialtyRequest.hourlyRate() < minHourlyRate) {
+                    minHourlyRate = specialtyRequest.hourlyRate();
+                }
             }
         }
+        user.updateMinHourlyRate(minHourlyRate);
+        userRepository.save(user);
 
         List<SpecialtyResponse> specialties = userSpecialtyRepository.findByUserId(userId).stream()
                 .map(us -> {

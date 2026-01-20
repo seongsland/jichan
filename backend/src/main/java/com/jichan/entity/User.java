@@ -41,10 +41,20 @@ public class User extends BaseTimeEntity {
     @Column(name = "phone_message", columnDefinition = "TEXT")
     private String phoneMessage;
 
+    @Column(name = "average_rating", nullable = false)
+    private int averageRating = 0;
+
+    @Column(name = "review_count", nullable = false)
+    private int reviewCount = 0;
+
+    @Column(name = "min_hourly_rate", nullable = false)
+    private int minHourlyRate = 0;
+
 
     @Builder
     public User(String name, String email, String password, String gender, String region,
-                String introduction, Boolean isVisible, Boolean emailVerified, String phone, String phoneMessage) {
+                String introduction, Boolean isVisible, Boolean emailVerified, String phone, String phoneMessage,
+                int averageRating, int reviewCount, int minHourlyRate) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -55,6 +65,9 @@ public class User extends BaseTimeEntity {
         this.emailVerified = emailVerified != null ? emailVerified : false;
         this.phone = phone;
         this.phoneMessage = phoneMessage;
+        this.averageRating = averageRating;
+        this.reviewCount = reviewCount;
+        this.minHourlyRate = minHourlyRate;
     }
 
     public void updateProfile(String name, String gender, String region, String introduction,
@@ -70,5 +83,18 @@ public class User extends BaseTimeEntity {
 
     public void verifyEmail() {
         this.emailVerified = true;
+    }
+
+    public void updateRating(int averageRating, int reviewCount) {
+        this.averageRating = averageRating;
+        this.reviewCount = reviewCount;
+    }
+
+    public void updateMinHourlyRate(int minHourlyRate) {
+        this.minHourlyRate = minHourlyRate;
+    }
+
+    public void increaseReviewCount() {
+        this.reviewCount++;
     }
 }

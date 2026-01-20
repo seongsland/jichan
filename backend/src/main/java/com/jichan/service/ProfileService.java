@@ -30,7 +30,6 @@ public class ProfileService {
     private final UserSpecialtyRepository userSpecialtyRepository;
     private final SpecialtyService specialtyService;
     private final ContactLogRepository contactLogRepository;
-    private final RatingRepository ratingRepository;
     private static final int PAGE_SIZE = 10;
 
 
@@ -41,17 +40,17 @@ public class ProfileService {
 
         if (specialtyId != null) {
             if ("rating".equals(sortBy)) {
-                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByRatingDesc(specialtyId, pageable);
+                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByAverageRatingDesc(specialtyId, pageable);
             } else if ("price".equals(sortBy)) {
-                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByPriceAsc(specialtyId, pageable);
+                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByMinHourlyRateAsc(specialtyId, pageable);
             } else {
                 userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrue(specialtyId, pageable);
             }
         } else {
             if ("rating".equals(sortBy)) {
-                userSlice = userRepository.findByIsVisibleTrueOrderByRatingDesc(pageable);
+                userSlice = userRepository.findByIsVisibleTrueOrderByAverageRatingDesc(pageable);
             } else if ("price".equals(sortBy)) {
-                userSlice = userRepository.findByIsVisibleTrueOrderByPriceAsc(pageable);
+                userSlice = userRepository.findByIsVisibleTrueOrderByMinHourlyRateAsc(pageable);
             } else {
                 userSlice = userRepository.findByIsVisibleTrue(pageable);
             }
@@ -67,9 +66,6 @@ public class ProfileService {
         Map<Long, List<UserSpecialty>> userSpecialtyMap = userSpecialtyRepository.findByUserIdIn(userIds).stream()
                 .collect(Collectors.groupingBy(UserSpecialty::getUserId));
 
-        Map<Long, List<Rating>> ratingMap = ratingRepository.findByExpertIdIn(userIds).stream()
-                .collect(Collectors.groupingBy(Rating::getExpertId));
-
         // ContactLog 조회 (현재 사용자가 본 기록)
         List<ContactLog> viewerContactLogs = contactLogRepository.findByViewerIdAndExpertIdIn(viewerId, userIds);
         Set<Long> emailViewedExperts = viewerContactLogs.stream()
@@ -81,20 +77,10 @@ public class ProfileService {
                 .map(ContactLog::getExpertId)
                 .collect(Collectors.toSet());
 
-        // ContactLog 조회 (전체 조회수 계산용) - DB에서 카운트만 가져오기
-        List<Object[]> viewCounts = contactLogRepository.countByExpertIdIn(userIds);
-        Map<Long, Long> viewCountMap = viewCounts.stream()
-                .collect(Collectors.toMap(
-                        row -> (Long) row[0],
-                        row -> (Long) row[1]
-                ));
-
         List<ProfileItem> content = users.stream()
                 .map(user -> convertToProfileItem(
                         user,
                         userSpecialtyMap.getOrDefault(user.getId(), List.of()),
-                        ratingMap.getOrDefault(user.getId(), List.of()),
-                        viewCountMap.getOrDefault(user.getId(), 0L).intValue(),
                         emailViewedExperts.contains(user.getId()),
                         phoneViewedExperts.contains(user.getId())
                 ))
@@ -116,6 +102,8 @@ public class ProfileService {
                             .expertId(expertId)
                             .contactType(contactType)
                             .build();
+                    // 조회수 증가
+                    expert.increaseReviewCount();
                     return contactLogRepository.save(contactLog);
                 });
 
@@ -128,19 +116,13 @@ public class ProfileService {
     }
 
 
-    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, List<Rating> ratings, int viewCount, boolean isEmailViewed, boolean isPhoneViewed) {
+    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, boolean isEmailViewed, boolean isPhoneViewed) {
         List<SpecialtyInfo> specialties = userSpecialties.stream()
                 .map(us -> {
                     var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
                     return new SpecialtyInfo(detail.name(), us.getHourlyRate());
                 })
                 .collect(Collectors.toList());
-
-        Double averageRating = ratings.isEmpty() ? null :
-                ratings.stream()
-                        .mapToInt(Rating::getScore)
-                        .average()
-                        .orElse(0.0);
 
         return new ProfileItem(
                 user.getId(),
@@ -149,8 +131,8 @@ public class ProfileService {
                 user.getRegion(),
                 specialties,
                 user.getIntroduction(),
-                averageRating,
-                viewCount,
+                (double) user.getAverageRating(),
+                user.getReviewCount(),
                 isEmailViewed,
                 isPhoneViewed,
                 isEmailViewed ? user.getEmail() : null,
