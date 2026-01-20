@@ -263,7 +263,7 @@ const User = () => {
         </div>
 
         <div className="form-group">
-          <label>주특기</label>
+          <label>특기</label>
           <div className="specialty-input-group">
             <select
               value={selectedCategory}

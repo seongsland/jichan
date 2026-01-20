@@ -103,7 +103,7 @@ class ProfileControllerTest {
 
         detail = SpecialtyDetail.builder()
                 .category(category)
-                .name("주특기1")
+                .name("특기1")
                 .build();
         specialtyDetailRepository.save(detail);
 
@@ -141,7 +141,7 @@ class ProfileControllerTest {
     }
 
     @Test
-    @DisplayName("프로필 목록 조회 성공 - 주특기 필터링")
+    @DisplayName("프로필 목록 조회 성공 - 특기 필터링")
     void getProfiles_success_withSpecialty() throws Exception {
         // when & then
         mockMvc.perform(get("/api/profile")

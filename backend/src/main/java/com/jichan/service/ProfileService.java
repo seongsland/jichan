@@ -12,9 +12,11 @@ import com.jichan.repository.UserSpecialtyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,26 +30,23 @@ public class ProfileService {
     private final SpecialtyService specialtyService;
     private final ContactLogRepository contactLogRepository;
     private final RatingRepository ratingRepository;
-    private static final int PAGE_SIZE = 11; // 더보기 기능을 위해 11개씩 조회
+    private static final int PAGE_SIZE = 10;
 
 
     public ProfileListResponse getProfiles(Long specialtyId, String sortBy, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         List<User> users;
+        boolean hasNext;
 
         if (specialtyId != null) {
-            users = userSpecialtyRepository.findUsersBySpecialtyId(specialtyId, pageable).stream()
-                    .map(UserSpecialty::getUserId)
-                    .map(id -> userRepository.findById(id).orElse(null))
-                    .filter(java.util.Objects::nonNull)
-                    .collect(Collectors.toList());
+            Slice<User> userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrue(specialtyId, pageable);
+            users = new ArrayList<>(userSlice.getContent());
+            hasNext = userSlice.hasNext();
         } else {
-            users = userRepository.findAll(pageable).getContent();
+            Slice<User> userSlice = userRepository.findByIsVisibleTrue(pageable);
+            users = new ArrayList<>(userSlice.getContent());
+            hasNext = userSlice.hasNext();
         }
-
-        users = users.stream()
-                .filter(user -> Boolean.TRUE.equals(user.getIsVisible()))
-                .collect(Collectors.toList());
 
         if ("rating".equals(sortBy)) {
             users.sort((u1, u2) -> {
@@ -65,9 +64,7 @@ public class ProfileService {
             users.sort(java.util.Comparator.comparing(User::getName));
         }
 
-        boolean hasNext = users.size() > 10;
         List<ProfileItem> content = users.stream()
-                .limit(10)
                 .map(this::convertToProfileItem)
                 .collect(Collectors.toList());
 
