@@ -39,12 +39,10 @@ class UserControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private User testUser;
-
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        testUser = User.builder()
+        User testUser = User.builder()
                 .name("홍길동")
                 .email("test@example.com")
                 .password(passwordEncoder.encode("password123"))
@@ -61,7 +59,7 @@ class UserControllerTest {
     @WithMockUser(username = "test@example.com")
     void updateProfile_success() throws Exception {
         // given
-        ProfileUpdateRequest request = new ProfileUpdateRequest("김철수", "여성", "부산", "수정된 소개글", true, "010-1234-5678", "평일 7시 이후 통화 가능");
+        ProfileUpdateRequest request = new ProfileUpdateRequest("김철수", "여성", "부산", "수정된 소개글", true, "010-1234-5678", "평일 7시 이후 통화 가능", null);
 
         // when & then
         mockMvc.perform(put("/api/user/profile")
@@ -77,7 +75,7 @@ class UserControllerTest {
     @WithMockUser(username = "test@example.com")
     void updateProfile_success_partialUpdate() throws Exception {
         // given
-        ProfileUpdateRequest request = new ProfileUpdateRequest(null, null, null, null, true, null, null);
+        ProfileUpdateRequest request = new ProfileUpdateRequest(null, null, null, null, true, null, null, null);
 
         // when & then
         mockMvc.perform(put("/api/user/profile")
@@ -91,7 +89,7 @@ class UserControllerTest {
     @DisplayName("프로필 업데이트 실패 - 인증되지 않은 사용자")
     void updateProfile_fail_unauthorized() throws Exception {
         // given
-        ProfileUpdateRequest request = new ProfileUpdateRequest("김철수", null, null, null, null, null, null);
+        ProfileUpdateRequest request = new ProfileUpdateRequest("김철수", null, null, null, null, null, null, null);
 
         // when & then
         mockMvc.perform(put("/api/user/profile")
@@ -105,7 +103,7 @@ class UserControllerTest {
     @WithMockUser(username = "test@example.com")
     void updateProfile_success_visibilityChange() throws Exception {
         // given
-        ProfileUpdateRequest request = new ProfileUpdateRequest(null, null, null, null, true, null, null);
+        ProfileUpdateRequest request = new ProfileUpdateRequest(null, null, null, null, true, null, null, null);
 
         // when & then
         mockMvc.perform(put("/api/user/profile")

@@ -1,5 +1,6 @@
 package com.jichan.service;
 
+import com.jichan.dto.ProfileDto;
 import com.jichan.dto.ProfileDto.ContactViewResponse;
 import com.jichan.dto.ProfileDto.ProfileItem;
 import com.jichan.dto.ProfileDto.ProfileListResponse;
@@ -35,36 +36,11 @@ public class ProfileService {
     private static final int PAGE_SIZE = 10;
 
 
-    public ProfileListResponse getProfiles(Long viewerId, Long categoryId, Long specialtyId, String sortBy, int page) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+    public ProfileListResponse getProfiles(Long viewerId, ProfileDto.ProfileRequest profileRequest) {
+        Pageable pageable = PageRequest.of(profileRequest.page(), PAGE_SIZE);
 
-        Slice<User> userSlice;
-
-        if (specialtyId != null) {
-            if ("rating".equals(sortBy)) {
-                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByAverageRatingDesc(specialtyId, pageable);
-            } else if ("price".equals(sortBy)) {
-                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByMinHourlyRateAsc(specialtyId, pageable);
-            } else {
-                userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrue(specialtyId, pageable);
-            }
-        } else if (categoryId != null) {
-            if ("rating".equals(sortBy)) {
-                userSlice = userRepository.findByCategoryIdAndIsVisibleTrueOrderByAverageRatingDesc(categoryId, pageable);
-            } else if ("price".equals(sortBy)) {
-                userSlice = userRepository.findByCategoryIdAndIsVisibleTrueOrderByMinHourlyRateAsc(categoryId, pageable);
-            } else {
-                userSlice = userRepository.findByCategoryIdAndIsVisibleTrue(categoryId, pageable);
-            }
-        } else {
-            if ("rating".equals(sortBy)) {
-                userSlice = userRepository.findByIsVisibleTrueOrderByAverageRatingDesc(pageable);
-            } else if ("price".equals(sortBy)) {
-                userSlice = userRepository.findByIsVisibleTrueOrderByMinHourlyRateAsc(pageable);
-            } else {
-                userSlice = userRepository.findByIsVisibleTrue(pageable);
-            }
-        }
+        // QueryDSL을 사용하여 조건에 맞는 프로필 조회
+        Slice<User> userSlice = userRepository.findProfiles(profileRequest, pageable);
 
         List<User> users = userSlice.getContent();
         boolean hasNext = userSlice.hasNext();
