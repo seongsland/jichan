@@ -15,6 +15,46 @@
   flex-wrap: wrap;
 }
 
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  justify-content: flex-end;
+}
+
+.filter-actions .btn {
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background: white;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.filter-actions .btn-primary {
+  background: #4dabf7;
+  color: white;
+  border-color: #4dabf7;
+}
+
+.filter-actions .btn-primary:hover {
+  background: #339af0;
+  border-color: #339af0;
+}
+
+.filter-actions .btn-outline:hover {
+  background: #f8f9fa;
+  color: #007bff;
+  border-color: #adb5bd;
+}
+
+.filter-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .filter-group {
   display: flex;
   flex-direction: column;
@@ -123,4 +163,33 @@
   .profile-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* 더보기 버튼 스타일 개선 */
+.load-more .btn {
+  background-color: #fff;
+  color: #4dabf7;
+  border: 1px solid #4dabf7;
+  padding: 0.8rem 3rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.load-more .btn:hover {
+  background-color: #4dabf7;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+  transform: translateY(-2px);
+}
+
+.load-more .btn:disabled {
+  background-color: #f1f3f5;
+  color: #adb5bd;
+  border-color: #dee2e6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
