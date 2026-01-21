@@ -12,7 +12,7 @@ jichan/
 
 ## 기술 스택
 
-- **Backend**: Spring Boot 3.2.0 + JPA + MySQL
+- **Backend**: Spring Boot 3.2.0 + JPA + QueryDSL + MySQL
 - **Frontend**: React 18 + Vite
 - **배포**: Vercel (프론트엔드)
 
