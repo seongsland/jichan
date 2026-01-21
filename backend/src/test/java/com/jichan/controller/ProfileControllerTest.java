@@ -125,7 +125,6 @@ class ProfileControllerTest {
                 .userId(viewer.getId())
                 .expertId(expert1.getId())
                 .score(5)
-                .comment("좋아요")
                 .build();
         ratingRepository.save(rating);
     }

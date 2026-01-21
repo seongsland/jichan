@@ -5,22 +5,75 @@ import Message from '../components/Message';
 import {useLoading} from '../context/LoadingContext';
 import './Contacts.css';
 
+const StarRating = ({ score, onRate }) => {
+  return (
+    <div className="star-rating-inline">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className={`star ${star <= score ? 'filled' : ''}`}
+          onClick={() => onRate(star)}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+};
+
 const Contacts = () => {
   const navigate = useNavigate();
-  const { showLoading, hideLoading } = useLoading();
-  const [contacts, setContacts] = useState([]);
+  const { loading, showLoading, hideLoading } = useLoading();
+  
+  const [contactData, setContactData] = useState({
+    content: [],
+    hasNext: false,
+    page: 0
+  });
+
   const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
-  const [ratingForms, setRatingForms] = useState({});
+  const [filters, setFilters] = useState({
+    category: '',
+    specialty: '',
+  });
+  const [categories, setCategories] = useState([]);
+  const [details, setDetails] = useState([]);
 
   useEffect(() => {
-    void fetchContacts();
+    void fetchSpecialties();
+    void fetchContacts(0, true);
   }, []);
 
-  const fetchContacts = async () => {
+  const fetchSpecialties = async () => {
+    try {
+      const [categoriesResponse, detailsResponse] = await Promise.all([
+        api.get('/specialty/categories'),
+        api.get('/specialty/details')
+      ]);
+      setCategories(categoriesResponse.data);
+      setDetails(detailsResponse.data);
+    } catch (error) {
+      console.error('특기 정보를 불러오는데 실패했습니다.', error);
+    }
+  };
+
+  const fetchContacts = async (pageNum, reset = false, currentFilters = null) => {
     showLoading();
     try {
-      const response = await api.get('/contact');
-      setContacts(response.data);
+      const activeFilters = currentFilters || filters;
+      const params = {
+        page: pageNum,
+        ...(activeFilters.category && { category: activeFilters.category }),
+        ...(activeFilters.specialty && { specialty: activeFilters.specialty }),
+      };
+      const response = await api.get('/contact', { params });
+      const data = response.data;
+
+      setContactData(prev => ({
+        content: reset ? data.content : [...prev.content, ...data.content],
+        hasNext: data.hasNext,
+        page: pageNum
+      }));
     } catch (error) {
       setMessage({
         type: 'error',
@@ -32,26 +85,29 @@ const Contacts = () => {
     }
   };
 
-  const handleRatingSubmit = async (expertId, e) => {
-    e.preventDefault();
-    const formData = ratingForms[expertId] || { score: '', comment: '' };
+  const handleLoadMore = () => {
+    void fetchContacts(contactData.page + 1, false);
+  };
 
+  const handleRatingSubmit = async (expertId, score) => {
     try {
       await api.post('/contact/rating', {
-        expertId,
-        score: parseInt(formData.score),
-        comment: formData.comment || null,
+        expertId: expertId,
+        score: score,
       });
       setMessage({
         type: 'success',
         text: '평가가 등록되었습니다.',
         timestamp: Date.now(),
       });
-      setRatingForms({
-        ...ratingForms,
-        [expertId]: { score: '', comment: '' },
-      });
-      fetchContacts();
+      
+      // 로컬 상태 업데이트
+      setContactData(prev => ({
+        ...prev,
+        content: prev.content.map(c => 
+          c.expertId === expertId ? { ...c, rating: score } : c
+        )
+      }));
     } catch (error) {
       setMessage({
         type: 'error',
@@ -61,18 +117,45 @@ const Contacts = () => {
     }
   };
 
-  const handleRatingChange = (expertId, field, value) => {
-    setRatingForms({
-      ...ratingForms,
-      [expertId]: {
-        ...(ratingForms[expertId] || {}),
-        [field]: value,
-      },
-    });
+  const handleDelete = async (expertId) => {
+    if (window.confirm('정말로 이 전문가를 목록에서 삭제하시겠습니까?')) {
+      try {
+        await api.delete(`/contact/${expertId}`);
+        setMessage({
+          type: 'success',
+          text: '전문가가 목록에서 삭제되었습니다.',
+          timestamp: Date.now(),
+        });
+        
+        // 로컬 상태에서 제거
+        setContactData(prev => ({
+          ...prev,
+          content: prev.content.filter(c => c.expertId !== expertId)
+        }));
+      } catch (error) {
+        setMessage({
+          type: 'error',
+          text: error.response?.data?.message || '삭제에 실패했습니다.',
+          timestamp: Date.now(),
+        });
+      }
+    }
   };
 
+  const handleSearch = () => {
+    void fetchContacts(0, true, filters);
+  };
+
+  const handleReset = () => {
+    const resetFilters = { category: '', specialty: '' };
+    setFilters(resetFilters);
+    void fetchContacts(0, true, resetFilters);
+  };
+
+  const filteredDetails = details.filter(detail => !filters.category || detail.categoryId === parseInt(filters.category));
+
   return (
-    <div className="contacts">
+    <div className="contacts-profile">
       <h2>내가 본 전문가 목록</h2>
       <Message
         type={message.type}
@@ -81,7 +164,62 @@ const Contacts = () => {
         onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
       />
 
-      {contacts.length === 0 ? (
+      <div className="profile-filters">
+        <div className="filter-group">
+          <label>특기</label>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <select
+              value={filters.category}
+              onChange={(e) => {
+                setFilters(prev => ({ ...prev, category: e.target.value, specialty: '' }));
+              }}
+            >
+              <option value="">카테고리 선택</option>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            <select
+              value={filters.specialty}
+              onChange={(e) => setFilters(prev => ({ ...prev, specialty: e.target.value }))}
+              disabled={!filters.category}
+            >
+              <option value="">세부항목 선택</option>
+              {filteredDetails.map(detail => (
+                <option key={detail.id} value={detail.id}>
+                  {detail.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="filter-actions" style={{ alignSelf: 'flex-end' }}>
+          <button
+            onClick={handleSearch}
+            className="btn btn-primary"
+            disabled={loading}
+          >
+            {loading ? '검색 중...' : '조회'}
+          </button>
+          <button
+            onClick={handleReset}
+            className="btn btn-outline"
+            disabled={loading}
+            title="초기화"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {loading && contactData.content.length === 0 && <div className="loading">로딩 중...</div>}
+
+      {!loading && contactData.content.length === 0 ? (
         <div className="empty-state">
           <p>아직 본 전문가가 없습니다.</p>
           <button
@@ -92,90 +230,62 @@ const Contacts = () => {
           </button>
         </div>
       ) : (
-        <div className="contacts-list">
-          {contacts.map((contact) => (
-            <div key={contact.expertId} className="contact-card">
-              <div className="contact-header">
-                <h3>{contact.expertName}</h3>
-                {contact.rating && (
-                  <div className="rating-badge">
-                    별점: {contact.rating}점
+        <>
+          <div className="profile-grid">
+            {contactData.content.map((contact) => (
+              <div key={contact.expertId} className="profile-card">
+                <button
+                  onClick={() => handleDelete(contact.expertId)}
+                  className="delete-btn"
+                  title="삭제"
+                >
+                  &times;
+                </button>
+                <div className="profile-header">
+                  <h3>{contact.expertName}</h3>
+                </div>
+                <div className="profile-info">
+                  {contact.gender && <span>성별: {contact.gender}</span>}
+                  {contact.region && <span>지역: {contact.region}</span>}
+                </div>
+                {contact.introduction && (
+                  <p className="introduction">{contact.introduction}</p>
+                )}
+                {contact.email && (
+                  <div className="contact-info-item">
+                    <strong>이메일:</strong> {contact.email}
                   </div>
                 )}
-              </div>
-              <div className="contact-info">
-                {contact.gender && <span>성별: {contact.gender}</span>}
-                {contact.region && <span>지역: {contact.region}</span>}
-                <div className="contact-views">
-                  {contact.hasEmailView && (
-                    <span className="view-badge">이메일 확인함</span>
-                  )}
-                  {contact.hasPhoneView && (
-                    <span className="view-badge">핸드폰 확인함</span>
-                  )}
+                {contact.phone && (
+                  <div className="contact-info-item">
+                    <strong>핸드폰:</strong> {contact.phone}
+                    {contact.phoneMessage && (
+                      <div className="phone-message">{contact.phoneMessage}</div>
+                    )}
+                  </div>
+                )}
+                <div className="contact-actions">
+                  <span className="rating-label">평가:</span>
+                  <StarRating
+                    score={contact.rating}
+                    onRate={(score) => handleRatingSubmit(contact.expertId, score)}
+                  />
                 </div>
               </div>
-              {contact.introduction && (
-                <p className="introduction">{contact.introduction}</p>
-              )}
-
-              {!contact.rating && (
-                <div className="rating-form">
-                  <h4>평가하기</h4>
-                  <form
-                    onSubmit={(e) => handleRatingSubmit(contact.expertId, e)}
-                  >
-                    <div className="form-group">
-                      <label htmlFor={`score-${contact.expertId}`}>
-                        별점 (1-5)
-                      </label>
-                      <select
-                        id={`score-${contact.expertId}`}
-                        value={ratingForms[contact.expertId]?.score || ''}
-                        onChange={(e) =>
-                          handleRatingChange(
-                            contact.expertId,
-                            'score',
-                            e.target.value
-                          )
-                        }
-                        required
-                      >
-                        <option value="">선택하세요</option>
-                        <option value="1">1점</option>
-                        <option value="2">2점</option>
-                        <option value="3">3점</option>
-                        <option value="4">4점</option>
-                        <option value="5">5점</option>
-                      </select>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor={`comment-${contact.expertId}`}>
-                        코멘트 (선택사항)
-                      </label>
-                      <textarea
-                        id={`comment-${contact.expertId}`}
-                        value={ratingForms[contact.expertId]?.comment || ''}
-                        onChange={(e) =>
-                          handleRatingChange(
-                            contact.expertId,
-                            'comment',
-                            e.target.value
-                          )
-                        }
-                        rows="3"
-                        placeholder="평가 코멘트를 입력하세요"
-                      />
-                    </div>
-                    <button type="submit" className="btn btn-primary">
-                      평가 등록
-                    </button>
-                  </form>
-                </div>
-              )}
+            ))}
+          </div>
+          {contactData.hasNext && (
+            <div className="load-more">
+              <button
+                onClick={handleLoadMore}
+                className="btn btn-secondary"
+                disabled={loading}
+              >
+                {loading ? '로딩 중...' : '더보기'}
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );

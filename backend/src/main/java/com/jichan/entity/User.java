@@ -42,7 +42,7 @@ public class User extends BaseTimeEntity {
     private String phoneMessage;
 
     @Column(name = "average_rating", nullable = false)
-    private int averageRating = 0;
+    private double averageRating = 0.0; // Changed to double
 
     @Column(name = "review_count", nullable = false)
     private int reviewCount = 0;
@@ -54,7 +54,7 @@ public class User extends BaseTimeEntity {
     @Builder
     public User(String name, String email, String password, String gender, String region,
                 String introduction, Boolean isVisible, Boolean emailVerified, String phone, String phoneMessage,
-                int averageRating, int reviewCount, int minHourlyRate) {
+                double averageRating, int reviewCount, int minHourlyRate) { // Changed to double
         this.name = name;
         this.email = email;
         this.password = password;
@@ -85,9 +85,8 @@ public class User extends BaseTimeEntity {
         this.emailVerified = true;
     }
 
-    public void updateRating(int averageRating, int reviewCount) {
+    public void updateRating(double averageRating) {
         this.averageRating = averageRating;
-        this.reviewCount = reviewCount;
     }
 
     public void updateMinHourlyRate(int minHourlyRate) {

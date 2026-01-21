@@ -114,7 +114,6 @@ class ContactControllerTest {
                 .userId(viewer.getId())
                 .expertId(expert1.getId())
                 .score(5)
-                .comment("좋아요")
                 .build();
         ratingRepository.save(rating);
     }
@@ -158,15 +157,14 @@ class ContactControllerTest {
     @WithMockUser(username = "viewer@example.com")
     void createRating_success() throws Exception {
         // given
-        RatingRequest request = new RatingRequest(expert2.getId(), 4, "좋은 전문가입니다");
+        RatingRequest request = new RatingRequest(expert2.getId(), 4);
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.score").value(4))
-                .andExpect(jsonPath("$.comment").value("좋은 전문가입니다"));
+                .andExpect(jsonPath("$.score").value(4));
     }
 
     @Test
@@ -174,7 +172,7 @@ class ContactControllerTest {
     @WithMockUser(username = "viewer@example.com")
     void createRating_success_withoutComment() throws Exception {
         // given
-        RatingRequest request = new RatingRequest(expert2.getId(), 5, null);
+        RatingRequest request = new RatingRequest(expert2.getId(), 5);
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
@@ -188,7 +186,7 @@ class ContactControllerTest {
     @DisplayName("평가 등록 실패 - 인증되지 않은 사용자")
     void createRating_fail_unauthorized() throws Exception {
         // given
-        RatingRequest request = new RatingRequest(expert2.getId(), 5, null);
+        RatingRequest request = new RatingRequest(expert2.getId(), 5);
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
@@ -202,7 +200,7 @@ class ContactControllerTest {
     @WithMockUser(username = "viewer@example.com")
     void createRating_fail_expertNotFound() throws Exception {
         // given
-        RatingRequest request = new RatingRequest(999L, 5, null);
+        RatingRequest request = new RatingRequest(999L, 5);
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
@@ -216,7 +214,7 @@ class ContactControllerTest {
     @WithMockUser(username = "viewer@example.com")
     void createRating_fail_invalidScore() throws Exception {
         // given
-        RatingRequest request = new RatingRequest(expert2.getId(), 6, null); // 1~5 범위 초과
+        RatingRequest request = new RatingRequest(expert2.getId(), 6); // 1~5 범위 초과
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
@@ -230,7 +228,7 @@ class ContactControllerTest {
     @WithMockUser(username = "viewer@example.com")
     void createRating_fail_scoreTooLow() throws Exception {
         // given
-        RatingRequest request = new RatingRequest(expert2.getId(), 0, null); // 1~5 범위 미만
+        RatingRequest request = new RatingRequest(expert2.getId(), 0); // 1~5 범위 미만
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
@@ -244,7 +242,7 @@ class ContactControllerTest {
     @WithMockUser(username = "viewer@example.com")
     void createRating_fail_duplicateRating() throws Exception {
         // given - 이미 평가가 존재함 (setUp에서 생성)
-        RatingRequest request = new RatingRequest(expert1.getId(), 3, null);
+        RatingRequest request = new RatingRequest(expert1.getId(), 3);
 
         // when & then
         mockMvc.perform(post("/api/contact/rating")
