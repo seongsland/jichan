@@ -7,11 +7,18 @@ import java.util.List;
 
 public class ContactDto {
 
+    public record SpecialtyInfo(
+            String name,
+            Integer hourlyRate,
+            Long specialtyDetailId // 프론트엔드에서 이름 매핑을 위해 필요할 수 있음
+    ) {}
+
     public record ContactListResponse(
             Long expertId,
             String expertName,
             String gender,
             String region,
+            List<SpecialtyInfo> specialties,
             String introduction,
             Boolean hasEmailView,
             Boolean hasPhoneView,

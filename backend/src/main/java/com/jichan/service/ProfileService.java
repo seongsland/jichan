@@ -106,7 +106,7 @@ public class ProfileService {
         List<SpecialtyInfo> specialties = userSpecialties.stream()
                 .map(us -> {
                     var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
-                    return new SpecialtyInfo(detail.name(), us.getHourlyRate());
+                    return new SpecialtyInfo(detail.name(), us.getHourlyRate(), us.getSpecialtyDetailId());
                 })
                 .collect(Collectors.toList());
 
@@ -117,7 +117,7 @@ public class ProfileService {
                 user.getRegion(),
                 specialties,
                 user.getIntroduction(),
-                (double) user.getAverageRating(),
+                user.getAverageRating(),
                 user.getReviewCount(),
                 isEmailViewed,
                 isPhoneViewed,

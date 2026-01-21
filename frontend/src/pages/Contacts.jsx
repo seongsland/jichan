@@ -38,6 +38,7 @@ const Contacts = () => {
   });
   const [categories, setCategories] = useState([]);
   const [details, setDetails] = useState([]);
+  const [visibleCategories, setVisibleCategories] = useState({});
 
   useEffect(() => {
     void fetchSpecialties();
@@ -248,6 +249,40 @@ const Contacts = () => {
                   {contact.gender && <span>성별: {contact.gender}</span>}
                   {contact.region && <span>지역: {contact.region}</span>}
                 </div>
+                {contact.specialties && contact.specialties.length > 0 && (
+                  <div className="specialties">
+                    {contact.specialties.map((spec, idx) => {
+                      let name = spec.name;
+                      let categoryName = "";
+                      if (spec.specialtyDetailId) {
+                        const detail = details.find(d => d.id === spec.specialtyDetailId);
+                        if (detail) {
+                          const category = categories.find(c => c.id === detail.categoryId);
+                          categoryName = category.name;
+                        }
+                      }
+
+                      const specialtyKey = `${contact.expertId}-${idx}`;
+
+                      return (
+                        <div 
+                          key={idx} 
+                          className="specialty" 
+                          title={categoryName}
+                          onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
+                          style={{ cursor: 'pointer', position: 'relative' }}
+                        >
+                          {name} - {spec.hourlyRate?.toLocaleString()}원/시간
+                          {visibleCategories[specialtyKey] && categoryName && (
+                            <div className="specialty-overlay">
+                              {categoryName}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                 {contact.introduction && (
                   <p className="introduction">{contact.introduction}</p>
                 )}

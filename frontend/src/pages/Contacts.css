@@ -76,6 +76,37 @@
   font-size: 0.9rem;
 }
 
+.specialties {
+  margin-bottom: 1rem;
+}
+
+.specialty {
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.specialty-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 10;
+  text-align: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
 .introduction {
   color: #666;
   margin-bottom: 1rem;
@@ -84,6 +115,7 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex-grow: 1;
 }
 
 .contact-info-item {
