@@ -1,10 +1,18 @@
 package com.jichan.dto;
 
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 public class ProfileDto {
+
+    public record ProfileRequest(
+            Long category,
+            Long specialty,
+            String sortBy,
+            @RequestParam(defaultValue = "0") int page
+    ) {}
 
     public record ContactViewRequest(
             @NotNull(message = "전문가 ID는 필수입니다") Long expertId,

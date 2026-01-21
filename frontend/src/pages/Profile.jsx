@@ -6,25 +6,30 @@ import './Profile.css';
 
 const Profile = () => {
   const { loading, showLoading, hideLoading } = useLoading();
-  const [profiles, setProfiles] = useState([]);
-  const [hasNext, setHasNext] = useState(false);
-  const [page, setPage] = useState(0);
-  const [specialty, setSpecialty] = useState('');
-  const [sortBy, setSortBy] = useState('');
+  
+  const [profileData, setProfileData] = useState({
+    content: [],
+    hasNext: false,
+    page: 0
+  });
+
+  const [filters, setFilters] = useState({
+    category: '',
+    specialty: '',
+    sortBy: ''
+  });
+
   const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
   const [contactViews, setContactViews] = useState({});
 
   const [categories, setCategories] = useState([]);
   const [details, setDetails] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
     void fetchSpecialties();
+    void fetchProfiles(0, true);
   }, []);
 
-  useEffect(() => {
-    void fetchProfiles(0, true);
-  }, [specialty, sortBy]);
 
   const fetchSpecialties = async () => {
     try {
@@ -39,25 +44,25 @@ const Profile = () => {
     }
   };
 
-  const fetchProfiles = async (pageNum, reset = false) => {
+  const fetchProfiles = async (pageNum, reset = false, currentFilters = null) => {
     showLoading();
     try {
+      const activeFilters = currentFilters || filters;
       const params = {
         page: pageNum,
-        ...(specialty && { specialty }),
-        ...(sortBy && { sortBy }),
+        ...(activeFilters.category && { category: activeFilters.category }),
+        ...(activeFilters.specialty && { specialty: activeFilters.specialty }),
+        ...(activeFilters.sortBy && { sortBy: activeFilters.sortBy }),
       };
       const response = await api.get('/profile', { params });
       const data = response.data;
       console.log(data);
 
-      if (reset) {
-        setProfiles(data.content);
-      } else {
-        setProfiles(prevProfiles=> [...prevProfiles, ...data.content]);
-      }
-      setHasNext(data.hasNext);
-      setPage(pageNum);
+      setProfileData(prev => ({
+        content: reset ? data.content : [...prev.content, ...data.content],
+        hasNext: data.hasNext,
+        page: pageNum
+      }));
 
       // 이미 본 연락처 정보가 있다면 상태 업데이트
       const newContactViews = {};
@@ -90,7 +95,7 @@ const Profile = () => {
   };
 
   const handleLoadMore = () => {
-    fetchProfiles(page + 1, false);
+    void fetchProfiles(profileData.page + 1, false);
   };
 
   const handleContactView = async (expertId, contactType) => {
@@ -110,13 +115,14 @@ const Profile = () => {
       }));
 
       // 조회수 증가 반영
-      setProfiles(prevProfiles => 
-        prevProfiles.map(profile => 
+      setProfileData(prev => ({
+        ...prev,
+        content: prev.content.map(profile => 
           profile.id === expertId 
             ? { ...profile, reviewCount: (profile.reviewCount || 0) + 1 }
             : profile
         )
-      );
+      }));
 
     } catch (error) {
       setMessage({
@@ -127,7 +133,17 @@ const Profile = () => {
     }
   };
 
-  const filteredDetails = details.filter(detail => !selectedCategory || detail.categoryId === parseInt(selectedCategory));
+  const handleSearch = () => {
+    void fetchProfiles(0, true);
+  };
+
+  const handleReset = () => {
+    const resetFilters = { category: '', specialty: '', sortBy: '' };
+    setFilters(resetFilters);
+    void fetchProfiles(0, true, resetFilters);
+  };
+
+  const filteredDetails = details.filter(detail => !filters.category || detail.categoryId === parseInt(filters.category));
 
   return (
     <div className="profile">
@@ -144,10 +160,9 @@ const Profile = () => {
           <label>특기</label>
           <div style={{ display: 'flex', gap: '10px' }}>
             <select
-              value={selectedCategory}
+              value={filters.category}
               onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setSpecialty('');
+                setFilters(prev => ({ ...prev, category: e.target.value, specialty: '' }));
               }}
             >
               <option value="">카테고리 선택</option>
@@ -158,9 +173,9 @@ const Profile = () => {
               ))}
             </select>
             <select
-              value={specialty}
-              onChange={(e) => setSpecialty(e.target.value)}
-              disabled={!selectedCategory}
+              value={filters.specialty}
+              onChange={(e) => setFilters(prev => ({ ...prev, specialty: e.target.value }))}
+              disabled={!filters.category}
             >
               <option value="">세부항목 선택</option>
               {filteredDetails.map(detail => (
@@ -175,18 +190,38 @@ const Profile = () => {
           <label htmlFor="sortBy">정렬</label>
           <select
             id="sortBy"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
+            value={filters.sortBy}
+            onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value }))}
           >
             <option value="">기본</option>
             <option value="rating">평점순</option>
             <option value="price">금액순</option>
           </select>
         </div>
+        <div className="filter-actions" style={{ alignSelf: 'flex-end' }}>
+          <button
+            onClick={handleSearch}
+            className="btn btn-primary"
+            disabled={loading}
+          >
+            {loading ? '검색 중...' : '조회'}
+          </button>
+          <button
+            onClick={handleReset}
+            className="btn btn-outline"
+            disabled={loading}
+            title="초기화"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="profile-grid">
-        {profiles.map((profile) => (
+        {profileData.content.map((profile) => (
           <div key={profile.id} className="profile-card">
             <div className="profile-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -263,7 +298,7 @@ const Profile = () => {
           </div>
         ))}
       </div>
-      {hasNext && (
+      {profileData.hasNext && (
         <div className="load-more">
           <button
             onClick={handleLoadMore}
