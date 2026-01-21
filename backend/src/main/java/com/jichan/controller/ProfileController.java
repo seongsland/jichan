@@ -21,11 +21,12 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<ProfileListResponse> getProfiles(
             Authentication authentication,
+            @RequestParam(required = false) Long category,
             @RequestParam(required = false) Long specialty,
             @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "0") int page) {
         Long viewerId = Long.valueOf(authentication.getName());
-        ProfileListResponse response = profileService.getProfiles(viewerId, specialty, sortBy, page);
+        ProfileListResponse response = profileService.getProfiles(viewerId, category, specialty, sortBy, page);
         return ResponseEntity.ok(response);
     }
 

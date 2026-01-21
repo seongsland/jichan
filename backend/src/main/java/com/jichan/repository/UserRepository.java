@@ -28,4 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId = :specialtyId) ORDER BY u.minHourlyRate ASC")
     Slice<User> findBySpecialtyIdAndIsVisibleTrueOrderByMinHourlyRateAsc(@Param("specialtyId") Long specialtyId, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId IN (SELECT sd.id FROM SpecialtyDetail sd WHERE sd.category.id = :categoryId))")
+    Slice<User> findByCategoryIdAndIsVisibleTrue(@Param("categoryId") Long categoryId, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId IN (SELECT sd.id FROM SpecialtyDetail sd WHERE sd.category.id = :categoryId)) ORDER BY u.averageRating DESC")
+    Slice<User> findByCategoryIdAndIsVisibleTrueOrderByAverageRatingDesc(@Param("categoryId") Long categoryId, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.isVisible = true AND u.id IN (SELECT us.userId FROM UserSpecialty us WHERE us.specialtyDetailId IN (SELECT sd.id FROM SpecialtyDetail sd WHERE sd.category.id = :categoryId)) ORDER BY u.minHourlyRate ASC")
+    Slice<User> findByCategoryIdAndIsVisibleTrueOrderByMinHourlyRateAsc(@Param("categoryId") Long categoryId, Pageable pageable);
 }

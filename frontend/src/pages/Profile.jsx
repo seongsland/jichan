@@ -50,6 +50,7 @@ const Profile = () => {
       const activeFilters = currentFilters || filters;
       const params = {
         page: pageNum,
+        ...(activeFilters.category && { category: activeFilters.category }),
         ...(activeFilters.specialty && { specialty: activeFilters.specialty }),
         ...(activeFilters.sortBy && { sortBy: activeFilters.sortBy }),
       };

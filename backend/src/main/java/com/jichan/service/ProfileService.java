@@ -35,7 +35,7 @@ public class ProfileService {
     private static final int PAGE_SIZE = 10;
 
 
-    public ProfileListResponse getProfiles(Long viewerId, Long specialtyId, String sortBy, int page) {
+    public ProfileListResponse getProfiles(Long viewerId, Long categoryId, Long specialtyId, String sortBy, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 
         Slice<User> userSlice;
@@ -47,6 +47,14 @@ public class ProfileService {
                 userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrueOrderByMinHourlyRateAsc(specialtyId, pageable);
             } else {
                 userSlice = userRepository.findBySpecialtyIdAndIsVisibleTrue(specialtyId, pageable);
+            }
+        } else if (categoryId != null) {
+            if ("rating".equals(sortBy)) {
+                userSlice = userRepository.findByCategoryIdAndIsVisibleTrueOrderByAverageRatingDesc(categoryId, pageable);
+            } else if ("price".equals(sortBy)) {
+                userSlice = userRepository.findByCategoryIdAndIsVisibleTrueOrderByMinHourlyRateAsc(categoryId, pageable);
+            } else {
+                userSlice = userRepository.findByCategoryIdAndIsVisibleTrue(categoryId, pageable);
             }
         } else {
             if ("rating".equals(sortBy)) {
