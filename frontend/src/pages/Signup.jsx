@@ -11,7 +11,7 @@ const Signup = () => {
     email: '',
     password: '',
   });
-  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
+  const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleChange = (e) => {
     setFormData({
@@ -22,14 +22,13 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: '', text: '', timestamp: Date.now() });
+    setMessage({ type: '', text: '' });
 
     try {
       await api.post('/auth/signup', formData);
       setMessage({
         type: 'success',
         text: '회원가입이 완료되었습니다. 이메일을 확인해주세요.',
-        timestamp: Date.now(),
       });
       setTimeout(() => {
         navigate('/login');
@@ -38,7 +37,6 @@ const Signup = () => {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '회원가입에 실패했습니다.',
-        timestamp: Date.now(),
       });
     }
   };
@@ -50,8 +48,7 @@ const Signup = () => {
         <Message
           type={message.type}
           message={message.text}
-          timestamp={message.timestamp}
-          onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
+          onClose={() => setMessage({ type: '', text: '' })}
         />
         <form onSubmit={handleSubmit}>
           <div className="form-group">

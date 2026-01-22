@@ -21,7 +21,8 @@ const User = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedDetail, setSelectedDetail] = useState('');
   const [hourlyRate, setHourlyRate] = useState('');
-  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const [visibleCategories, setVisibleCategories] = useState({});
 
   useEffect(() => {
     void fetchProfile();
@@ -63,7 +64,6 @@ const User = () => {
       setMessage({
         type: 'error',
         text: '프로필을 불러오는데 실패했습니다.',
-        timestamp: Date.now(),
       });
     } finally {
       hideLoading();
@@ -102,7 +102,6 @@ const User = () => {
       setMessage({
         type: 'error',
         text: '카테고리, 세부항목, 시간당 금액을 모두 입력해주세요.',
-        timestamp: Date.now(),
       });
       return;
     }
@@ -114,7 +113,6 @@ const User = () => {
       setMessage({
         type: 'error',
         text: '유효한 시간당 금액을 입력해주세요.',
-        timestamp: Date.now(),
       });
       return;
     }
@@ -124,7 +122,6 @@ const User = () => {
       setMessage({
         type: 'error',
         text: '이미 추가된 전문 분야입니다.',
-        timestamp: Date.now(),
       });
       return;
     }
@@ -137,10 +134,11 @@ const User = () => {
     setSelectedCategory('');
     setSelectedDetail('');
     setHourlyRate('');
-    setMessage({ type: '', text: '', timestamp: Date.now() });
+    setMessage({ type: '', text: '' });
   };
 
-  const handleRemoveSpecialty = (detailId) => {
+  const handleRemoveSpecialty = (detailId, e) => {
+    e.stopPropagation(); // Prevent toggling category visibility when clicking remove
     setFormData({
       ...formData,
       specialties: formData.specialties.filter(s => s.specialtyDetailId !== detailId),
@@ -151,14 +149,13 @@ const User = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: '', text: '', timestamp: Date.now() });
+    setMessage({ type: '', text: '' });
 
     if (formData.isVisible) {
       if (!formData.name || !formData.gender || !formData.region || !formData.introduction) {
         setMessage({
           type: 'error',
           text: '프로필을 공개하려면 이름, 성별, 지역, 소개글을 모두 입력해야 합니다.',
-          timestamp: Date.now(),
         });
         return;
       }
@@ -167,7 +164,6 @@ const User = () => {
         setMessage({
           type: 'error',
           text: '핸드폰 번호를 입력한 경우 연락 가능 시간 메모를 입력해야 합니다.',
-          timestamp: Date.now(),
         });
         return;
       }
@@ -176,7 +172,6 @@ const User = () => {
         setMessage({
           type: 'error',
           text: '프로필을 공개하려면 최소 1개 이상의 특기를 등록해야 합니다.',
-          timestamp: Date.now(),
         });
         return;
       }
@@ -189,13 +184,11 @@ const User = () => {
       setMessage({
         type: 'success',
         text: '프로필이 업데이트되었습니다.',
-        timestamp: Date.now(),
       });
     } catch (error) {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '프로필 업데이트에 실패했습니다.',
-        timestamp: Date.now(),
       });
     } finally {
       hideLoading();
@@ -208,8 +201,7 @@ const User = () => {
       <Message
         type={message.type}
         message={message.text}
-        timestamp={message.timestamp}
-        onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
+        onClose={() => setMessage({ type: '', text: '' })}
       />
       <form onSubmit={handleSubmit} className="profile-form">
         <div className="form-group checkbox-group">
@@ -335,10 +327,27 @@ const User = () => {
             {formData.specialties.map(specialty => {
               const detail = details.find(d => d.id === specialty.specialtyDetailId);
               const category = categories.find(c => c.id === detail?.categoryId);
+              const specialtyKey = specialty.specialtyDetailId;
+
               return (
-                <div key={specialty.specialtyDetailId} className="specialty-item">
-                  <span>{category?.name} - {detail?.name}: {formatCurrency(specialty.hourlyRate)}원/시간</span>
-                  <button type="button" onClick={() => handleRemoveSpecialty(specialty.specialtyDetailId)} className="btn btn-danger btn-sm">
+                <div 
+                  key={specialtyKey} 
+                  className="specialty-item"
+                  title={category?.name}
+                  onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
+                >
+                  <span>{detail?.name}: {formatCurrency(specialty.hourlyRate)}원/시간</span>
+                  {visibleCategories[specialtyKey] && category?.name && (
+                    <div className="specialty-overlay">
+                      {category.name}
+                    </div>
+                  )}
+                  <button 
+                    type="button" 
+                    onClick={(e) => handleRemoveSpecialty(specialty.specialtyDetailId, e)} 
+                    className="btn btn-danger btn-sm"
+                    style={{ zIndex: 20 }}
+                  >
                     제거
                   </button>
                 </div>

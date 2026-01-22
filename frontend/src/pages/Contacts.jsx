@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {useLoading} from '../context/LoadingContext';
 import './Contacts.css';
 
@@ -31,7 +32,8 @@ const Contacts = () => {
     page: 0
   });
 
-  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, expertId: null });
   const [filters, setFilters] = useState({
     category: '',
     specialty: '',
@@ -79,7 +81,6 @@ const Contacts = () => {
       setMessage({
         type: 'error',
         text: '전문가 목록을 불러오는데 실패했습니다.',
-        timestamp: Date.now(),
       });
     } finally {
       hideLoading();
@@ -99,7 +100,6 @@ const Contacts = () => {
       setMessage({
         type: 'success',
         text: '평가가 등록되었습니다.',
-        timestamp: Date.now(),
       });
       
       // 로컬 상태 업데이트
@@ -113,33 +113,37 @@ const Contacts = () => {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '평가 등록에 실패했습니다.',
-        timestamp: Date.now(),
       });
     }
   };
 
-  const handleDelete = async (expertId) => {
-    if (window.confirm('정말로 이 전문가를 목록에서 삭제하시겠습니까?')) {
-      try {
-        await api.delete(`/contact/${expertId}`);
-        setMessage({
-          type: 'success',
-          text: '전문가가 목록에서 삭제되었습니다.',
-          timestamp: Date.now(),
-        });
-        
-        // 로컬 상태에서 제거
-        setContactData(prev => ({
-          ...prev,
-          content: prev.content.filter(c => c.expertId !== expertId)
-        }));
-      } catch (error) {
-        setMessage({
-          type: 'error',
-          text: error.response?.data?.message || '삭제에 실패했습니다.',
-          timestamp: Date.now(),
-        });
-      }
+  const handleDeleteClick = (expertId) => {
+    setConfirmDialog({ isOpen: true, expertId });
+  };
+
+  const executeDelete = async () => {
+    const expertId = confirmDialog.expertId;
+    if (!expertId) return;
+
+    try {
+      await api.delete(`/contact/${expertId}`);
+      setMessage({
+        type: 'success',
+        text: '전문가가 목록에서 삭제되었습니다.',
+      });
+      
+      // 로컬 상태에서 제거
+      setContactData(prev => ({
+        ...prev,
+        content: prev.content.filter(c => c.expertId !== expertId)
+      }));
+    } catch (error) {
+      setMessage({
+        type: 'error',
+        text: error.response?.data?.message || '삭제에 실패했습니다.',
+      });
+    } finally {
+      setConfirmDialog({ isOpen: false, expertId: null });
     }
   };
 
@@ -157,12 +161,20 @@ const Contacts = () => {
 
   return (
     <div className="contacts-profile">
-      <h2>내가 본 전문가 목록</h2>
+      <h2>나의 지인</h2>
       <Message
         type={message.type}
         message={message.text}
-        timestamp={message.timestamp}
-        onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
+        onClose={() => setMessage({ type: '', text: '' })}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        message="정말로 이 전문가를 목록에서 삭제하시겠습니까?"
+        onConfirm={executeDelete}
+        onCancel={() => setConfirmDialog({ isOpen: false, expertId: null })}
+        confirmText="삭제"
+        cancelText="취소"
       />
 
       <div className="profile-filters">
@@ -222,7 +234,7 @@ const Contacts = () => {
 
       {!loading && contactData.content.length === 0 ? (
         <div className="empty-state">
-          <p>아직 본 전문가가 없습니다.</p>
+          <p>아직 등록된 지인이 없습니다.</p>
           <button
             onClick={() => navigate('/profile')}
             className="btn btn-primary"
@@ -236,7 +248,7 @@ const Contacts = () => {
             {contactData.content.map((contact) => (
               <div key={contact.expertId} className="profile-card">
                 <button
-                  onClick={() => handleDelete(contact.expertId)}
+                  onClick={() => handleDeleteClick(contact.expertId)}
                   className="delete-btn"
                   title="삭제"
                 >

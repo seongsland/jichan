@@ -58,7 +58,7 @@
 
 .profile-header {
   margin-bottom: 1rem;
-  padding-right: 20px; /* Space for delete button */
+  padding-right: 20px;
 }
 
 .profile-header h3 {
@@ -174,7 +174,11 @@
   color: #ffc107;
 }
 
-/* Filter styles from Profile.css */
+.empty-state .btn {
+  border: 0;
+  cursor: pointer;
+}
+
 .profile-filters {
   display: flex;
   gap: 1rem;

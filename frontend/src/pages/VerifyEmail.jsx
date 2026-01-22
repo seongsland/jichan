@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const { showLoading, hideLoading } = useLoading();
-  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
+  const [message, setMessage] = useState({ type: '', text: '' });
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -19,7 +19,6 @@ const VerifyEmail = () => {
         setMessage({
           type: 'error',
           text: '인증 토큰이 없습니다.',
-          timestamp: Date.now(),
         });
         hideLoading();
         return;
@@ -30,7 +29,6 @@ const VerifyEmail = () => {
         setMessage({
           type: 'success',
           text: '이메일 인증이 완료되었습니다.',
-          timestamp: Date.now(),
         });
         setTimeout(() => {
           navigate('/login');
@@ -39,7 +37,6 @@ const VerifyEmail = () => {
         setMessage({
           type: 'error',
           text: error.response?.data?.message || '이메일 인증에 실패했습니다.',
-          timestamp: Date.now(),
         });
       } finally {
         hideLoading();
@@ -56,8 +53,7 @@ const VerifyEmail = () => {
         <Message
           type={message.type}
           message={message.text}
-          timestamp={message.timestamp}
-          onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
+          onClose={() => setMessage({ type: '', text: '' })}
         />
       </div>
     </div>
