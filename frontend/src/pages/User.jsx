@@ -197,7 +197,7 @@ const User = () => {
 
   return (
     <div className="user">
-      <h2>프로필 관리</h2>
+      <h2 className="page-title">프로필 관리</h2>
       <Message
         type={message.type}
         message={message.text}
@@ -336,7 +336,11 @@ const User = () => {
                   title={category?.name}
                   onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
                 >
-                  <span>{detail?.name}: {formatCurrency(specialty.hourlyRate)}원/시간</span>
+                  <div className="specialty-text">
+                    <span className="name">{detail?.name}</span>
+                    <span className="separator">: </span>
+                    <span className="price">{formatCurrency(specialty.hourlyRate)}원/시간</span>
+                  </div>
                   {visibleCategories[specialtyKey] && category?.name && (
                     <div className="specialty-overlay">
                       {category.name}

@@ -171,7 +171,7 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      <h2>전문가 검색</h2>
+      <h2 className="page-title">전문가 검색</h2>
       <Message
         type={message.type}
         message={message.text}
@@ -189,8 +189,8 @@ const Profile = () => {
 
       <div className="profile-filters">
         <div className="filter-group">
-          <label>특기</label>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <label className="filter-label">특기</label>
+          <div className="filter-row">
             <select
               value={filters.category}
               onChange={(e) => {
@@ -219,7 +219,7 @@ const Profile = () => {
           </div>
         </div>
         <div className="filter-group">
-          <label htmlFor="sortBy">정렬</label>
+          <label htmlFor="sortBy" className="filter-label">정렬</label>
           <select
             id="sortBy"
             value={filters.sortBy}
@@ -230,7 +230,7 @@ const Profile = () => {
             <option value="price">금액순</option>
           </select>
         </div>
-        <div className="filter-actions" style={{ alignSelf: 'flex-end' }}>
+        <div className="filter-actions">
           <button
             onClick={handleSearch}
             className="btn btn-primary"
@@ -244,7 +244,7 @@ const Profile = () => {
             disabled={loading}
             title="초기화"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
               <path d="M3 3v5h5"/>
             </svg>
@@ -262,7 +262,7 @@ const Profile = () => {
             {profileData.content.map((profile) => (
               <div key={profile.id} className="profile-card">
                 <div className="profile-header">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div className="profile-header-content">
                     <h3>{profile.name}</h3>
                     <div className="profile-stats">
                       {profile.averageRating !== null && (
@@ -333,7 +333,7 @@ const Profile = () => {
                   {!contactViews[`${profile.id}-EMAIL`] && (
                       <button
                           onClick={() => handleContactViewClick(profile.id, 'EMAIL')}
-                          className="btn btn-outline"
+                          className="btn btn-outline btn-sm"
                       >
                         이메일 보기
                       </button>
@@ -341,7 +341,7 @@ const Profile = () => {
                   {!contactViews[`${profile.id}-PHONE`] && (
                       <button
                           onClick={() => handleContactViewClick(profile.id, 'PHONE')}
-                          className="btn btn-outline"
+                          className="btn btn-outline btn-sm"
                       >
                         핸드폰 보기
                       </button>
