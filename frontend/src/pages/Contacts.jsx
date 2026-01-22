@@ -160,7 +160,7 @@ const Contacts = () => {
   const filteredDetails = details.filter(detail => !filters.category || detail.categoryId === parseInt(filters.category));
 
   return (
-    <div className="contacts-profile">
+    <div className="contacts">
       <h2 className="page-title">나의 지인</h2>
       <Message
         type={message.type}

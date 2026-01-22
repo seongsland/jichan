@@ -1,10 +1,10 @@
-.contacts-profile {
+.contacts {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
 }
 
-.page-title {
+.contacts .page-title {
   font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
@@ -12,27 +12,27 @@
   text-align: center;
 }
 
-.empty-state {
+.contacts .empty-state {
   text-align: center;
   padding: 3rem;
   background-color: #f8f9fa;
   border-radius: 8px;
 }
 
-.empty-state p {
+.contacts .empty-state p {
   margin-bottom: 1rem;
   color: #666;
 }
 
 /* Profile Grid */
-.profile-grid {
+.contacts .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 }
 
-.profile-card {
+.contacts .profile-card {
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 16px;
@@ -44,12 +44,12 @@
   flex-direction: column;
 }
 
-.profile-card:hover {
+.contacts .profile-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-.delete-btn {
+.contacts .delete-btn {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -68,27 +68,27 @@
   z-index: 5;
 }
 
-.delete-btn:hover {
+.contacts .delete-btn:hover {
   background-color: #fa5252;
   color: white;
   transform: rotate(90deg);
 }
 
-.profile-header {
+.contacts .profile-header {
   margin-bottom: 1rem;
   padding-right: 30px; /* Space for delete button */
   border-bottom: 1px solid #f0f0f0;
   padding-bottom: 1rem;
 }
 
-.profile-header h3 {
+.contacts .profile-header h3 {
   font-size: 1.4rem;
   font-weight: 700;
   color: #2c3e50;
   margin: 0;
 }
 
-.profile-info {
+.contacts .profile-info {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.2rem;
@@ -96,14 +96,14 @@
   font-size: 0.95rem;
 }
 
-.specialties {
+.contacts .specialties {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.specialty {
+.contacts .specialty {
   padding: 0.4rem 0.8rem;
   background-color: #e7f5ff;
   color: #007bff;
@@ -115,11 +115,11 @@
   position: relative;
 }
 
-.specialty:hover {
+.contacts .specialty:hover {
   background-color: #d0ebff;
 }
 
-.specialty-overlay {
+.contacts .specialty-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -138,7 +138,7 @@
   box-sizing: border-box;
 }
 
-.introduction {
+.contacts .introduction {
   color: #666;
   line-height: 1.6;
   margin-bottom: 1.5rem;
@@ -149,7 +149,7 @@
   flex-grow: 1;
 }
 
-.contact-info-item {
+.contacts .contact-info-item {
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 8px;
@@ -158,7 +158,7 @@
   border-left: 4px solid #007bff;
 }
 
-.phone-message {
+.contacts .phone-message {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid #b3d9ff;
@@ -166,7 +166,7 @@
   font-style: italic;
 }
 
-.contact-actions {
+.contacts .contact-actions {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -175,44 +175,44 @@
   border-top: 1px solid #f1f3f5;
 }
 
-.rating-label {
+.contacts .rating-label {
   font-weight: 500;
   color: #495057;
 }
 
-.star-rating-inline {
+.contacts .star-rating-inline {
   display: flex;
   gap: 4px;
   cursor: pointer;
 }
 
-.star-rating-inline .star {
+.contacts .star-rating-inline .star {
   font-size: 1.5rem;
   color: #dee2e6;
   transition: color 0.2s;
   line-height: 1;
 }
 
-.star-rating-inline .star.filled {
+.contacts .star-rating-inline .star.filled {
   color: #ffc107;
 }
 
-.star-rating-inline .star:hover,
-.star-rating-inline .star:hover ~ .star {
+.contacts .star-rating-inline .star:hover,
+.contacts .star-rating-inline .star:hover ~ .star {
   color: #dee2e6;
 }
 
-.star-rating-inline:hover .star {
+.contacts .star-rating-inline:hover .star {
   color: #ffc107;
 }
 
-.empty-state .btn {
+.contacts .empty-state .btn {
   border: 0;
   cursor: pointer;
 }
 
 /* Filters Section */
-.profile-filters {
+.contacts .profile-filters {
   background-color: #ffffff;
   padding: 1.5rem;
   border-radius: 16px;
@@ -225,7 +225,7 @@
   border: 1px solid #f0f0f0;
 }
 
-.filter-group {
+.contacts .filter-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -233,18 +233,18 @@
   min-width: 200px;
 }
 
-.filter-label {
+.contacts .filter-label {
   font-weight: 600;
   color: #2c3e50;
   font-size: 0.95rem;
 }
 
-.filter-row {
+.contacts .filter-row {
   display: flex;
   gap: 10px;
 }
 
-.filter-group select {
+.contacts .filter-group select {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #dee2e6;
@@ -256,18 +256,18 @@
   cursor: pointer;
 }
 
-.filter-group select:focus {
+.contacts .filter-group select:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.filter-actions {
+.contacts .filter-actions {
   display: flex;
   gap: 10px;
 }
 
 /* Buttons (Global Style Match) */
-.btn {
+.contacts .btn {
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
   font-weight: 600;
@@ -280,56 +280,56 @@
   font-size: 1rem;
 }
 
-.btn-primary {
+.contacts .btn-primary {
   background-color: #007bff;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
 }
 
-.btn-primary:hover {
+.contacts .btn-primary:hover {
   background-color: #0069d9;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
 }
 
-.btn-outline {
+.contacts .btn-outline {
   background-color: transparent;
   color: #007bff;
   border: 2px solid #007bff;
   padding: 0.6rem 1.4rem;
 }
 
-.btn-outline:hover {
+.contacts .btn-outline:hover {
   background-color: #007bff;
   color: white;
   transform: translateY(-2px);
 }
 
-.btn:disabled {
+.contacts .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.load-more {
+.contacts .load-more {
   text-align: center;
   margin-top: 2rem;
 }
 
-.load-more .btn-secondary {
+.contacts .load-more .btn-secondary {
   background-color: #6c757d;
   color: white;
   padding: 0.8rem 3rem;
 }
 
-.load-more .btn-secondary:hover {
+.contacts .load-more .btn-secondary:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.load-more .btn-secondary:disabled {
+.contacts .load-more .btn-secondary:disabled {
   background-color: #f1f3f5;
   color: #adb5bd;
   cursor: not-allowed;
@@ -338,26 +338,30 @@
 }
 
 @media (max-width: 768px) {
-  .contacts-profile {
+  .contacts {
     padding: 0.5rem;
   }
 
-  .page-title {
+  .contacts .page-title {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
-  .profile-filters {
+  .contacts .profile-filters {
     padding: 1rem;
     gap: 1rem;
   }
 
-  .profile-card {
+  .contacts .profile-card {
     padding: 1.25rem;
   }
 
-  .profile-grid {
+  .contacts .profile-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .contacts .filter-row {
+    flex-direction: column;
   }
 }

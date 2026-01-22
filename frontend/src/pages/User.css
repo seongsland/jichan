@@ -4,7 +4,7 @@
   padding: 1rem;
 }
 
-.page-title {
+.user .page-title {
   font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
@@ -12,7 +12,7 @@
   text-align: center;
 }
 
-.profile-form {
+.user .profile-form {
   background-color: #ffffff;
   padding: 2.5rem;
   border-radius: 16px;
@@ -20,11 +20,11 @@
   border: 1px solid #f0f0f0;
 }
 
-.form-group {
+.user .form-group {
   margin-bottom: 2rem;
 }
 
-.form-group label {
+.user .form-group label {
   display: block;
   margin-bottom: 0.8rem;
   color: #2c3e50;
@@ -32,9 +32,9 @@
   font-size: 0.95rem;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.user .form-group input,
+.user .form-group select,
+.user .form-group textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border: 1px solid #dee2e6;
@@ -46,15 +46,15 @@
   background-color: #fff;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.user .form-group input:focus,
+.user .form-group select:focus,
+.user .form-group textarea:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.checkbox-group label {
+.user .checkbox-group label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -63,40 +63,40 @@
   color: #495057;
 }
 
-.checkbox-group input[type="checkbox"] {
+.user .checkbox-group input[type="checkbox"] {
   cursor: pointer;
   width: 1.2rem;
   height: 1.2rem;
 }
 
-.loading {
+.user .loading {
   text-align: center;
   padding: 2rem;
   color: #666;
 }
 
-.specialty-input-group {
+.user .specialty-input-group {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
-.specialty-input-group select,
-.specialty-input-group input {
+.user .specialty-input-group select,
+.user .specialty-input-group input {
   flex: 1;
   min-width: 150px;
 }
 
 
-.specialty-list {
+.user .specialty-list {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.specialty-item {
+.user .specialty-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -109,12 +109,12 @@
   transition: transform 0.2s;
 }
 
-.specialty-item:hover {
+.user .specialty-item:hover {
   transform: translateX(5px);
   background-color: #f1f3f5;
 }
 
-.specialty-text {
+.user .specialty-text {
   flex: 1;
   display: flex;
   flex-wrap: wrap;
@@ -123,7 +123,7 @@
   margin-right: 0.5rem;
 }
 
-.specialty-text .name {
+.user .specialty-text .name {
   font-weight: 500;
   color: #495057;
   word-break: break-word;
@@ -149,7 +149,7 @@
 }
 
 /* Buttons */
-.btn {
+.user .btn {
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
   font-weight: 600;
@@ -162,46 +162,46 @@
   font-size: 1rem;
 }
 
-.btn-sm {
+.user .btn-sm {
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
 }
 
-.btn-primary {
+.user .btn-primary {
   background-color: #007bff;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
 }
 
-.btn-primary:hover {
+.user .btn-primary:hover {
   background-color: #0069d9;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
 }
 
-.btn-secondary {
+.user .btn-secondary {
   background-color: #6c757d;
   color: white;
 }
 
-.btn-secondary:hover {
+.user .btn-secondary:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
 }
 
-.btn-danger {
+.user .btn-danger {
   background-color: #ff6b6b;
   color: white;
   z-index: 20;
 }
 
-.btn-danger:hover {
+.user .btn-danger:hover {
   background-color: #fa5252;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(250, 82, 82, 0.2);
 }
 
-.btn-block {
+.user .btn-block {
   width: 100%;
   margin-top: 1rem;
   padding: 1rem;
@@ -213,22 +213,22 @@
     padding: 0.5rem;
   }
 
-  .profile-form {
+  .user .profile-form {
     padding: 1.25rem;
   }
 
-  .page-title {
+  .user .page-title {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
-  .specialty-text {
+  .user .specialty-text {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.2rem;
   }
 
-  .specialty-text .separator {
+  .user .specialty-text .separator {
     display: none;
   }
 

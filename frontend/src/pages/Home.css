@@ -3,39 +3,39 @@
 }
 
 /* Hero Section */
-.home-hero {
+.home .home-hero {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 5rem 1rem;
   margin-bottom: 4rem;
   text-align: center;
 }
 
-.hero-content {
+.home .hero-content {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.home-hero h1 {
+.home .home-hero h1 {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   color: #2c3e50;
 }
 
-.highlight {
+.home .highlight {
   color: #007bff;
   position: relative;
   display: inline-block;
 }
 
-.hero-subtitle {
+.home .hero-subtitle {
   font-size: 1.25rem;
   line-height: 1.6;
   color: #333;
   margin-bottom: 1.5rem;
 }
 
-.hero-actions {
+.home .hero-actions {
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -43,17 +43,17 @@
 }
 
 /* Features Section */
-.home-features {
+.home .home-features {
   max-width: 1200px;
   margin: 0 auto 5rem;
 }
 
-.section-header {
+.home .section-header {
   text-align: center;
   margin-bottom: 3rem;
 }
 
-.section-header h2 {
+.home .section-header h2 {
   font-size: 2rem;
   color: #333;
   font-weight: 600;
@@ -61,14 +61,14 @@
   display: inline-block;
 }
 
-.features-grid {
+.home .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
 }
 
 /* Feature Cards */
-.feature-card {
+.home .feature-card {
   padding: 2.5rem 1.5rem;
   background-color: #ffffff;
   border-radius: 12px;
@@ -78,12 +78,12 @@
   text-align: center;
 }
 
-.feature-card:hover {
+.home .feature-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.feature-icon {
+.home .feature-icon {
   font-size: 2rem;
   background-color: #f0f7ff;
   width: 60px;
@@ -93,13 +93,13 @@
   margin: 0 auto 1.5rem;
 }
 
-.feature-card h3 {
+.home .feature-card h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
   color: #2c3e50;
 }
 
-.feature-card p {
+.home .feature-card p {
   color: #666;
   line-height: 1.6;
   word-break: keep-all;
@@ -107,7 +107,7 @@
 }
 
 /* Buttons */
-.btn {
+.home .btn {
   padding: 0.75rem 1.5rem;
   border-radius: 50px; /* 둥근 버튼 */
   text-decoration: none;
@@ -120,69 +120,69 @@
   border: none;
 }
 
-.btn-lg {
+.home .btn-lg {
   padding: 1rem 2rem;
   font-size: 1.1rem;
 }
 
-.btn-primary {
+.home .btn-primary {
   background-color: #007bff;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
 }
 
-.btn-primary:hover {
+.home .btn-primary:hover {
   background-color: #0069d9;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
 }
 
-.btn-secondary {
+.home .btn-secondary {
   background-color: #6c757d;
   color: white;
 }
 
-.btn-secondary:hover {
+.home .btn-secondary:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
 }
 
-.btn-outline {
+.home .btn-outline {
   background-color: transparent;
   color: #007bff;
   border: 2px solid #007bff;
 }
 
-.btn-outline:hover {
+.home .btn-outline:hover {
   background-color: #007bff;
   color: white;
   transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
-  .home-hero {
+  .home .home-hero {
     padding: 2rem 1rem;
   }
 
-  .home-hero h1 {
+  .home .home-hero h1 {
     font-size: 2rem;
   }
 
-  .hero-subtitle {
+  .home .hero-subtitle {
     font-size: 1rem;
   }
 
-  .home-philosophy {
+  .home .home-philosophy {
     padding: 3rem 1rem;
   }
 
-  .home-philosophy h2 {
+  .home .home-philosophy h2 {
     font-size: 1.5rem;
   }
 }
 
 /* Philosophy Section */
-.home-philosophy {
+.home .home-philosophy {
   background-color: #f8f9fa;
   padding: 4rem 1rem;
   text-align: center;
@@ -190,21 +190,21 @@
   border-top: 1px solid #eee;
 }
 
-.home-philosophy h2 {
+.home .home-philosophy h2 {
   font-size: 1.8rem;
   color: #2c3e50;
   margin-bottom: 1.5rem;
   font-weight: 700;
 }
 
-.home-philosophy p {
+.home .home-philosophy p {
   font-size: 1.1rem;
   color: #555;
   line-height: 1.8;
   margin-bottom: 0.5rem;
 }
 
-.home-philosophy .highlight-text {
+.home .home-philosophy .highlight-text {
   color: #007bff;
   font-weight: 600;
   margin-top: 1rem;

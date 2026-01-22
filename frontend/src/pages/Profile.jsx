@@ -188,7 +188,7 @@ const Profile = () => {
       />
 
       <div className="profile-filters">
-        <div className="filter-group">
+        <div className="filter-group search-filter">
           <label className="filter-label">특기</label>
           <div className="filter-row">
             <select
@@ -218,7 +218,7 @@ const Profile = () => {
             </select>
           </div>
         </div>
-        <div className="filter-group">
+        <div className="filter-group sort-filter">
           <label htmlFor="sortBy" className="filter-label">정렬</label>
           <select
             id="sortBy"

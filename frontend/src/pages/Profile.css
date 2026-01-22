@@ -4,7 +4,7 @@
   padding: 1rem;
 }
 
-.page-title {
+.profile .page-title {
   font-size: 2rem;
   font-weight: 700;
   color: #2c3e50;
@@ -13,7 +13,7 @@
 }
 
 /* Filters Section */
-.profile-filters {
+.profile .profile-filters {
   background-color: #ffffff;
   padding: 1.5rem;
   border-radius: 16px;
@@ -26,7 +26,7 @@
   border: 1px solid #f0f0f0;
 }
 
-.filter-group {
+.profile .filter-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -34,18 +34,27 @@
   min-width: 200px;
 }
 
-.filter-label {
+.profile .search-filter {
+  flex: 1;
+}
+
+.profile .sort-filter {
+  flex: 0 0 160px;
+  min-width: 160px;
+}
+
+.profile .filter-label {
   font-weight: 600;
   color: #2c3e50;
   font-size: 0.95rem;
 }
 
-.filter-row {
+.profile .filter-row {
   display: flex;
   gap: 10px;
 }
 
-.filter-group select {
+.profile .filter-group select {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #dee2e6;
@@ -57,18 +66,18 @@
   cursor: pointer;
 }
 
-.filter-group select:focus {
+.profile .filter-group select:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.filter-actions {
+.profile .filter-actions {
   display: flex;
   gap: 10px;
 }
 
 /* Buttons (Global Style Match) */
-.btn {
+.profile .btn {
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
   font-weight: 600;
@@ -81,37 +90,37 @@
   font-size: 1rem;
 }
 
-.btn-sm {
+.profile .btn-sm {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
 }
 
-.btn-primary {
+.profile .btn-primary {
   background-color: #007bff;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
 }
 
-.btn-primary:hover {
+.profile .btn-primary:hover {
   background-color: #0069d9;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
 }
 
-.btn-outline {
+.profile .btn-outline {
   background-color: transparent;
   color: #007bff;
   border: 2px solid #007bff;
   padding: 0.6rem 1.4rem; /* Adjust for border */
 }
 
-.btn-outline:hover {
+.profile .btn-outline:hover {
   background-color: #007bff;
   color: white;
   transform: translateY(-2px);
 }
 
-.btn:disabled {
+.profile .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -119,14 +128,14 @@
 }
 
 /* Profile Grid */
-.profile-grid {
+.profile .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 }
 
-.profile-card {
+.profile .profile-card {
   background-color: white;
   padding: 2rem;
   border-radius: 16px;
@@ -137,48 +146,48 @@
   flex-direction: column;
 }
 
-.profile-card:hover {
+.profile .profile-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-.profile-header {
+.profile .profile-header {
   margin-bottom: 1rem;
   border-bottom: 1px solid #f0f0f0;
   padding-bottom: 1rem;
 }
 
-.profile-header-content {
+.profile .profile-header-content {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.profile-card h3 {
+.profile .profile-card h3 {
   font-size: 1.4rem;
   font-weight: 700;
   color: #2c3e50;
   margin: 0;
 }
 
-.profile-stats {
+.profile .profile-stats {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.rating {
+.profile .rating {
   color: #ffc107;
   font-weight: bold;
 }
 
-.review-count {
+.profile .review-count {
   color: #adb5bd;
   font-size: 0.9rem;
 }
 
-.profile-info {
+.profile .profile-info {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.2rem;
@@ -186,14 +195,14 @@
   font-size: 0.95rem;
 }
 
-.specialties {
+.profile .specialties {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.specialty {
+.profile .specialty {
   padding: 0.4rem 0.8rem;
   background-color: #e7f5ff;
   color: #007bff;
@@ -205,11 +214,11 @@
   position: relative;
 }
 
-.specialty:hover {
+.profile .specialty:hover {
   background-color: #d0ebff;
 }
 
-.specialty-overlay {
+.profile .specialty-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -228,7 +237,7 @@
   box-sizing: border-box;
 }
 
-.introduction {
+.profile .introduction {
   color: #666;
   line-height: 1.6;
   margin-bottom: 1.5rem;
@@ -239,17 +248,17 @@
   overflow: hidden;
 }
 
-.profile-actions {
+.profile .profile-actions {
   margin-top: auto;
   display: flex;
   gap: 0.8rem;
 }
 
-.profile-actions .btn {
+.profile .profile-actions .btn {
   flex: 1;
 }
 
-.contact-info {
+.profile .contact-info {
   background-color: #f8f9fa;
   padding: 1rem;
   border-radius: 8px;
@@ -258,7 +267,7 @@
   border-left: 4px solid #007bff;
 }
 
-.phone-message {
+.profile .phone-message {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid #b3d9ff;
@@ -266,12 +275,12 @@
   font-style: italic;
 }
 
-.load-more {
+.profile .load-more {
   text-align: center;
   margin-top: 2rem;
 }
 
-.loading {
+.profile .loading {
   text-align: center;
   padding: 2rem;
   color: #666;
@@ -282,42 +291,63 @@
     padding: 0.5rem;
   }
 
-  .page-title {
+  .profile .page-title {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
-  .profile-filters {
+  .profile .profile-filters {
     padding: 1rem;
     gap: 1rem;
   }
 
-  .profile-card {
+  .profile .profile-card {
     padding: 1.25rem;
   }
 
-  .profile-grid {
+  .profile .profile-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  .profile .filter-row {
+    flex-direction: column;
+  }
+
+  .profile .sort-filter {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
 }
 
-.load-more .btn {
+.profile .load-more .btn {
   background-color: #6c757d;
   color: white;
   padding: 0.8rem 3rem;
 }
 
-.load-more .btn:hover {
+.profile .load-more .btn:hover {
   background-color: #5a6268;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.load-more .btn:disabled {
+.profile .load-more .btn:disabled {
   background-color: #f1f3f5;
   color: #adb5bd;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+.profile .empty-state {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.profile .empty-state p {
+  margin-bottom: 1rem;
+  color: #666;
 }
