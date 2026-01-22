@@ -127,8 +127,9 @@ public class ContactService {
         User expert = userRepository.findById(expertId)
                 .orElseThrow(() -> new IllegalArgumentException("전문가를 찾을 수 없습니다."));
         
-        double avgScore = ratingRepository.findStatsByExpertId(expertId);
-        expert.updateRating(avgScore);
+        RatingStatsDto stats = ratingRepository.findStatsByExpertId(expertId);
+        expert.updateRating(stats.average());
+        expert.updateReviewCount(stats.count().intValue());
         userRepository.save(expert);
     }
 }

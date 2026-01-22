@@ -273,8 +273,8 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="profile-info">
-                  {profile.gender && <span>성별: {profile.gender}</span>}
-                  {profile.region && <span>지역: {profile.region}</span>}
+                  {profile.region && <span className="info-badge">{profile.region}</span>}
+                  {profile.gender && <span className="info-badge">{profile.gender}</span>}
                 </div>
                 {profile.specialties && profile.specialties.length > 0 && (
                   <div className="specialties">

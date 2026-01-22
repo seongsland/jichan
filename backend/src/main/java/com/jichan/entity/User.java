@@ -93,7 +93,7 @@ public class User extends BaseTimeEntity {
         this.minHourlyRate = minHourlyRate;
     }
 
-    public void increaseReviewCount() {
-        this.reviewCount++;
+    public void updateReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
     }
 }

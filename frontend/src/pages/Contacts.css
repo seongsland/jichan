@@ -61,17 +61,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  color: #fa5252;
   cursor: pointer;
   transition: all 0.2s;
   z-index: 5;
 }
 
+.contacts .delete-btn svg {
+  stroke: #fa5252;
+  transition: stroke 0.2s;
+}
+
 .contacts .delete-btn:hover {
   background-color: #fa5252;
-  color: white;
-  transform: rotate(90deg);
+  transform: scale(1.1) rotate(90deg);
+}
+
+.contacts .delete-btn:hover svg {
+  stroke: white;
 }
 
 .contacts .profile-header {
@@ -90,10 +96,20 @@
 
 .contacts .profile-info {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 1.2rem;
   color: #666;
   font-size: 0.95rem;
+  flex-wrap: wrap;
+}
+
+.contacts .profile-info .info-badge {
+  background-color: #f1f3f5;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 500;
 }
 
 .contacts .specialties {
@@ -113,6 +129,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   position: relative;
+  width: 100%;
 }
 
 .contacts .specialty:hover {

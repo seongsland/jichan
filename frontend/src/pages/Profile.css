@@ -180,6 +180,7 @@
 .profile .rating {
   color: #ffc107;
   font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .profile .review-count {
@@ -189,10 +190,20 @@
 
 .profile .profile-info {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 1.2rem;
   color: #666;
   font-size: 0.95rem;
+  flex-wrap: wrap;
+}
+
+.profile .profile-info .info-badge {
+  background-color: #f1f3f5;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 500;
 }
 
 .profile .specialties {
@@ -212,6 +223,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   position: relative;
+  width: 100%;
 }
 
 .profile .specialty:hover {
@@ -321,13 +333,13 @@
 }
 
 .profile .load-more .btn {
-  background-color: #6c757d;
+  background-color: #007bff;
   color: white;
   padding: 0.8rem 3rem;
 }
 
 .profile .load-more .btn:hover {
-  background-color: #5a6268;
+  background-color: #0069d9;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
