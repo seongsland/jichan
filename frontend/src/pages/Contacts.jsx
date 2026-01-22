@@ -31,7 +31,7 @@ const Contacts = () => {
     page: 0
   });
 
-  const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
+  const [message, setMessage] = useState({ type: '', text: '' });
   const [filters, setFilters] = useState({
     category: '',
     specialty: '',
@@ -79,7 +79,6 @@ const Contacts = () => {
       setMessage({
         type: 'error',
         text: '전문가 목록을 불러오는데 실패했습니다.',
-        timestamp: Date.now(),
       });
     } finally {
       hideLoading();
@@ -99,7 +98,6 @@ const Contacts = () => {
       setMessage({
         type: 'success',
         text: '평가가 등록되었습니다.',
-        timestamp: Date.now(),
       });
       
       // 로컬 상태 업데이트
@@ -113,7 +111,6 @@ const Contacts = () => {
       setMessage({
         type: 'error',
         text: error.response?.data?.message || '평가 등록에 실패했습니다.',
-        timestamp: Date.now(),
       });
     }
   };
@@ -125,7 +122,6 @@ const Contacts = () => {
         setMessage({
           type: 'success',
           text: '전문가가 목록에서 삭제되었습니다.',
-          timestamp: Date.now(),
         });
         
         // 로컬 상태에서 제거
@@ -137,7 +133,6 @@ const Contacts = () => {
         setMessage({
           type: 'error',
           text: error.response?.data?.message || '삭제에 실패했습니다.',
-          timestamp: Date.now(),
         });
       }
     }
@@ -161,8 +156,7 @@ const Contacts = () => {
       <Message
         type={message.type}
         message={message.text}
-        timestamp={message.timestamp}
-        onClose={() => setMessage({ type: '', text: '', timestamp: Date.now() })}
+        onClose={() => setMessage({ type: '', text: '' })}
       />
 
       <div className="profile-filters">
