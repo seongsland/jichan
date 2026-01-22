@@ -34,7 +34,7 @@ const Home = () => {
               전문가 검색하기
             </Link>
             <Link to="/contacts" className="btn btn-secondary">
-              내가 본 전문가
+              나의 지인
             </Link>
           </>
         ) : (

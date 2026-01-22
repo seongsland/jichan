@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import api from '../utils/api';
 import Message from '../components/Message';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {useLoading} from '../context/LoadingContext';
 import './Profile.css';
 
@@ -22,6 +23,12 @@ const Profile = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [contactViews, setContactViews] = useState({});
   const [visibleCategories, setVisibleCategories] = useState({});
+  const [confirmDialog, setConfirmDialog] = useState({ 
+    isOpen: false, 
+    expertId: null, 
+    contactType: null,
+    message: ''
+  });
 
   const [categories, setCategories] = useState([]);
   const [details, setDetails] = useState([]);
@@ -98,7 +105,23 @@ const Profile = () => {
     void fetchProfiles(profileData.page + 1, false);
   };
 
-  const handleContactView = async (expertId, contactType) => {
+  const handleContactViewClick = (expertId, contactType) => {
+    const message = contactType === 'EMAIL' 
+      ? '이메일을 확인 하시겠습니까?' 
+      : '핸드폰 번호를 확인 하시겠습니까?';
+    
+    setConfirmDialog({
+      isOpen: true,
+      expertId,
+      contactType,
+      message
+    });
+  };
+
+  const executeContactView = async () => {
+    const { expertId, contactType } = confirmDialog;
+    if (!expertId || !contactType) return;
+
     try {
       const response = await api.post('/profile/contact_view', {
         expertId,
@@ -129,6 +152,8 @@ const Profile = () => {
         type: 'error',
         text: error.response?.data?.message || '연락처를 불러오는데 실패했습니다.',
       });
+    } finally {
+      setConfirmDialog({ isOpen: false, expertId: null, contactType: null, message: '' });
     }
   };
 
@@ -151,6 +176,15 @@ const Profile = () => {
         type={message.type}
         message={message.text}
         onClose={() => setMessage({ type: '', text: '' })}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        message={confirmDialog.message}
+        onConfirm={executeContactView}
+        onCancel={() => setConfirmDialog({ isOpen: false, expertId: null, contactType: null, message: '' })}
+        confirmText="확인"
+        cancelText="취소"
       />
 
       <div className="profile-filters">
@@ -292,7 +326,7 @@ const Profile = () => {
             <div className="profile-actions">
               {!contactViews[`${profile.id}-EMAIL`] && (
                   <button
-                      onClick={() => handleContactView(profile.id, 'EMAIL')}
+                      onClick={() => handleContactViewClick(profile.id, 'EMAIL')}
                       className="btn btn-outline"
                   >
                     이메일 보기
@@ -300,7 +334,7 @@ const Profile = () => {
               )}
               {!contactViews[`${profile.id}-PHONE`] && (
                   <button
-                      onClick={() => handleContactView(profile.id, 'PHONE')}
+                      onClick={() => handleContactViewClick(profile.id, 'PHONE')}
                       className="btn btn-outline"
                   >
                     핸드폰 보기

@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
           {isAuthenticated ? (
             <>
               <Link to="/profile">전문가 검색</Link>
-              <Link to="/contacts">내가 본 전문가</Link>
+              <Link to="/contacts">나의 지인</Link>
               <Link to="/user">프로필 관리</Link>
               <button onClick={handleLogout} className="logout-btn">
                 로그아웃
