@@ -197,7 +197,7 @@ const Profile = () => {
                 setFilters(prev => ({ ...prev, category: e.target.value, specialty: '' }));
               }}
             >
-              <option value="">카테고리 선택</option>
+              <option value="">카테고리 전체</option>
               {categories.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -209,7 +209,7 @@ const Profile = () => {
               onChange={(e) => setFilters(prev => ({ ...prev, specialty: e.target.value }))}
               disabled={!filters.category}
             >
-              <option value="">세부항목 선택</option>
+              <option value="">세부항목 전체</option>
               {filteredDetails.map(detail => (
                 <option key={detail.id} value={detail.id}>
                   {detail.name}
@@ -252,108 +252,116 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="profile-grid">
-        {profileData.content.map((profile) => (
-          <div key={profile.id} className="profile-card">
-            <div className="profile-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <h3>{profile.name}</h3>
-                <div className="profile-stats">
-                  {profile.averageRating !== null && (
-                    <span className="rating">★ {profile.averageRating.toFixed(1)}</span>
-                  )}
-                  <span className="review-count"> ({profile.reviewCount || 0})</span>
-                </div>
-              </div>
-            </div>
-            <div className="profile-info">
-              {profile.gender && <span>성별: {profile.gender}</span>}
-              {profile.region && <span>지역: {profile.region}</span>}
-            </div>
-            {profile.specialties && profile.specialties.length > 0 && (
-              <div className="specialties">
-                {profile.specialties.map((spec, idx) => {
-                  let name = spec.name;
-                  let categoryName = "";
-                  const detail = details.find(d => d.id === spec.specialtyDetailId);
-                  if (detail) {
-                    const category = categories.find(c => c.id === detail.categoryId);
-                    categoryName = category.name;
-                  }
-
-                  const specialtyKey = `${profile.id}-${idx}`;
-
-                  return (
-                    <div 
-                      key={idx} 
-                      className="specialty" 
-                      title={categoryName}
-                      onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
-                      style={{ cursor: 'pointer', position: 'relative' }}
-                    >
-                      {name} - {spec.hourlyRate?.toLocaleString()}원/시간
-                      {visibleCategories[specialtyKey] && categoryName && (
-                        <div className="specialty-overlay">
-                          {categoryName}
-                        </div>
+      {!loading && profileData.content.length === 0 ? (
+        <div className="empty-state">
+          <p>아직 등록된 전문가가 없습니다.</p>
+        </div>
+      ) : (
+        <>
+          <div className="profile-grid">
+            {profileData.content.map((profile) => (
+              <div key={profile.id} className="profile-card">
+                <div className="profile-header">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <h3>{profile.name}</h3>
+                    <div className="profile-stats">
+                      {profile.averageRating !== null && (
+                        <span className="rating">★ {profile.averageRating.toFixed(1)}</span>
                       )}
+                      <span className="review-count"> ({profile.reviewCount || 0})</span>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-            {profile.introduction && (
-              <p className="introduction">{profile.introduction}</p>
-            )}
-            {contactViews[`${profile.id}-EMAIL`] && (
-              <div className="contact-info">
-                <strong>이메일:</strong>{' '}
-                {contactViews[`${profile.id}-EMAIL`].contact}
-              </div>
-            )}
-            {contactViews[`${profile.id}-PHONE`] && (
-              <div className="contact-info">
-                <strong>핸드폰:</strong>{' '}
-                {contactViews[`${profile.id}-PHONE`].contact}
-                {contactViews[`${profile.id}-PHONE`].phoneMessage && (
-                  <div className="phone-message">
-                    {contactViews[`${profile.id}-PHONE`].phoneMessage}
+                  </div>
+                </div>
+                <div className="profile-info">
+                  {profile.gender && <span>성별: {profile.gender}</span>}
+                  {profile.region && <span>지역: {profile.region}</span>}
+                </div>
+                {profile.specialties && profile.specialties.length > 0 && (
+                  <div className="specialties">
+                    {profile.specialties.map((spec, idx) => {
+                      let name = spec.name;
+                      let categoryName = "";
+                      const detail = details.find(d => d.id === spec.specialtyDetailId);
+                      if (detail) {
+                        const category = categories.find(c => c.id === detail.categoryId);
+                        categoryName = category.name;
+                      }
+
+                      const specialtyKey = `${profile.id}-${idx}`;
+
+                      return (
+                        <div 
+                          key={idx} 
+                          className="specialty" 
+                          title={categoryName}
+                          onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
+                          style={{ cursor: 'pointer', position: 'relative' }}
+                        >
+                          {name} - {spec.hourlyRate?.toLocaleString()}원/시간
+                          {visibleCategories[specialtyKey] && categoryName && (
+                            <div className="specialty-overlay">
+                              {categoryName}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
-              </div>
-            )}
+                {profile.introduction && (
+                  <p className="introduction">{profile.introduction}</p>
+                )}
+                {contactViews[`${profile.id}-EMAIL`] && (
+                  <div className="contact-info">
+                    <strong>이메일:</strong>{' '}
+                    {contactViews[`${profile.id}-EMAIL`].contact}
+                  </div>
+                )}
+                {contactViews[`${profile.id}-PHONE`] && (
+                  <div className="contact-info">
+                    <strong>핸드폰:</strong>{' '}
+                    {contactViews[`${profile.id}-PHONE`].contact}
+                    {contactViews[`${profile.id}-PHONE`].phoneMessage && (
+                      <div className="phone-message">
+                        {contactViews[`${profile.id}-PHONE`].phoneMessage}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-            <div className="profile-actions">
-              {!contactViews[`${profile.id}-EMAIL`] && (
-                  <button
-                      onClick={() => handleContactViewClick(profile.id, 'EMAIL')}
-                      className="btn btn-outline"
-                  >
-                    이메일 보기
-                  </button>
-              )}
-              {!contactViews[`${profile.id}-PHONE`] && (
-                  <button
-                      onClick={() => handleContactViewClick(profile.id, 'PHONE')}
-                      className="btn btn-outline"
-                  >
-                    핸드폰 보기
-                  </button>
-              )}
-            </div>
+                <div className="profile-actions">
+                  {!contactViews[`${profile.id}-EMAIL`] && (
+                      <button
+                          onClick={() => handleContactViewClick(profile.id, 'EMAIL')}
+                          className="btn btn-outline"
+                      >
+                        이메일 보기
+                      </button>
+                  )}
+                  {!contactViews[`${profile.id}-PHONE`] && (
+                      <button
+                          onClick={() => handleContactViewClick(profile.id, 'PHONE')}
+                          className="btn btn-outline"
+                      >
+                        핸드폰 보기
+                      </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      {profileData.hasNext && (
-        <div className="load-more">
-          <button
-            onClick={handleLoadMore}
-            className="btn btn-secondary"
-            disabled={loading}
-          >
-            {loading ? '로딩 중...' : '더보기'}
-          </button>
-        </div>
+          {profileData.hasNext && (
+            <div className="load-more">
+              <button
+                onClick={handleLoadMore}
+                className="btn btn-secondary"
+                disabled={loading}
+              >
+                {loading ? '로딩 중...' : '더보기'}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

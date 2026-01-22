@@ -10,6 +10,7 @@ import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 
+import static com.jichan.entity.QUser.user;
 import static com.jichan.entity.QContactLog.contactLog;
 import static com.jichan.entity.QUserSpecialty.userSpecialty;
 import static com.jichan.entity.QSpecialtyDetail.specialtyDetail;
@@ -26,6 +27,7 @@ public class ContactLogRepositoryImpl implements ContactLogRepositoryCustom {
                 .from(contactLog)
                 .where(
                         contactLog.viewerId.eq(viewerId),
+                        visibleUserExists(),
                         specialtyExists(specialtyDetailId),
                         categoryExists(categoryId, specialtyDetailId)
                 )
@@ -41,6 +43,17 @@ public class ContactLogRepositoryImpl implements ContactLogRepositoryCustom {
         }
 
         return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    private BooleanExpression visibleUserExists() {
+        return JPAExpressions
+                .selectOne()
+                .from(user)
+                .where(
+                        user.id.eq(contactLog.expertId),
+                        user.isVisible.eq(true)
+                )
+                .exists();
     }
 
     private BooleanExpression specialtyExists(Long specialtyId) {

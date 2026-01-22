@@ -22,6 +22,7 @@ const User = () => {
   const [selectedDetail, setSelectedDetail] = useState('');
   const [hourlyRate, setHourlyRate] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [visibleCategories, setVisibleCategories] = useState({});
 
   useEffect(() => {
     void fetchProfile();
@@ -136,7 +137,8 @@ const User = () => {
     setMessage({ type: '', text: '' });
   };
 
-  const handleRemoveSpecialty = (detailId) => {
+  const handleRemoveSpecialty = (detailId, e) => {
+    e.stopPropagation(); // Prevent toggling category visibility when clicking remove
     setFormData({
       ...formData,
       specialties: formData.specialties.filter(s => s.specialtyDetailId !== detailId),
@@ -325,10 +327,27 @@ const User = () => {
             {formData.specialties.map(specialty => {
               const detail = details.find(d => d.id === specialty.specialtyDetailId);
               const category = categories.find(c => c.id === detail?.categoryId);
+              const specialtyKey = specialty.specialtyDetailId;
+
               return (
-                <div key={specialty.specialtyDetailId} className="specialty-item">
-                  <span>{category?.name} - {detail?.name}: {formatCurrency(specialty.hourlyRate)}원/시간</span>
-                  <button type="button" onClick={() => handleRemoveSpecialty(specialty.specialtyDetailId)} className="btn btn-danger btn-sm">
+                <div 
+                  key={specialtyKey} 
+                  className="specialty-item"
+                  title={category?.name}
+                  onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
+                >
+                  <span>{detail?.name}: {formatCurrency(specialty.hourlyRate)}원/시간</span>
+                  {visibleCategories[specialtyKey] && category?.name && (
+                    <div className="specialty-overlay">
+                      {category.name}
+                    </div>
+                  )}
+                  <button 
+                    type="button" 
+                    onClick={(e) => handleRemoveSpecialty(specialty.specialtyDetailId, e)} 
+                    className="btn btn-danger btn-sm"
+                    style={{ zIndex: 20 }}
+                  >
                     제거
                   </button>
                 </div>

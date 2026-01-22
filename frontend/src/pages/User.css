@@ -103,10 +103,31 @@
   border: 1px solid #dee2e6;
   border-radius: 4px;
   margin-bottom: 0.5rem;
+  position: relative;
+  cursor: pointer;
 }
 
 .specialty-item span {
   flex: 1;
+}
+
+.specialty-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 10;
+  text-align: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 
 .btn-danger {
@@ -117,6 +138,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.875rem;
+  z-index: 20;
 }
 
 .btn-danger:hover {

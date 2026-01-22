@@ -161,7 +161,7 @@ const Contacts = () => {
 
   return (
     <div className="contacts-profile">
-      <h2>내가 본 전문가 목록</h2>
+      <h2>나의 지인</h2>
       <Message
         type={message.type}
         message={message.text}
@@ -234,7 +234,7 @@ const Contacts = () => {
 
       {!loading && contactData.content.length === 0 ? (
         <div className="empty-state">
-          <p>아직 본 전문가가 없습니다.</p>
+          <p>아직 등록된 지인이 없습니다.</p>
           <button
             onClick={() => navigate('/profile')}
             className="btn btn-primary"
