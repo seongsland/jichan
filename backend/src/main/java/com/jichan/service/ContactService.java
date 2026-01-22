@@ -1,21 +1,23 @@
 package com.jichan.service;
 
-import com.jichan.dto.ContactDto.ContactListResponse;
-import com.jichan.dto.ContactDto.RatingRequest;
-import com.jichan.dto.ContactDto.RatingResponse;
-import com.jichan.entity.ContactLog;
-import com.jichan.entity.ContactType;
-import com.jichan.entity.Rating;
-import com.jichan.entity.User;
+import com.jichan.dto.ContactDto.*;
+import com.jichan.dto.SpecialtyDto;
+import com.jichan.entity.*;
 import com.jichan.repository.ContactLogRepository;
 import com.jichan.repository.RatingRepository;
 import com.jichan.repository.UserRepository;
+import com.jichan.repository.UserSpecialtyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,68 +28,107 @@ public class ContactService {
     private final ContactLogRepository contactLogRepository;
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
+    private final UserSpecialtyRepository userSpecialtyRepository;
+    private final SpecialtyService specialtyService;
+    private static final int PAGE_SIZE = 10;
 
-    public List<ContactListResponse> getContacts(Long viewerId) {
-        List<ContactLog> contactLogs = contactLogRepository.findByViewerId(viewerId);
+    public ContactSliceResponse getContacts(Long viewerId, Long categoryId, Long specialtyDetailId, int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 
-        return new ArrayList<>(contactLogs.stream()
-                .map(log -> {
-                    User expert = userRepository.findById(log.getExpertId()).orElse(null);
-                    Rating rating = ratingRepository.findByUserIdAndExpertId(viewerId, log.getExpertId()).orElse(null);
+        // 1. QueryDSL을 사용하여 필터링 및 페이징된 전문가 ID 목록 조회
+        Slice<Long> expertIdSlice = contactLogRepository.findExpertIdsByViewerIdAndFilters(
+                viewerId, categoryId, specialtyDetailId, pageable);
+        
+        List<Long> expertIds = expertIdSlice.getContent();
 
-                    boolean hasEmailView = contactLogRepository.findByViewerIdAndExpertIdAndContactType(
-                            viewerId, log.getExpertId(), ContactType.EMAIL).isPresent();
-                    boolean hasPhoneView = contactLogRepository.findByViewerIdAndExpertIdAndContactType(
-                            viewerId, log.getExpertId(), ContactType.PHONE).isPresent();
+        if (CollectionUtils.isEmpty(expertIds)) {
+            return new ContactSliceResponse(List.of(), false);
+        }
+
+        // 2. 필요한 데이터를 한 번의 쿼리로 가져옴
+        Map<Long, User> expertMap = userRepository.findAllById(expertIds).stream()
+                .collect(Collectors.toMap(User::getId, u -> u));
+
+        Map<Long, Rating> ratingMap = ratingRepository.findByUserIdAndExpertIdIn(viewerId, expertIds).stream()
+                .collect(Collectors.toMap(Rating::getExpertId, r -> r));
+
+        Map<Long, List<ContactLog>> contactLogMap = contactLogRepository.findByViewerIdAndExpertIdIn(viewerId, expertIds).stream()
+                .collect(Collectors.groupingBy(ContactLog::getExpertId));
+
+        Map<Long, List<UserSpecialty>> userSpecialtyMap = userSpecialtyRepository.findByUserIdIn(expertIds).stream()
+                .collect(Collectors.groupingBy(UserSpecialty::getUserId));
+
+        // 3. DTO로 변환
+        List<ContactListResponse> content = expertIds.stream()
+                .map(expertId -> {
+                    User expert = expertMap.get(expertId);
+                    Rating rating = ratingMap.get(expertId);
+                    List<ContactLog> logs = contactLogMap.get(expertId);
+                    List<UserSpecialty> userSpecialties = userSpecialtyMap.getOrDefault(expertId, List.of());
+
+                    boolean hasEmailView = logs != null && logs.stream().anyMatch(l -> l.getContactType() == ContactType.EMAIL);
+                    boolean hasPhoneView = logs != null && logs.stream().anyMatch(l -> l.getContactType() == ContactType.PHONE);
+
+                    List<SpecialtyInfo> specialties = userSpecialties.stream()
+                            .map(us -> {
+                                SpecialtyDto.DetailResponse detail = specialtyService.getDetail(us.getSpecialtyDetailId());
+                                return new SpecialtyInfo(detail.name(), us.getHourlyRate(), us.getSpecialtyDetailId());
+                            })
+                            .collect(Collectors.toList());
 
                     return new ContactListResponse(
-                            expert != null ? expert.getId() : log.getExpertId(),
-                            expert != null ? expert.getName() : "Unknown",
-                            expert != null ? expert.getGender() : null,
-                            expert != null ? expert.getRegion() : null,
-                            expert != null ? expert.getIntroduction() : null,
+                            expert.getId(),
+                            expert.getName(),
+                            expert.getGender(),
+                            expert.getRegion(),
+                            specialties,
+                            expert.getIntroduction(),
                             hasEmailView,
                             hasPhoneView,
-                            rating != null ? rating.getScore() : null
+                            rating != null ? rating.getScore() : null,
+                            hasEmailView ? expert.getEmail() : null,
+                            hasPhoneView ? expert.getPhone() : null,
+                            hasPhoneView ? expert.getPhoneMessage() : null
                     );
                 })
-                .collect(Collectors.toMap(
-                        ContactListResponse::expertId,
-                        r -> r,
-                        (r1, r2) -> r1
-                ))
-                .values());
+                .collect(Collectors.toList());
+
+        return new ContactSliceResponse(content, expertIdSlice.hasNext());
     }
 
     @Transactional
-    public RatingResponse createRating(Long userId, RatingRequest request) {
-        if (ratingRepository.existsByUserIdAndExpertId(userId, request.expertId())) {
-            throw new IllegalStateException("이미 평가한 전문가입니다.");
+    public RatingResponse createOrUpdateRating(Long userId, RatingRequest request) {
+        Optional<Rating> existingRatingOpt = ratingRepository.findByUserIdAndExpertId(userId, request.expertId());
+
+        Rating rating;
+        if (existingRatingOpt.isPresent()) {
+            rating = existingRatingOpt.get();
+            rating.update(request.score());
+        } else {
+            rating = Rating.builder()
+                    .userId(userId)
+                    .expertId(request.expertId())
+                    .score(request.score())
+                    .build();
         }
-
-        Rating rating = Rating.builder()
-                .userId(userId)
-                .expertId(request.expertId())
-                .score(request.score())
-                .comment(request.comment())
-                .build();
-
         rating = ratingRepository.save(rating);
+        updateExpertRatingStats(request.expertId());
+        return new RatingResponse(rating.getId(), request.expertId(), rating.getScore());
+    }
 
-        // Update expert's rating stats
-        User expert = userRepository.findById(request.expertId())
+    @Transactional
+    public void deleteContact(Long viewerId, Long expertId) {
+        contactLogRepository.deleteByViewerIdAndExpertId(viewerId, expertId);
+        ratingRepository.deleteByUserIdAndExpertId(viewerId, expertId);
+        updateExpertRatingStats(expertId);
+    }
+
+    private void updateExpertRatingStats(Long expertId) {
+        User expert = userRepository.findById(expertId)
                 .orElseThrow(() -> new IllegalArgumentException("전문가를 찾을 수 없습니다."));
-        List<Rating> expertRatings = ratingRepository.findByExpertId(request.expertId());
-        int reviewCount = expertRatings.size();
-        int averageRating = (int) Math.round(expertRatings.stream().mapToInt(Rating::getScore).average().orElse(0.0));
-        expert.updateRating(averageRating, reviewCount);
+        
+        double avgScore = ratingRepository.findStatsByExpertId(expertId);
+        expert.updateRating(avgScore);
         userRepository.save(expert);
-
-        return new RatingResponse(
-                rating.getId(),
-                request.expertId(),
-                rating.getScore(),
-                rating.getComment()
-        );
     }
 }

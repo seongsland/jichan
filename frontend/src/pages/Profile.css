@@ -119,6 +119,25 @@
   font-size: 0.9rem;
 }
 
+.specialty-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 10;
+  text-align: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
 .introduction {
   color: #666;
   margin-bottom: 1rem;
@@ -128,6 +147,7 @@
 .profile-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top:auto;
   margin-bottom: 1rem;
   flex-wrap: wrap;
 }
@@ -136,7 +156,7 @@
   padding: 0.75rem;
   background-color: #e7f3ff;
   border-radius: 4px;
-  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 

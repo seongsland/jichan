@@ -26,7 +26,8 @@ public class ProfileDto {
 
     public record SpecialtyInfo(
             String name,
-            Integer hourlyRate
+            Integer hourlyRate,
+            Long specialtyDetailId
     ) {}
 
     public record ProfileItem(

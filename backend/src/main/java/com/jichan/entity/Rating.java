@@ -31,19 +31,14 @@ public class Rating extends BaseTimeEntity {
     @Max(5)
     private Integer score;
 
-    @Column(columnDefinition = "TEXT")
-    private String comment;
-
     @Builder
-    public Rating(Long userId, Long expertId, Integer score, String comment) {
+    public Rating(Long userId, Long expertId, Integer score) {
         this.userId = userId;
         this.expertId = expertId;
         this.score = score;
-        this.comment = comment;
     }
 
-    public void updateRating(Integer score, String comment) {
+    public void update(Integer score) {
         if (score != null) this.score = score;
-        if (comment != null) this.comment = comment;
     }
 }

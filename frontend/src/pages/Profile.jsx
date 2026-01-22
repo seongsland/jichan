@@ -21,6 +21,7 @@ const Profile = () => {
 
   const [message, setMessage] = useState({ type: '', text: '', timestamp: null });
   const [contactViews, setContactViews] = useState({});
+  const [visibleCategories, setVisibleCategories] = useState({});
 
   const [categories, setCategories] = useState([]);
   const [details, setDetails] = useState([]);
@@ -242,16 +243,29 @@ const Profile = () => {
               <div className="specialties">
                 {profile.specialties.map((spec, idx) => {
                   let name = spec.name;
-                  if (!name && spec.specialtyDetailId) {
-                    const detail = details.find(d => d.id === spec.specialtyDetailId);
-                    if (detail) {
-                      const category = categories.find(c => c.id === detail.categoryId);
-                      name = category ? `${category.name} - ${detail.name}` : detail.name;
-                    }
+                  let categoryName = "";
+                  const detail = details.find(d => d.id === spec.specialtyDetailId);
+                  if (detail) {
+                    const category = categories.find(c => c.id === detail.categoryId);
+                    categoryName = category.name;
                   }
+
+                  const specialtyKey = `${profile.id}-${idx}`;
+
                   return (
-                    <div key={idx} className="specialty">
+                    <div 
+                      key={idx} 
+                      className="specialty" 
+                      title={categoryName}
+                      onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
+                      style={{ cursor: 'pointer', position: 'relative' }}
+                    >
                       {name} - {spec.hourlyRate?.toLocaleString()}원/시간
+                      {visibleCategories[specialtyKey] && categoryName && (
+                        <div className="specialty-overlay">
+                          {categoryName}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -260,24 +274,6 @@ const Profile = () => {
             {profile.introduction && (
               <p className="introduction">{profile.introduction}</p>
             )}
-            <div className="profile-actions">
-              {!contactViews[`${profile.id}-EMAIL`] && (
-                <button
-                  onClick={() => handleContactView(profile.id, 'EMAIL')}
-                  className="btn btn-outline"
-                >
-                  이메일 보기
-                </button>
-              )}
-              {!contactViews[`${profile.id}-PHONE`] && (
-                <button
-                  onClick={() => handleContactView(profile.id, 'PHONE')}
-                  className="btn btn-outline"
-                >
-                  핸드폰 보기
-                </button>
-              )}
-            </div>
             {contactViews[`${profile.id}-EMAIL`] && (
               <div className="contact-info">
                 <strong>이메일:</strong>{' '}
@@ -295,6 +291,25 @@ const Profile = () => {
                 )}
               </div>
             )}
+
+            <div className="profile-actions">
+              {!contactViews[`${profile.id}-EMAIL`] && (
+                  <button
+                      onClick={() => handleContactView(profile.id, 'EMAIL')}
+                      className="btn btn-outline"
+                  >
+                    이메일 보기
+                  </button>
+              )}
+              {!contactViews[`${profile.id}-PHONE`] && (
+                  <button
+                      onClick={() => handleContactView(profile.id, 'PHONE')}
+                      className="btn btn-outline"
+                  >
+                    핸드폰 보기
+                  </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
