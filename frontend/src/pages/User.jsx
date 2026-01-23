@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import api from '../utils/api';
 import Message from '../components/Message';
 import {useLoading} from '../context/LoadingContext';
+import { validateName } from '../utils/validation';
 import './User.css';
 import sidoData from '../utils/sido.json';
 
@@ -194,6 +195,12 @@ const User = () => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
 
+    const nameError = validateName(formData.name);
+    if (nameError) {
+      setMessage({ type: 'error', text: nameError });
+      return;
+    }
+
     if (formData.isVisible) {
       if (!formData.name || !formData.gender || !formData.region || !formData.introduction) {
         setMessage({
@@ -267,6 +274,7 @@ const User = () => {
             value={formData.name}
             onChange={handleChange}
             required
+            maxLength={13}
           />
         </div>
         <div className="form-group">

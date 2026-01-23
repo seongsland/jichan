@@ -1,15 +1,19 @@
-import {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
+import { validatePassword, validateName } from '../utils/validation';
 import Message from '../components/Message';
+import { useLoading } from '../context/LoadingContext';
 import './Auth.css';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
+    passwordConfirm: '',
   });
   const [agreed, setAgreed] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -29,6 +33,23 @@ const Signup = () => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
 
+    const nameError = validateName(formData.name);
+    if (nameError) {
+      setMessage({ type: 'error', text: nameError });
+      return;
+    }
+
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setMessage({ type: 'error', text: passwordError });
+      return;
+    }
+
+    if (formData.password !== formData.passwordConfirm) {
+      setMessage({ type: 'error', text: '비밀번호가 일치하지 않습니다.' });
+      return;
+    }
+
     if (!agreed) {
       setMessage({
         type: 'error',
@@ -37,8 +58,11 @@ const Signup = () => {
       return;
     }
 
+    showLoading();
+
     try {
-      await api.post('/auth/signup', formData);
+      const { passwordConfirm, ...signupData } = formData;
+      await api.post('/auth/signup', signupData);
       setMessage({
         type: 'success',
         text: '회원가입이 완료되었습니다. 이메일을 확인해주세요.',
@@ -51,6 +75,8 @@ const Signup = () => {
         type: 'error',
         text: error.response?.data?.message || '회원가입에 실패했습니다.',
       });
+    } finally {
+      hideLoading();
     }
   };
 
@@ -73,6 +99,7 @@ const Signup = () => {
               value={formData.name}
               onChange={handleChange}
               required
+              maxLength={13}
             />
           </div>
           <div className="form-group">
@@ -96,6 +123,20 @@ const Signup = () => {
               onChange={handleChange}
               required
               minLength={8}
+              maxLength={32}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="passwordConfirm">비밀번호 확인</label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              value={formData.passwordConfirm}
+              onChange={handleChange}
+              required
+              minLength={8}
+              maxLength={32}
             />
           </div>
           <div className="form-group checkbox-group">

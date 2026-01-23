@@ -1,5 +1,6 @@
 package com.jichan.dto;
 
+import com.jichan.util.validator.ValidName;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -31,6 +32,7 @@ public class UserDto {
     ) {}
 
     public record ProfileUpdateRequest(
+            @ValidName
             String name,
             String gender,
             String region,

@@ -19,6 +19,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // 앱 초기 로드 시 accessToken이 없으면 refreshToken으로 갱신 시도
     const initializeAuth = async () => {
+      const storedLoginStatus = localStorage.getItem('isLoggedIn');
+
+      if (!storedLoginStatus) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
       try {
         // refreshToken으로 accessToken 갱신 시도 (axios 직접 사용으로 인터셉터 회피)
         const response = await axios.post('/api/auth/token_refresh', {}, {
@@ -30,6 +38,7 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         // refreshToken이 없거나 유효하지 않으면 인증되지 않은 상태
         setIsAuthenticated(false);
+        localStorage.removeItem('isLoggedIn');
       } finally {
         setLoading(false);
       }
@@ -43,6 +52,7 @@ export const AuthProvider = ({ children }) => {
     // refreshToken은 서버에서 httpOnly 쿠키로 설정되므로 프론트엔드에서는 처리하지 않음
     setAccessToken(accessToken);
     setIsAuthenticated(true);
+    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const logout = async () => {
@@ -55,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       // refreshToken 쿠키는 서버에서 삭제됨
       clearAccessToken();
       setIsAuthenticated(false);
+      localStorage.removeItem('isLoggedIn');
     }
   };
 
@@ -64,5 +75,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-

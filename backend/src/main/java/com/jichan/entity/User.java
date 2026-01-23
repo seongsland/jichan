@@ -96,4 +96,8 @@ public class User extends BaseTimeEntity {
     public void updateReviewCount(int reviewCount) {
         this.reviewCount = reviewCount;
     }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

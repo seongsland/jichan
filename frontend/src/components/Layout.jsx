@@ -77,7 +77,7 @@ const Layout = ({ children }) => {
         <div className="footer-content">
           <div className="footer-section">
             <h3>지찬</h3>
-            <p>신뢰할 수 있는 지인 기반<br/>전문가 매칭 플랫폼</p>
+            <p>자유롭게 직접 소통하는<br/>전문가 매칭 플랫폼</p>
           </div>
           <div className="footer-section">
             <h4>서비스 문의</h4>

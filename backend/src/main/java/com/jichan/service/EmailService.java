@@ -18,8 +18,12 @@ public class EmailService {
         message.setText("이메일 인증을 완료하려면 다음 링크를 클릭하세요: http://localhost:3000/verify_email?token=" + token);
         mailSender.send(message);
     }
+
+    public void sendPasswordResetEmail(String to, String token) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("지찬 비밀번호 재설정");
+        message.setText("비밀번호를 재설정하려면 다음 링크를 클릭하세요: http://localhost:3000/reset_password?token=" + token);
+        mailSender.send(message);
+    }
 }
-
-
-
-
