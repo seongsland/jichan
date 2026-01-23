@@ -3,6 +3,7 @@ import api from '../utils/api';
 import Message from '../components/Message';
 import {useLoading} from '../context/LoadingContext';
 import './User.css';
+import sidoData from '../utils/sido.json';
 
 const User = () => {
   const { showLoading, hideLoading } = useLoading();
@@ -24,10 +25,21 @@ const User = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const [visibleCategories, setVisibleCategories] = useState({});
 
+  const [sido, setSido] = useState('');
+  const [sigungu, setSigungu] = useState('');
+
   useEffect(() => {
     void fetchProfile();
     void fetchSpecialties();
   }, []);
+
+  useEffect(() => {
+    if (sido) {
+      setFormData(prev => ({ ...prev, region: sigungu ? `${sido} ${sigungu}` : sido }));
+    } else {
+      setFormData(prev => ({ ...prev, region: '' }));
+    }
+  }, [sido, sigungu]);
 
   const fetchSpecialties = async () => {
     try {
@@ -47,6 +59,15 @@ const User = () => {
     try {
       const response = await api.get('/user/profile');
       const data = response.data;
+
+      if (data.region) {
+        const regionParts = data.region.split(' ');
+        const initialSido = regionParts[0] || '';
+        const initialSigungu = regionParts.length > 1 ? regionParts.slice(1).join(' ') : '';
+        setSido(initialSido);
+        setSigungu(initialSigungu);
+      }
+
       setFormData({
         name: data.name || '',
         gender: data.gender || '',
@@ -76,6 +97,15 @@ const User = () => {
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     });
+  };
+
+  const handleSidoChange = (e) => {
+    setSido(e.target.value);
+    setSigungu('');
+  };
+
+  const handleSigunguChange = (e) => {
+    setSigungu(e.target.value);
   };
 
   // Format number with commas for Korean currency
@@ -197,7 +227,7 @@ const User = () => {
 
   return (
     <div className="user">
-      <h2>프로필 관리</h2>
+      <h2 className="page-title">프로필 관리</h2>
       <Message
         type={message.type}
         message={message.text}
@@ -240,15 +270,32 @@ const User = () => {
           </select>
         </div>
         <div className="form-group">
-          <label htmlFor="region">지역</label>
-          <input
-            type="text"
-            id="region"
-            name="region"
-            value={formData.region}
-            onChange={handleChange}
-            placeholder="예: 서울"
-          />
+          <label htmlFor="sido">지역</label>
+          <div className="region-selects">
+            <select
+              id="sido"
+              name="sido"
+              value={sido}
+              onChange={handleSidoChange}
+            >
+              <option value="">시/도 선택</option>
+              {Object.keys(sidoData).map(s => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <select
+              id="sigungu"
+              name="sigungu"
+              value={sigungu}
+              onChange={handleSigunguChange}
+              disabled={!sido}
+            >
+              <option value="">시/군/구 선택</option>
+              {sido && sidoData[sido] && sidoData[sido].map(sg => (
+                <option key={sg} value={sg}>{sg}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="form-group">
           <label htmlFor="introduction">소개글</label>
@@ -336,7 +383,11 @@ const User = () => {
                   title={category?.name}
                   onClick={() => setVisibleCategories(prev => ({ ...prev, [specialtyKey]: !prev[specialtyKey] }))}
                 >
-                  <span>{detail?.name}: {formatCurrency(specialty.hourlyRate)}원/시간</span>
+                  <div className="specialty-text">
+                    <span className="name">{detail?.name}</span>
+                    <span className="separator">: </span>
+                    <span className="price">{formatCurrency(specialty.hourlyRate)}원/시간</span>
+                  </div>
                   {visibleCategories[specialtyKey] && category?.name && (
                     <div className="specialty-overlay">
                       {category.name}

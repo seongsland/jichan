@@ -1,5 +1,6 @@
 package com.jichan.repository;
 
+import com.jichan.dto.ContactDto;
 import com.jichan.entity.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
     void deleteByUserIdAndExpertId(Long userId, Long expertId);
     List<Rating> findByUserIdAndExpertIdIn(Long userId, List<Long> expertIds);
 
-    @Query("SELECT COALESCE(AVG(r.score), 0.0) FROM Rating r WHERE r.expertId = :expertId")
-    double findStatsByExpertId(@Param("expertId") Long expertId);
+    @Query("SELECT new com.jichan.dto.ContactDto$RatingStatsDto(COALESCE(AVG(r.score), 0.0), COUNT(r)) FROM Rating r WHERE r.expertId = :expertId")
+    ContactDto.RatingStatsDto findStatsByExpertId(@Param("expertId") Long expertId);
 }

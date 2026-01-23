@@ -160,8 +160,8 @@ const Contacts = () => {
   const filteredDetails = details.filter(detail => !filters.category || detail.categoryId === parseInt(filters.category));
 
   return (
-    <div className="contacts-profile">
-      <h2>나의 지인</h2>
+    <div className="contacts">
+      <h2 className="page-title">나의 지인</h2>
       <Message
         type={message.type}
         message={message.text}
@@ -179,8 +179,8 @@ const Contacts = () => {
 
       <div className="profile-filters">
         <div className="filter-group">
-          <label>특기</label>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <label className="filter-label">특기</label>
+          <div className="filter-row">
             <select
               value={filters.category}
               onChange={(e) => {
@@ -208,7 +208,7 @@ const Contacts = () => {
             </select>
           </div>
         </div>
-        <div className="filter-actions" style={{ alignSelf: 'flex-end' }}>
+        <div className="filter-actions">
           <button
             onClick={handleSearch}
             className="btn btn-primary"
@@ -222,7 +222,7 @@ const Contacts = () => {
             disabled={loading}
             title="초기화"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
               <path d="M3 3v5h5"/>
             </svg>
@@ -252,14 +252,17 @@ const Contacts = () => {
                   className="delete-btn"
                   title="삭제"
                 >
-                  &times;
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
                 </button>
                 <div className="profile-header">
                   <h3>{contact.expertName}</h3>
                 </div>
                 <div className="profile-info">
-                  {contact.gender && <span>성별: {contact.gender}</span>}
-                  {contact.region && <span>지역: {contact.region}</span>}
+                  {contact.region && <span className="info-badge">{contact.region}</span>}
+                  {contact.gender && <span className="info-badge">{contact.gender}</span>}
                 </div>
                 {contact.specialties && contact.specialties.length > 0 && (
                   <div className="specialties">

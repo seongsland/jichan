@@ -43,4 +43,7 @@ public class ContactDto {
             Long expertId,
             Integer score
     ) {}
+
+    public record RatingStatsDto(Double average, Long count) {}
+
 }

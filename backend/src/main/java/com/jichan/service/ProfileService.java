@@ -88,8 +88,6 @@ public class ProfileService {
                             .expertId(expertId)
                             .contactType(contactType)
                             .build();
-                    // 조회수 증가
-                    expert.increaseReviewCount();
                     return contactLogRepository.save(contactLog);
                 });
 
