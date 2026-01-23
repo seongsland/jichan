@@ -299,7 +299,14 @@ const Contacts = () => {
                   </div>
                 )}
                 {contact.introduction && (
-                  <p className="introduction">{contact.introduction}</p>
+                  <p className="introduction" style={{ whiteSpace: 'pre-line' }}>
+                    {contact.introduction.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < contact.introduction.split('\n').length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
                 )}
                 {contact.email && (
                   <div className="contact-info-item">
@@ -310,7 +317,14 @@ const Contacts = () => {
                   <div className="contact-info-item">
                     <strong>핸드폰:</strong> {contact.phone}
                     {contact.phoneMessage && (
-                      <div className="phone-message">{contact.phoneMessage}</div>
+                      <div className="phone-message" style={{ whiteSpace: 'pre-line' }}>
+                        {contact.phoneMessage.split('\n').map((line, i) => (
+                          <span key={i}>
+                            {line}
+                            {i < contact.phoneMessage.split('\n').length - 1 && <br />}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
                 )}

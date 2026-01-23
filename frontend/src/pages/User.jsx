@@ -93,6 +93,19 @@ const User = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    if (name === 'introduction') {
+      if (value.length > 200) return;
+      const lineCount = (value.match(/\n/g) || []).length + 1;
+      if (lineCount > 5) return;
+    }
+
+    if (name === 'phoneMessage') {
+      if (value.length > 100) return;
+      const lineCount = (value.match(/\n/g) || []).length + 1;
+      if (lineCount > 3) return;
+    }
+
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
@@ -298,7 +311,7 @@ const User = () => {
           </div>
         </div>
         <div className="form-group">
-          <label htmlFor="introduction">소개글</label>
+          <label htmlFor="introduction">소개글 (최대 5줄, 200자)</label>
           <textarea
             id="introduction"
             name="introduction"
@@ -320,7 +333,7 @@ const User = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="phoneMessage">연락 가능 시간 메모</label>
+          <label htmlFor="phoneMessage">연락 가능 시간 메모 (최대 3줄, 100자)</label>
           <textarea
             id="phoneMessage"
             name="phoneMessage"

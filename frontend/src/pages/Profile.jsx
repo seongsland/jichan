@@ -309,7 +309,14 @@ const Profile = () => {
                   </div>
                 )}
                 {profile.introduction && (
-                  <p className="introduction">{profile.introduction}</p>
+                  <p className="introduction" style={{ whiteSpace: 'pre-line' }}>
+                    {profile.introduction.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < profile.introduction.split('\n').length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
                 )}
                 {contactViews[`${profile.id}-EMAIL`] && (
                   <div className="contact-info">
@@ -322,8 +329,13 @@ const Profile = () => {
                     <strong>핸드폰:</strong>{' '}
                     {contactViews[`${profile.id}-PHONE`].contact}
                     {contactViews[`${profile.id}-PHONE`].phoneMessage && (
-                      <div className="phone-message">
-                        {contactViews[`${profile.id}-PHONE`].phoneMessage}
+                      <div className="phone-message" style={{ whiteSpace: 'pre-line' }}>
+                        {contactViews[`${profile.id}-PHONE`].phoneMessage.split('\n').map((line, i) => (
+                          <span key={i}>
+                            {line}
+                            {i < contactViews[`${profile.id}-PHONE`].phoneMessage.split('\n').length - 1 && <br />}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>

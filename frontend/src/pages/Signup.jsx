@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
 import './Auth.css';
@@ -11,6 +11,7 @@ const Signup = () => {
     email: '',
     password: '',
   });
+  const [agreed, setAgreed] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleChange = (e) => {
@@ -20,9 +21,21 @@ const Signup = () => {
     });
   };
 
+  const handleAgreementChange = (e) => {
+    setAgreed(e.target.checked);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
+
+    if (!agreed) {
+      setMessage({
+        type: 'error',
+        text: '이용약관 및 개인정보 처리방침에 동의해야 합니다.',
+      });
+      return;
+    }
 
     try {
       await api.post('/auth/signup', formData);
@@ -84,6 +97,18 @@ const Signup = () => {
               required
               minLength={8}
             />
+          </div>
+          <div className="form-group checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={handleAgreementChange}
+              />
+              <span>
+                <Link to="/terms" target="_blank">이용약관</Link> 및 <Link to="/privacy" target="_blank">개인정보 처리방침</Link>에 동의합니다.
+              </span>
+            </label>
           </div>
           <button type="submit" className="btn btn-primary btn-block">
             회원가입

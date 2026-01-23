@@ -13,9 +13,14 @@ const Layout = ({ children }) => {
   };
 
   const handleNavClick = (e, path) => {
+    // 현재 페이지와 같은 경로를 클릭했을 때
     if (location.pathname === path) {
       e.preventDefault();
-      window.location.reload();
+      // 새로고침 대신 스크롤만 최상단으로 이동
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   };
 
