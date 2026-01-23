@@ -96,7 +96,7 @@ const User = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     if (name === 'introduction') {
       if (value.length > 200) return;
       const lineCount = (value.match(/\n/g) || []).length + 1;
@@ -107,6 +107,23 @@ const User = () => {
       if (value.length > 100) return;
       const lineCount = (value.match(/\n/g) || []).length + 1;
       if (lineCount > 3) return;
+    }
+
+    if (name === 'phone') {
+      const cleaned = value.replace(/\D/g, '');
+      const match = cleaned.match(/^(\d{0,3})(\d{0,4})(\d{0,4})$/);
+      if (!match) return;
+
+      let formatted = !match[2] ? match[1] : `${match[1]}-${match[2]}`;
+      if (match[3]) {
+        formatted += `-${match[3]}`;
+      }
+
+      setFormData({
+        ...formData,
+        phone: formatted,
+      });
+      return;
     }
 
     setFormData({
@@ -200,6 +217,14 @@ const User = () => {
     const nameError = validateName(formData.name);
     if (nameError) {
       setMessage({ type: 'error', text: nameError });
+      return;
+    }
+
+    if (formData.phone && !/^\d{3}-\d{4}-\d{4}$/.test(formData.phone)) {
+      setMessage({
+        type: 'error',
+        text: '핸드폰 번호 형식이 올바르지 않습니다. (예: 010-1234-5678)',
+      });
       return;
     }
 
@@ -363,6 +388,7 @@ const User = () => {
             value={formData.phone}
             onChange={handleChange}
             placeholder="예: 010-1234-5678"
+            maxLength="13"
           />
         </div>
         <div className="form-group">

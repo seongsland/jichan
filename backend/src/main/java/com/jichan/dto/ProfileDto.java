@@ -11,6 +11,7 @@ public class ProfileDto {
             Long category,
             Long specialty,
             String sortBy,
+            String region,
             @RequestParam(defaultValue = "0") int page
     ) {}
 
