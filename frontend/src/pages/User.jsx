@@ -5,9 +5,11 @@ import {useLoading} from '../context/LoadingContext';
 import { validateName } from '../utils/validation';
 import './User.css';
 import sidoData from '../utils/sido.json';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const User = () => {
   const { showLoading, hideLoading } = useLoading();
+  const { logout } = useAuth(); // Use the useAuth hook
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -235,6 +237,10 @@ const User = () => {
         type: 'success',
         text: '프로필이 업데이트되었습니다.',
       });
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     } catch (error) {
       setMessage({
         type: 'error',
@@ -242,6 +248,25 @@ const User = () => {
       });
     } finally {
       hideLoading();
+    }
+  };
+
+  const handleWithdrawal = async () => {
+    if (window.confirm('정말 탈퇴하시겠습니까?\r\n작성하신 소개글과 특기 사항이 모두 삭제됩니다.')) {
+      showLoading();
+      try {
+        await api.delete('/auth/withdraw');
+        alert('성공적으로 탈퇴되었습니다.');
+        await logout();
+        window.location.href = '/';
+      } catch (error) {
+        setMessage({
+          type: 'error',
+          text: error.response?.data?.message || '탈퇴 처리에 실패했습니다.',
+        });
+      } finally {
+        hideLoading();
+      }
     }
   };
 
@@ -432,6 +457,11 @@ const User = () => {
           저장
         </button>
       </form>
+      <div className="withdrawal-section">
+        <span onClick={handleWithdrawal} className="withdrawal-link">
+         > 회원 탈퇴
+        </span>
+      </div>
     </div>
   );
 };

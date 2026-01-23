@@ -136,17 +136,6 @@ const Profile = () => {
           phoneMessage,
         },
       }));
-
-      // 조회수 증가 반영
-      setProfileData(prev => ({
-        ...prev,
-        content: prev.content.map(profile => 
-          profile.id === expertId 
-            ? { ...profile, reviewCount: (profile.reviewCount || 0) + 1 }
-            : profile
-        )
-      }));
-
     } catch (error) {
       setMessage({
         type: 'error',

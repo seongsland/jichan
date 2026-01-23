@@ -41,15 +41,15 @@ export const validateName = (name) => {
   // 3. 조합 및 길이 검사
   if (hasKorean && hasEnglish) { // 한글 + 영문 조합
     if (name.length < 3 || name.length > 8) {
-      return '이름(한글+영문 조합)은 3자 이상 8자 이하이어야 합니다.';
+      return '이름(한글+영문 조합)은 3자 이상 8자 이하여야 합니다.';
     }
   } else if (hasKorean) { // 한글 또는 한글+숫자 조합
     if (name.length < 2 || name.length > 8) {
-      return '한글 이름은 2자 이상 8자 이하이어야 합니다.';
+      return '한글 이름은 2자 이상 8자 이하여야 합니다.';
     }
   } else if (hasEnglish) { // 영문 또는 영문+숫자 조합
     if (name.length < 3 || name.length > 13) {
-      return '영문 이름은 3자 이상 13자 이하이어야 합니다.';
+      return '영문 이름은 3자 이상 13자 이하여야 합니다.';
     }
   } else {
     // 이 경우는 숫자만 있는 경우인데, 위에서 이미 필터링됨

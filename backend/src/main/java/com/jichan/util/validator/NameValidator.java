@@ -32,17 +32,17 @@ public class NameValidator implements ConstraintValidator<ValidName, String> {
         // 3. 조합 및 길이 검사
         if (hasKorean && hasEnglish) { // 한글 + 영문 조합
             if (len < 3 || len > 8) {
-                context.buildConstraintViolationWithTemplate("이름(한글+영문 조합)은 3자 이상 8자 이하이어야 합니다.").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("이름(한글+영문 조합)은 3자 이상 8자 이하여야 합니다.").addConstraintViolation();
                 return false;
             }
         } else if (hasKorean) { // 한글 또는 한글+숫자 조합
             if (len < 2 || len > 8) {
-                context.buildConstraintViolationWithTemplate("한글 이름은 2자 이상 8자 이하이어야 합니다.").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("한글 이름은 2자 이상 8자 이하여야 합니다.").addConstraintViolation();
                 return false;
             }
         } else if (hasEnglish) { // 영문 또는 영문+숫자 조합
             if (len < 3 || len > 13) {
-                context.buildConstraintViolationWithTemplate("영문 이름은 3자 이상 13자 이하이어야 합니다.").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("영문 이름은 3자 이상 13자 이하여야 합니다.").addConstraintViolation();
                 return false;
             }
         } else {
