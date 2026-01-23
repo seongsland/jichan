@@ -36,6 +36,10 @@ jwt:
   access-token-expiration: 3600000
   refresh-token-expiration: 86400000
 
+jichan:
+  server:
+    address: http://localhost:3000
+
 encryption:
   key: ${ENC_KEY}
 

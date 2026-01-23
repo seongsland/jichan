@@ -1,10 +1,7 @@
 import {Link} from 'react-router-dom';
-import {useAuth} from '../context/AuthContext';
 import './Home.css';
 
 const Home = () => {
-  const { isAuthenticated } = useAuth();
-
   return (
     <div className="home">
       <section className="home-hero">
@@ -16,28 +13,14 @@ const Home = () => {
             직접 연락하고 자유롭게 조율하는 나만의 든든한 지인을 만나보세요.
           </p>
           <div className="hero-actions">
-            {isAuthenticated ? (
-              <>
-                <Link to="/profile" className="btn btn-primary btn-lg">
-                  내게 필요한 지인 찾기
-                </Link>
-                <Link to="/user" className="btn btn-secondary btn-lg">
-                  나도 지인으로 등록하기
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/profile" className="btn btn-primary btn-lg">
-                  내게 필요한 지인 찾기
-                </Link>
-                <Link to="/signup" className="btn btn-secondary btn-lg">
-                  나도 지인으로 등록하기
-                </Link>
-                <Link to="/login" className="btn btn-outline btn-lg">
-                  로그인
-                </Link>
-              </>
-            )}
+            <>
+              <Link to="/profile" className="btn btn-primary btn-lg">
+                내게 필요한 지인 찾기
+              </Link>
+              <Link to="/user" className="btn btn-secondary btn-lg">
+                나도 지인으로 등록하기
+              </Link>
+            </>
           </div>
         </div>
       </section>

@@ -44,7 +44,7 @@ const VerifyEmail = () => {
     };
 
     verifyEmail();
-  }, [token, navigate, showLoading, hideLoading]);
+  }, [token]);
 
   return (
     <div className="auth-container">

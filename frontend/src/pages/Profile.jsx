@@ -4,6 +4,7 @@ import Message from '../components/Message';
 import ConfirmDialog from '../components/ConfirmDialog';
 import {useLoading} from '../context/LoadingContext';
 import './Profile.css';
+import sidoData from '../utils/sido.json';
 
 const Profile = () => {
   const { loading, showLoading, hideLoading } = useLoading();
@@ -17,8 +18,13 @@ const Profile = () => {
   const [filters, setFilters] = useState({
     category: '',
     specialty: '',
-    sortBy: ''
+    sortBy: '',
+    region: ''
   });
+
+  const [isDetailSearchVisible, setIsDetailSearchVisible] = useState(false);
+  const [sido, setSido] = useState('');
+  const [sigungu, setSigungu] = useState('');
 
   const [message, setMessage] = useState({ type: '', text: '' });
   const [contactViews, setContactViews] = useState({});
@@ -37,6 +43,11 @@ const Profile = () => {
     void fetchSpecialties();
     void fetchProfiles(0, true);
   }, []);
+
+  useEffect(() => {
+    const region = sigungu ? `${sido} ${sigungu}` : sido;
+    setFilters(prev => ({ ...prev, region }));
+  }, [sido, sigungu]);
 
 
   const fetchSpecialties = async () => {
@@ -61,6 +72,7 @@ const Profile = () => {
         ...(activeFilters.category && { category: activeFilters.category }),
         ...(activeFilters.specialty && { specialty: activeFilters.specialty }),
         ...(activeFilters.sortBy && { sortBy: activeFilters.sortBy }),
+        ...(activeFilters.region && { region: activeFilters.region }),
       };
       const response = await api.get('/profile', { params });
       const data = response.data;
@@ -136,17 +148,6 @@ const Profile = () => {
           phoneMessage,
         },
       }));
-
-      // 조회수 증가 반영
-      setProfileData(prev => ({
-        ...prev,
-        content: prev.content.map(profile => 
-          profile.id === expertId 
-            ? { ...profile, reviewCount: (profile.reviewCount || 0) + 1 }
-            : profile
-        )
-      }));
-
     } catch (error) {
       setMessage({
         type: 'error',
@@ -162,9 +163,21 @@ const Profile = () => {
   };
 
   const handleReset = () => {
-    const resetFilters = { category: '', specialty: '', sortBy: '' };
+    const resetFilters = { category: '', specialty: '', sortBy: '', region: '' };
     setFilters(resetFilters);
+    setSido('');
+    setSigungu('');
+    setIsDetailSearchVisible(false);
     void fetchProfiles(0, true, resetFilters);
+  };
+
+  const handleSidoChange = (e) => {
+    setSido(e.target.value);
+    setSigungu('');
+  };
+
+  const handleSigunguChange = (e) => {
+    setSigungu(e.target.value);
   };
 
   const filteredDetails = details.filter(detail => !filters.category || detail.categoryId === parseInt(filters.category));
@@ -187,7 +200,7 @@ const Profile = () => {
         cancelText="취소"
       />
 
-      <div className="profile-filters">
+      <div className={`profile-filters ${isDetailSearchVisible ? 'details-visible' : ''}`}>
         <div className="filter-group search-filter">
           <label className="filter-label">특기</label>
           <div className="filter-row">
@@ -218,6 +231,7 @@ const Profile = () => {
             </select>
           </div>
         </div>
+
         <div className="filter-group sort-filter">
           <label htmlFor="sortBy" className="filter-label">정렬</label>
           <select
@@ -230,25 +244,67 @@ const Profile = () => {
             <option value="price">금액순</option>
           </select>
         </div>
-        <div className="filter-actions">
-          <button
-            onClick={handleSearch}
-            className="btn btn-primary"
-            disabled={loading}
-          >
-            {loading ? '검색 중...' : '조회'}
-          </button>
-          <button
-            onClick={handleReset}
-            className="btn btn-outline"
-            disabled={loading}
-            title="초기화"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-              <path d="M3 3v5h5"/>
+
+        <div className="filter-group region-filter">
+          <label htmlFor="sido" className="filter-label">지역</label>
+          <div className="filter-row">
+            <select
+              id="sido"
+              name="sido"
+              value={sido}
+              onChange={handleSidoChange}
+            >
+              <option value="">시/도 선택</option>
+              {Object.keys(sidoData).map(s => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <select
+              id="sigungu"
+              name="sigungu"
+              value={sigungu}
+              onChange={handleSigunguChange}
+              disabled={!sido}
+            >
+              <option value="">시/군/구 선택</option>
+              {sido && sidoData[sido] && sidoData[sido].map(sg => (
+                <option key={sg} value={sg}>{sg}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="actions-container">
+          <div className="filter-actions">
+            <button
+              onClick={handleSearch}
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              {loading ? '검색 중...' : '조회'}
+            </button>
+            <button
+              onClick={handleReset}
+              className="btn btn-outline"
+              disabled={loading}
+              title="초기화"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div 
+            className="detail-search-handle" 
+            onClick={() => setIsDetailSearchVisible(!isDetailSearchVisible)}
+            title="상세 검색 열기/닫기"
+        >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isDetailSearchVisible ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}>
+                <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
-          </button>
         </div>
       </div>
 
@@ -309,7 +365,14 @@ const Profile = () => {
                   </div>
                 )}
                 {profile.introduction && (
-                  <p className="introduction">{profile.introduction}</p>
+                  <p className="introduction" style={{ whiteSpace: 'pre-line' }}>
+                    {profile.introduction.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < profile.introduction.split('\n').length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
                 )}
                 {contactViews[`${profile.id}-EMAIL`] && (
                   <div className="contact-info">
@@ -322,8 +385,13 @@ const Profile = () => {
                     <strong>핸드폰:</strong>{' '}
                     {contactViews[`${profile.id}-PHONE`].contact}
                     {contactViews[`${profile.id}-PHONE`].phoneMessage && (
-                      <div className="phone-message">
-                        {contactViews[`${profile.id}-PHONE`].phoneMessage}
+                      <div className="phone-message" style={{ whiteSpace: 'pre-line' }}>
+                        {contactViews[`${profile.id}-PHONE`].phoneMessage.split('\n').map((line, i) => (
+                          <span key={i}>
+                            {line}
+                            {i < contactViews[`${profile.id}-PHONE`].phoneMessage.split('\n').length - 1 && <br />}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>

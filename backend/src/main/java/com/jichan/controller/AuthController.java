@@ -1,24 +1,28 @@
 package com.jichan.controller;
 
-import com.jichan.dto.AuthDto.AuthResponse;
-import com.jichan.dto.AuthDto.LoginRequest;
-import com.jichan.dto.AuthDto.SignupRequest;
+import com.jichan.dto.AuthDto.*;
 import com.jichan.dto.CommonDto.ApiResponse;
 import com.jichan.service.AuthService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -27,7 +31,7 @@ public class AuthController {
     private Long refreshTokenExpiration;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<ApiResponse<Void>> signup(@Valid @RequestBody SignupRequest request) throws MessagingException {
         authService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>("회원가입이 완료되었습니다. 이메일을 확인해주세요.", null));
@@ -73,7 +77,7 @@ public class AuthController {
         }
         
         if (refreshToken == null) {
-            throw new IllegalArgumentException("refreshToken 쿠키가 없습니다.");
+            log.info("refreshToken 쿠키가 없습니다.");
         }
         
         String newAccessToken = authService.refreshToken(refreshToken);
@@ -81,8 +85,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(
-            @RequestHeader(value = "Authorization", required = false) String authorization) {
+    public ResponseEntity<ApiResponse<Void>> logout() {
         // refreshToken 쿠키 삭제
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
@@ -95,5 +98,26 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                 .body(new ApiResponse<>("로그아웃되었습니다.", null));
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ApiResponse<Void>> withdrawUser(Authentication authentication) {
+        Long userId = Long.valueOf(authentication.getName());
+        authService.withdrawUser(userId);
+
+        return ResponseEntity.ok()
+                .body(new ApiResponse<>("회원탈퇴가 완료되었습니다.", null));
+    }
+
+    @PostMapping("/forgot_password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestBody Map<String, String> request) throws MessagingException {
+        authService.forgotPassword(request.get("email"));
+        return ResponseEntity.ok(new ApiResponse<>("비밀번호 재설정 링크를 이메일로 보냈습니다.", null));
+    }
+
+    @PostMapping("/reset_password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(new ApiResponse<>("비밀번호가 성공적으로 재설정되었습니다.", null));
     }
 }

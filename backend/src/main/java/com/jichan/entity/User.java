@@ -1,6 +1,7 @@
 package com.jichan.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Entity
@@ -36,6 +37,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified = false;
 
+    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "핸드폰 번호 형식이 올바르지 않습니다.")
     private String phone;
 
     @Column(name = "phone_message", columnDefinition = "TEXT")
@@ -95,5 +97,9 @@ public class User extends BaseTimeEntity {
 
     public void updateReviewCount(int reviewCount) {
         this.reviewCount = reviewCount;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 }

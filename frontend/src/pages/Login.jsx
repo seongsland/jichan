@@ -75,9 +75,14 @@ const Login = () => {
             로그인
           </button>
         </form>
-        <p className="auth-link">
-          계정이 없으신가요? <Link to="/signup">회원가입</Link>
-        </p>
+        <div className="auth-links">
+          <p className="auth-link">
+            계정이 없으신가요? <Link to="/signup">회원가입</Link>
+          </p>
+          <p className="auth-link">
+            <Link to="/forgot_password">비밀번호 찾기</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

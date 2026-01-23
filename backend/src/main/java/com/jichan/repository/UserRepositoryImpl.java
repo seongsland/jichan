@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .where(
                         user.isVisible.isTrue(),
                         specialtyExists(profileRequest.specialty()),
-                        categoryExists(profileRequest.category(), profileRequest.specialty())
+                        categoryExists(profileRequest.category(), profileRequest.specialty()),
+                        regionLikes(profileRequest.region())
                 )
                 .orderBy(getOrderSpecifier(profileRequest.sortBy()))
                 .offset(pageable.getOffset())
@@ -73,6 +75,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         specialtyDetail.category.id.eq(categoryId)
                 )
                 .exists();
+    }
+
+    private BooleanExpression regionLikes(String region) {
+        if (!StringUtils.hasText(region)) {
+            return null;
+        }
+        return user.region.like(region + "%");
     }
 
     private OrderSpecifier<?> getOrderSpecifier(String sortBy) {

@@ -2,11 +2,14 @@ import {useEffect, useState} from 'react';
 import api from '../utils/api';
 import Message from '../components/Message';
 import {useLoading} from '../context/LoadingContext';
+import { validateName } from '../utils/validation';
 import './User.css';
 import sidoData from '../utils/sido.json';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const User = () => {
   const { showLoading, hideLoading } = useLoading();
+  const { logout } = useAuth(); // Use the useAuth hook
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -93,6 +96,36 @@ const User = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === 'introduction') {
+      if (value.length > 200) return;
+      const lineCount = (value.match(/\n/g) || []).length + 1;
+      if (lineCount > 5) return;
+    }
+
+    if (name === 'phoneMessage') {
+      if (value.length > 100) return;
+      const lineCount = (value.match(/\n/g) || []).length + 1;
+      if (lineCount > 3) return;
+    }
+
+    if (name === 'phone') {
+      const cleaned = value.replace(/\D/g, '');
+      const match = cleaned.match(/^(\d{0,3})(\d{0,4})(\d{0,4})$/);
+      if (!match) return;
+
+      let formatted = !match[2] ? match[1] : `${match[1]}-${match[2]}`;
+      if (match[3]) {
+        formatted += `-${match[3]}`;
+      }
+
+      setFormData({
+        ...formData,
+        phone: formatted,
+      });
+      return;
+    }
+
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
@@ -181,6 +214,20 @@ const User = () => {
     e.preventDefault();
     setMessage({ type: '', text: '' });
 
+    const nameError = validateName(formData.name);
+    if (nameError) {
+      setMessage({ type: 'error', text: nameError });
+      return;
+    }
+
+    if (formData.phone && !/^\d{3}-\d{4}-\d{4}$/.test(formData.phone)) {
+      setMessage({
+        type: 'error',
+        text: '핸드폰 번호 형식이 올바르지 않습니다. (예: 010-1234-5678)',
+      });
+      return;
+    }
+
     if (formData.isVisible) {
       if (!formData.name || !formData.gender || !formData.region || !formData.introduction) {
         setMessage({
@@ -215,6 +262,10 @@ const User = () => {
         type: 'success',
         text: '프로필이 업데이트되었습니다.',
       });
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     } catch (error) {
       setMessage({
         type: 'error',
@@ -222,6 +273,25 @@ const User = () => {
       });
     } finally {
       hideLoading();
+    }
+  };
+
+  const handleWithdrawal = async () => {
+    if (window.confirm('정말 탈퇴하시겠습니까?\r\n작성하신 소개글과 특기 사항이 모두 삭제됩니다.')) {
+      showLoading();
+      try {
+        await api.delete('/auth/withdraw');
+        alert('성공적으로 탈퇴되었습니다.');
+        await logout();
+        window.location.href = '/';
+      } catch (error) {
+        setMessage({
+          type: 'error',
+          text: error.response?.data?.message || '탈퇴 처리에 실패했습니다.',
+        });
+      } finally {
+        hideLoading();
+      }
     }
   };
 
@@ -254,6 +324,7 @@ const User = () => {
             value={formData.name}
             onChange={handleChange}
             required
+            maxLength={13}
           />
         </div>
         <div className="form-group">
@@ -298,7 +369,7 @@ const User = () => {
           </div>
         </div>
         <div className="form-group">
-          <label htmlFor="introduction">소개글</label>
+          <label htmlFor="introduction">소개글 (최대 5줄, 200자)</label>
           <textarea
             id="introduction"
             name="introduction"
@@ -317,10 +388,11 @@ const User = () => {
             value={formData.phone}
             onChange={handleChange}
             placeholder="예: 010-1234-5678"
+            maxLength="13"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="phoneMessage">연락 가능 시간 메모</label>
+          <label htmlFor="phoneMessage">연락 가능 시간 메모 (최대 3줄, 100자)</label>
           <textarea
             id="phoneMessage"
             name="phoneMessage"
@@ -411,6 +483,11 @@ const User = () => {
           저장
         </button>
       </form>
+      <div className="withdrawal-section">
+        <span onClick={handleWithdrawal} className="withdrawal-link">
+         > 회원 탈퇴
+        </span>
+      </div>
     </div>
   );
 };
