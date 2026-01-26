@@ -17,15 +17,23 @@
 }
 
 .layout .logo {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: #2c3e50;
   text-decoration: none;
   letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.layout .logo-mark {
+  vertical-align: text-bottom;
+  margin-right: 0.3rem;
 }
 
 .layout .logo-highlight {
   color: #007bff;
+  margin-left: 0.5rem;
 }
 
 .layout .nav {
@@ -162,9 +170,8 @@
 
   .layout .logo {
     width: 100%;
-    text-align: center;
+    justify-content: center; /* 모바일에서 로고 중앙 정렬 */
     padding: 1rem;
-    display: block;
     box-sizing: border-box;
   }
 

@@ -1,6 +1,7 @@
 import {Link, useNavigate, useLocation} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext';
 import './Layout.css';
+import logo_mark from '../assets/logo_mark.gif';
 
 const Layout = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
@@ -28,6 +29,7 @@ const Layout = ({ children }) => {
     <div className="layout">
       <header className="header">
         <Link to="/" className="logo">
+          <img src={logo_mark} alt="지찬 로고" className="logo-mark" width="35"/>
           지찬 - <span className="logo-highlight">지인찬스</span>
         </Link>
         <nav className="nav">
@@ -76,7 +78,7 @@ const Layout = ({ children }) => {
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>지찬</h3>
+            <h3><img src={logo_mark} alt="지찬 로고" width="23px" className="logo-mark" />지찬</h3>
             <p>자유롭게 직접 소통하는<br/>전문가 매칭 플랫폼</p>
           </div>
           <div className="footer-section">
