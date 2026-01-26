@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -117,11 +118,14 @@ public class ProfileService {
                 user.getIntroduction(),
                 user.getAverageRating(),
                 user.getReviewCount(),
+                StringUtils.hasText(user.getEmail()),
+                StringUtils.hasText(user.getPhone()),
                 isEmailViewed,
                 isPhoneViewed,
                 isEmailViewed ? user.getEmail() : null,
                 isPhoneViewed ? user.getPhone() : null,
                 isPhoneViewed ? user.getPhoneMessage() : null
+
         );
     }
 }

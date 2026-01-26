@@ -40,6 +40,8 @@ public class ProfileDto {
             String introduction,
             Double averageRating,
             Integer reviewCount,
+            boolean isEmailInputted,
+            boolean isPhoneInputted,
             boolean isEmailViewed,
             boolean isPhoneViewed,
             String email,

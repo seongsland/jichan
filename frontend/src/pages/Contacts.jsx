@@ -308,12 +308,12 @@ const Contacts = () => {
                     ))}
                   </p>
                 )}
-                {contact.email && (
+                {contact.hasEmailView && (
                   <div className="contact-info-item">
                     <strong>이메일:</strong> {contact.email}
                   </div>
                 )}
-                {contact.phone && (
+                {contact.hasPhoneView && (
                   <div className="contact-info-item">
                     <strong>핸드폰:</strong> {contact.phone}
                     {contact.phoneMessage && (

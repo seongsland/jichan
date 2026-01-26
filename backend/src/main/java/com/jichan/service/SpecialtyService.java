@@ -6,6 +6,7 @@ import com.jichan.repository.SpecialtyDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +23,14 @@ public class SpecialtyService {
 
     @Cacheable("categories")
     public List<SpecialtyDto.CategoryResponse> getCategories() {
-        return specialtyCategoryRepository.findAll().stream()
+        return specialtyCategoryRepository.findAll(Sort.by(Sort.Direction.ASC, "sortOrder")).stream()
                 .map(category -> new SpecialtyDto.CategoryResponse(category.getId(), category.getName()))
                 .toList();
     }
 
     @Cacheable("details")
     public List<SpecialtyDto.DetailResponse> getDetails() {
-        return specialtyDetailRepository.findAll().stream()
+        return specialtyDetailRepository.findAll(Sort.by(Sort.Direction.ASC, "sortOrder")).stream()
                 .map(detail -> new SpecialtyDto.DetailResponse(detail.getId(), detail.getName(), detail.getCategory().getId()))
                 .toList();
     }

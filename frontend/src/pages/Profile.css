@@ -222,7 +222,7 @@
 
 .profile .profile-card {
   background-color: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid #f0f0f0;
@@ -437,7 +437,7 @@
 
   .profile .search-filter .filter-row {
     flex-direction: column;
-    gap: 1rem;
+    gap: 10px;
   }
 
   .profile .search-filter .filter-row select {
