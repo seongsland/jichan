@@ -316,7 +316,7 @@ const User = () => {
           </label>
         </div>
         <div className="form-group">
-          <label htmlFor="name">이름</label>
+          <label htmlFor="name">이름 (닉네임)</label>
           <input
             type="text"
             id="name"

@@ -87,6 +87,11 @@
   margin-right: 8px;
 }
 
+.checkbox-label input[type="checkbox"]:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
 .checkbox-label a {
   color: #007bff;
   text-decoration: none;

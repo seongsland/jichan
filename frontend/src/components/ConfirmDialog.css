@@ -59,3 +59,11 @@
 .confirm-actions .btn-outline:hover {
   background-color: #f8f9fa;
 }
+
+@media (max-width: 768px) {
+  .confirm-box {
+    padding: 1.5rem;
+    max-width: 90%;
+    min-width: 280px;
+  }
+}
