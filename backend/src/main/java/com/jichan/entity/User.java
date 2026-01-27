@@ -8,6 +8,8 @@ import lombok.*;
 @Table(name = "user")
 @Getter
 @ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
@@ -53,34 +55,22 @@ public class User extends BaseTimeEntity {
     private int minHourlyRate = 0;
 
 
-    @Builder
-    public User(String name, String email, String password, String gender, String region,
-                String introduction, Boolean isVisible, Boolean emailVerified, String phone, String phoneMessage,
-                double averageRating, int reviewCount, int minHourlyRate) { // Changed to double
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.gender = gender;
-        this.region = region;
-        this.introduction = introduction;
-        this.isVisible = isVisible != null ? isVisible : false;
-        this.emailVerified = emailVerified != null ? emailVerified : false;
-        this.phone = phone;
-        this.phoneMessage = phoneMessage;
-        this.averageRating = averageRating;
-        this.reviewCount = reviewCount;
-        this.minHourlyRate = minHourlyRate;
-    }
-
     public void updateProfile(String name, String gender, String region, String introduction,
-                             Boolean isVisible, String phone, String phoneMessage) {
-        if (name != null) this.name = name;
-        if (gender != null) this.gender = gender;
-        if (region != null) this.region = region;
-        if (introduction != null) this.introduction = introduction;
-        if (isVisible != null) this.isVisible = isVisible;
-        if (phone != null) this.phone = phone;
-        if (phoneMessage != null) this.phoneMessage = phoneMessage;
+            Boolean isVisible, String phone, String phoneMessage) {
+        if (name != null)
+            this.name = name;
+        if (gender != null)
+            this.gender = gender;
+        if (region != null)
+            this.region = region;
+        if (introduction != null)
+            this.introduction = introduction;
+        if (isVisible != null)
+            this.isVisible = isVisible;
+        if (phone != null)
+            this.phone = phone;
+        if (phoneMessage != null)
+            this.phoneMessage = phoneMessage;
     }
 
     public void verifyEmail() {

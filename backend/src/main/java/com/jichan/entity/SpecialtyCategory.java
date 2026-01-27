@@ -1,13 +1,13 @@
 package com.jichan.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "specialty_category")
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SpecialtyCategory {
 
@@ -20,4 +20,5 @@ public class SpecialtyCategory {
 
     @Column(name = "sort_order")
     private Integer sortOrder;
+
 }

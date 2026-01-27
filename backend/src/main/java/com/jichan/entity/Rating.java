@@ -3,16 +3,15 @@ package com.jichan.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "rating", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"user_id", "expert_id"})
 })
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rating extends BaseTimeEntity {
 
@@ -30,13 +29,6 @@ public class Rating extends BaseTimeEntity {
     @Min(1)
     @Max(5)
     private Integer score;
-
-    @Builder
-    public Rating(Long userId, Long expertId, Integer score) {
-        this.userId = userId;
-        this.expertId = expertId;
-        this.score = score;
-    }
 
     public void update(Integer score) {
         if (score != null) this.score = score;
