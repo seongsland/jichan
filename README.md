@@ -7,7 +7,8 @@
 ```
 jichan/
 ├── backend/          # Spring Boot 백엔드
-└── frontend/         # React 프론트엔드
+├── frontend/         # React 프론트엔드
+└── docs/             # 프로젝트 산출물 및 문서
 ```
 
 ## 기술 스택
@@ -79,6 +80,15 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## 프로젝트 산출물
+
+`/docs` 디렉토리에서 프로젝트 관련 주요 산출물을 확인할 수 있습니다.
+
+- **erd.uml**: 데이터베이스 ERD (Entity Relationship Diagram)
+- **db_mysql_schema.sql**: MySQL 데이터베이스 스키마 SQL 파일
+- **api.html / api.json**: API 명세서 (OpenAPI/Swagger)
+- **redocly.yaml**: Redocly 설정 파일
 
 ## API 문서 (Swagger UI)
 
