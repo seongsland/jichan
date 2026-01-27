@@ -1,5 +1,4 @@
 # General ignores
-/docs/
 /build/
 /.idea/
 qodana.yaml

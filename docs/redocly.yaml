@@ -1,0 +1,7 @@
+openapi:
+  expandResponses: "all"
+  schemaExpansionLevel: "all"
+  expandSingleSchemaField: true
+  nativeScrollbars: true
+
+# npx @redocly/cli build-docs api.json -o api.html

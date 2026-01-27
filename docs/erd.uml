@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.contact_log</OriginalElement>
+  <nodes>
+    <node x="56.0" y="-24.5">5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.specialty_detail</node>
+    <node x="-115.5" y="151.5">5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.user</node>
+    <node x="45.0" y="-212.5">5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.specialty_category</node>
+    <node x="-115.5" y="831.5">5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.rating</node>
+    <node x="111.5" y="843.5">5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.contact_log</node>
+    <node x="1.0" y="655.5">5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.user_specialty</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.rating" target="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.user" relationship="REFERENCES">
+      <point x="0.0" y="-92.5" />
+      <point x="0.0" y="212.5" />
+    </edge>
+    <edge source="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.user_specialty" target="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.user" relationship="REFERENCES">
+      <point x="-43.0" y="-68.5" />
+      <point x="44.0" y="624.0" />
+      <point x="-33.0" y="624.0" />
+      <point x="0.0" y="212.5" />
+    </edge>
+    <edge source="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.specialty_detail" target="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.specialty_category" relationship="REFERENCES">
+      <point x="0.0" y="-68.5" />
+      <point x="0.0" y="56.5" />
+    </edge>
+    <edge source="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.user_specialty" target="5d0f0bef-713a-41a1-a66c-a615e2906b3a.TABLE:jichan.specialty_detail" relationship="REFERENCES">
+      <point x="43.0" y="-68.5" />
+      <point x="130.0" y="624.0" />
+      <point x="127.0" y="624.0" />
+      <point x="0.0" y="68.5" />
+    </edge>
+  </edges>
+  <settings layout="계층적 콤팩트" zoom="0.4192" showDependencies="false" x="113.5" y="450.9026717557251" />
+  <SelectedNodes />
+  <Categories>
+    <Category>가상 외래 키</Category>
+    <Category>열</Category>
+    <Category>주석</Category>
+    <Category>키 열</Category>
+  </Categories>
+</Diagram>
+
