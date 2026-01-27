@@ -91,7 +91,7 @@ const Profile = () => {
           newContactViews[`${profile.id}-EMAIL`] = { contact: profile.email };
         }
         if (profile.isPhoneViewed) {
-          newContactViews[`${profile.id}-PHONE`] = { 
+          newContactViews[`${profile.id}-PHONE`] = {
             contact: profile.phone,
             phoneMessage: profile.phoneMessage
           };
@@ -398,7 +398,8 @@ const Profile = () => {
                 )}
 
                 <div className="profile-actions">
-                  {!contactViews[`${profile.id}-EMAIL`] && (
+                  {profile.isEmailInputted &&
+                      !contactViews[`${profile.id}-EMAIL`] && (
                       <button
                           onClick={() => handleContactViewClick(profile.id, 'EMAIL')}
                           className="btn btn-outline btn-sm"
@@ -406,7 +407,8 @@ const Profile = () => {
                         이메일 보기
                       </button>
                   )}
-                  {!contactViews[`${profile.id}-PHONE`] && (
+                  {profile.isPhoneInputted &&
+                      !contactViews[`${profile.id}-PHONE`] && (
                       <button
                           onClick={() => handleContactViewClick(profile.id, 'PHONE')}
                           className="btn btn-outline btn-sm"

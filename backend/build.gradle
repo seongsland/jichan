@@ -68,19 +68,13 @@ tasks.withType(Test).configureEach {
     systemProperty "file.encoding", "UTF-8"
 }
 
-tasks.named('test') {
-    enabled = false
-}
 
-// 1. QClass 생성 경로 변수 선언 (layout.buildDirectory 사용으로 경고 해결)
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
 
-// 2. 컴파일 작업 설정
 tasks.withType(JavaCompile).configureEach {
     options.generatedSourceOutputDirectory.set(file(querydslDir))
 }
 
-// 3. 소스셋에 생성된 경로 추가 (IDE가 QClass를 인식하도록 함)
 sourceSets {
     main {
         java {
@@ -89,7 +83,14 @@ sourceSets {
     }
 }
 
-// 4. clean 작업 시 생성된 폴더 삭제
 clean {
     delete querydslDir
+}
+
+test {
+    useJUnitPlatform()
+    // 테스트 결과를 터미널에 로그로 남김
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
