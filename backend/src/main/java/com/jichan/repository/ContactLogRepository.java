@@ -14,11 +14,12 @@ import java.util.Optional;
 @Repository
 public interface ContactLogRepository extends JpaRepository<ContactLog, Long>, ContactLogRepositoryCustom {
     Optional<ContactLog> findByViewerIdAndExpertIdAndContactType(Long viewer, Long expertId, ContactType contactType);
+
     List<ContactLog> findByViewerIdAndExpertIdIn(Long viewerId, List<Long> expertIds);
 
     void deleteByViewerIdAndExpertId(Long viewerId, Long expertId);
 
     @Modifying
     @Query("delete from ContactLog cl where cl.viewerId = :userId or cl.expertId = :userId")
-    void deleteAllByAllUserId(@Param("userId")Long requesterId);
+    void deleteAllByAllUserId(@Param("userId") Long requesterId);
 }

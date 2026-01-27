@@ -44,12 +44,8 @@ public class AuthService {
             }
         });
 
-        User user = User.builder()
-                .name(request.name())
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .isVisible(false)
-                .build();
+        User user = User.builder().name(request.name()).email(request.email())
+                        .password(passwordEncoder.encode(request.password())).isVisible(false).build();
 
         userRepository.save(user);
 
@@ -61,7 +57,7 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
+                                  .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
@@ -87,8 +83,7 @@ public class AuthService {
     }
 
     public void withdrawUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         // 1. Delete UserSpecialty entries
         userSpecialtyRepository.deleteAllByUserId(userId);
@@ -115,14 +110,13 @@ public class AuthService {
             throw new IllegalArgumentException("만료된 토큰입니다. 새로운 인증 메일을 요청해주세요.");
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
         user.verifyEmail();
     }
 
     public void forgotPassword(String email) throws MessagingException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
+                                  .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
 
         String token = generateEmailToken(user.getId(), "password_reset");
         String encryptedToken = encryptor.encrypt(token);
@@ -141,8 +135,7 @@ public class AuthService {
             throw new IllegalArgumentException("만료된 토큰입니다. 다시 요청해주세요.");
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유효하지 않은 토큰입니다."));
 
         user.changePassword(passwordEncoder.encode(request.password()));
     }

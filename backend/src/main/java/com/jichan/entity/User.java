@@ -33,9 +33,11 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String introduction;
 
+    @Builder.Default
     @Column(name = "is_visible", nullable = false)
     private Boolean isVisible = false;
 
+    @Builder.Default
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified = false;
 
@@ -45,32 +47,28 @@ public class User extends BaseTimeEntity {
     @Column(name = "phone_message", columnDefinition = "TEXT")
     private String phoneMessage;
 
+    @Builder.Default
     @Column(name = "average_rating", nullable = false)
     private double averageRating = 0.0; // Changed to double
 
+    @Builder.Default
     @Column(name = "review_count", nullable = false)
     private int reviewCount = 0;
 
+    @Builder.Default
     @Column(name = "min_hourly_rate", nullable = false)
     private int minHourlyRate = 0;
 
 
-    public void updateProfile(String name, String gender, String region, String introduction,
-            Boolean isVisible, String phone, String phoneMessage) {
-        if (name != null)
-            this.name = name;
-        if (gender != null)
-            this.gender = gender;
-        if (region != null)
-            this.region = region;
-        if (introduction != null)
-            this.introduction = introduction;
-        if (isVisible != null)
-            this.isVisible = isVisible;
-        if (phone != null)
-            this.phone = phone;
-        if (phoneMessage != null)
-            this.phoneMessage = phoneMessage;
+    public void updateProfile(String name, String gender, String region, String introduction, Boolean isVisible,
+                              String phone, String phoneMessage) {
+        if (name != null) this.name = name;
+        if (gender != null) this.gender = gender;
+        if (region != null) this.region = region;
+        if (introduction != null) this.introduction = introduction;
+        if (isVisible != null) this.isVisible = isVisible;
+        if (phone != null) this.phone = phone;
+        if (phoneMessage != null) this.phoneMessage = phoneMessage;
     }
 
     public void verifyEmail() {
