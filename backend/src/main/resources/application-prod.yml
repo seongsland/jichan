@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+jichan:
+  server:
+    address: http://localhost:3000
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    com.jichan: INFO
+    org.springframework.web: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.stat: INFO

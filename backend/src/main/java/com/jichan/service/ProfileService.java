@@ -30,12 +30,11 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ProfileService {
 
+    private static final int PAGE_SIZE = 10;
     private final UserRepository userRepository;
     private final UserSpecialtyRepository userSpecialtyRepository;
     private final SpecialtyService specialtyService;
     private final ContactLogRepository contactLogRepository;
-    private static final int PAGE_SIZE = 10;
-
 
     public ProfileListResponse getProfiles(Long viewerId, ProfileDto.ProfileRequest profileRequest) {
         Pageable pageable = PageRequest.of(profileRequest.page(), PAGE_SIZE);
@@ -51,27 +50,21 @@ public class ProfileService {
 
         // 한 번의 쿼리로 필요한 데이터 조회
         Map<Long, List<UserSpecialty>> userSpecialtyMap = userSpecialtyRepository.findByUserIdIn(userIds).stream()
-                .collect(Collectors.groupingBy(UserSpecialty::getUserId));
+                                                                                 .collect(Collectors.groupingBy(
+                                                                                         UserSpecialty::getUserId));
 
         // ContactLog 조회 (현재 사용자가 본 기록)
         List<ContactLog> viewerContactLogs = contactLogRepository.findByViewerIdAndExpertIdIn(viewerId, userIds);
         Set<Long> emailViewedExperts = viewerContactLogs.stream()
-                .filter(log -> log.getContactType() == ContactType.EMAIL)
-                .map(ContactLog::getExpertId)
-                .collect(Collectors.toSet());
+                                                        .filter(log -> log.getContactType() == ContactType.EMAIL)
+                                                        .map(ContactLog::getExpertId).collect(Collectors.toSet());
         Set<Long> phoneViewedExperts = viewerContactLogs.stream()
-                .filter(log -> log.getContactType() == ContactType.PHONE)
-                .map(ContactLog::getExpertId)
-                .collect(Collectors.toSet());
+                                                        .filter(log -> log.getContactType() == ContactType.PHONE)
+                                                        .map(ContactLog::getExpertId).collect(Collectors.toSet());
 
-        List<ProfileItem> content = users.stream()
-                .map(user -> convertToProfileItem(
-                        user,
-                        userSpecialtyMap.getOrDefault(user.getId(), List.of()),
-                        emailViewedExperts.contains(user.getId()),
-                        phoneViewedExperts.contains(user.getId())
-                ))
-                .collect(Collectors.toList());
+        List<ProfileItem> content = users.stream().map(user -> convertToProfileItem(user,
+                userSpecialtyMap.getOrDefault(user.getId(), List.of()), emailViewedExperts.contains(user.getId()),
+                phoneViewedExperts.contains(user.getId()))).collect(Collectors.toList());
 
         return new ProfileListResponse(content, hasNext);
     }
@@ -79,18 +72,14 @@ public class ProfileService {
     @Transactional
     public ContactViewResponse viewContact(Long viewerId, Long expertId, ContactType contactType) {
         User expert = userRepository.findById(expertId)
-                .orElseThrow(() -> new IllegalArgumentException("전문가를 찾을 수 없습니다."));
+                                    .orElseThrow(() -> new IllegalArgumentException("전문가를 찾을 수 없습니다."));
 
         // ContactLog 기록 (중복 방지)
-        contactLogRepository.findByViewerIdAndExpertIdAndContactType(viewerId, expertId, contactType)
-                .orElseGet(() -> {
-                    ContactLog contactLog = ContactLog.builder()
-                            .viewerId(viewerId)
-                            .expertId(expertId)
-                            .contactType(contactType)
-                            .build();
-                    return contactLogRepository.save(contactLog);
-                });
+        contactLogRepository.findByViewerIdAndExpertIdAndContactType(viewerId, expertId, contactType).orElseGet(() -> {
+            ContactLog contactLog = ContactLog.builder().viewerId(viewerId).expertId(expertId).contactType(contactType)
+                                              .build();
+            return contactLogRepository.save(contactLog);
+        });
 
         // 연락처 반환
         if (contactType == ContactType.EMAIL) {
@@ -101,29 +90,17 @@ public class ProfileService {
     }
 
 
-    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, boolean isEmailViewed, boolean isPhoneViewed) {
-        List<SpecialtyInfo> specialties = userSpecialties.stream()
-                .map(us -> {
-                    var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
-                    return new SpecialtyInfo(detail.name(), us.getHourlyRate(), us.getSpecialtyDetailId());
-                })
-                .collect(Collectors.toList());
+    private ProfileItem convertToProfileItem(User user, List<UserSpecialty> userSpecialties, boolean isEmailViewed,
+                                             boolean isPhoneViewed) {
+        List<SpecialtyInfo> specialties = userSpecialties.stream().map(us -> {
+            var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
+            return new SpecialtyInfo(detail.name(), us.getHourlyRate(), us.getSpecialtyDetailId());
+        }).collect(Collectors.toList());
 
-        return new ProfileItem(
-                user.getId(),
-                user.getName(),
-                user.getGender(),
-                user.getRegion(),
-                specialties,
-                user.getIntroduction(),
-                user.getAverageRating(),
-                user.getReviewCount(),
-                StringUtils.hasText(user.getEmail()),
-                StringUtils.hasText(user.getPhone()),
-                isEmailViewed,
-                isPhoneViewed,
-                isEmailViewed ? user.getEmail() : null,
-                isPhoneViewed ? user.getPhone() : null,
+        return new ProfileItem(user.getId(), user.getName(), user.getGender(), user.getRegion(), specialties,
+                user.getIntroduction(), user.getAverageRating(), user.getReviewCount(),
+                StringUtils.hasText(user.getEmail()), StringUtils.hasText(user.getPhone()), isEmailViewed,
+                isPhoneViewed, isEmailViewed ? user.getEmail() : null, isPhoneViewed ? user.getPhone() : null,
                 isPhoneViewed ? user.getPhoneMessage() : null
 
         );

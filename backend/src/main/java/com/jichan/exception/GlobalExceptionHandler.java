@@ -21,12 +21,12 @@ public class GlobalExceptionHandler {
         log.error("IllegalArgumentException : {}", e.getMessage());
         Map<String, String> error = new HashMap<>();
         error.put("message", e.getMessage());
-        
+
         // "찾을 수 없습니다" 메시지가 포함된 경우 404 반환
         if (e.getMessage() != null && e.getMessage().contains("찾을 수 없습니다")) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
-        
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 

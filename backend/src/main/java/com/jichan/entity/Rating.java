@@ -6,9 +6,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @Entity
-@Table(name = "rating", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "expert_id"})
-})
+@Table(name = "rating", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "expert_id"})})
 @Getter
 @Builder
 @AllArgsConstructor

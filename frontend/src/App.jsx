@@ -11,59 +11,57 @@ import VerifyEmail from './pages/VerifyEmail';
 import User from './pages/User';
 import Profile from './pages/Profile';
 import Contacts from './pages/Contacts';
-import ApiTest from './pages/ApiTest';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
-  return (
-    <AuthProvider>
-      <LoadingProvider>
-        <Router>
-          <ScrollToTop />
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/forgot_password" element={<ForgotPassword />} />
-              <Route path="/reset_password" element={<ResetPassword />} />
-              <Route path="/verify_email" element={<VerifyEmail />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route
-                path="/user"
-                element={
-                  <ProtectedRoute>
-                    <User />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/contacts"
-                element={
-                  <ProtectedRoute>
-                    <Contacts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/test/api" element={<ApiTest />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </LoadingProvider>
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <LoadingProvider>
+                <Router>
+                    <ScrollToTop/>
+                    <Layout>
+                        <Routes>
+                            <Route path="/" element={<Home/>}/>
+                            <Route path="/signup" element={<Signup/>}/>
+                            <Route path="/login" element={<Login/>}/>
+                            <Route path="/forgot_password" element={<ForgotPassword/>}/>
+                            <Route path="/reset_password" element={<ResetPassword/>}/>
+                            <Route path="/verify_email" element={<VerifyEmail/>}/>
+                            <Route path="/terms" element={<Terms/>}/>
+                            <Route path="/privacy" element={<Privacy/>}/>
+                            <Route
+                                path="/user"
+                                element={
+                                    <ProtectedRoute>
+                                        <User/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/profile"
+                                element={
+                                    <ProtectedRoute>
+                                        <Profile/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/contacts"
+                                element={
+                                    <ProtectedRoute>
+                                        <Contacts/>
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </Routes>
+                    </Layout>
+                </Router>
+            </LoadingProvider>
+        </AuthProvider>
+    );
 }
 
 export default App;

@@ -31,21 +31,17 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ProfileResponse getProfile(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         return getProfileResponse(user, null);
     }
 
     public ProfileResponse updateProfile(Long userId, ProfileUpdateRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         if (Boolean.TRUE.equals(request.isVisible())) {
-            if (!StringUtils.hasText(request.name()) ||
-                !StringUtils.hasText(request.gender()) ||
-                !StringUtils.hasText(request.region()) ||
-                !StringUtils.hasText(request.introduction())) {
+            if (!StringUtils.hasText(request.name()) || !StringUtils.hasText(request.gender()) || !StringUtils.hasText(
+                    request.region()) || !StringUtils.hasText(request.introduction())) {
                 throw new IllegalArgumentException("프로필을 공개하려면 이름, 성별, 지역, 소개글을 모두 입력해야 합니다.");
             }
 
@@ -68,11 +64,9 @@ public class UserService {
             minHourlyRate = Integer.MAX_VALUE;
             for (SpecialtyRequest specialtyRequest : request.specialties()) {
                 // Validate that the specialty detail exists
-                UserSpecialty userSpecialty = UserSpecialty.builder()
-                        .userId(userId)
-                        .specialtyDetailId(specialtyRequest.specialtyDetailId())
-                        .hourlyRate(specialtyRequest.hourlyRate())
-                        .build();
+                UserSpecialty userSpecialty = UserSpecialty.builder().userId(userId)
+                                                           .specialtyDetailId(specialtyRequest.specialtyDetailId())
+                                                           .hourlyRate(specialtyRequest.hourlyRate()).build();
                 userSpecialtyRepository.save(userSpecialty);
                 userSpecialties.add(userSpecialty);
 
@@ -82,47 +76,22 @@ public class UserService {
             }
         }
 
-        user.updateProfile(
-                request.name(),
-                request.gender(),
-                request.region(),
-                request.introduction(),
-                request.isVisible(),
-                request.phone(),
-                request.phoneMessage()
-        );
+        user.updateProfile(request.name(), request.gender(), request.region(), request.introduction(),
+                request.isVisible(), request.phone(), request.phoneMessage());
         user.updateMinHourlyRate(minHourlyRate);
 
         return getProfileResponse(user, userSpecialties);
     }
 
     private @NonNull ProfileResponse getProfileResponse(User user, List<UserSpecialty> userSpecialties) {
-        List<SpecialtyResponse> specialties = Optional.ofNullable(userSpecialties)
-                .orElseGet(() -> userSpecialtyRepository.findByUserId(user.getId()))
-                .stream()
-                .filter(Objects::nonNull)
-                .map(us -> {
-                    var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
-                    var category = specialtyService.getCategory(detail.categoryId());
-                    return new SpecialtyResponse(
-                            detail.id(),
-                            detail.name(),
-                            category.name(),
-                            us.getHourlyRate()
-                    );
-                })
-                .toList();
+        List<SpecialtyResponse> specialties = Optional.ofNullable(userSpecialties).orElseGet(
+                () -> userSpecialtyRepository.findByUserId(user.getId())).stream().filter(Objects::nonNull).map(us -> {
+            var detail = specialtyService.getDetail(us.getSpecialtyDetailId());
+            var category = specialtyService.getCategory(detail.categoryId());
+            return new SpecialtyResponse(detail.id(), detail.name(), category.name(), us.getHourlyRate());
+        }).toList();
 
-        return new ProfileResponse(
-                user.getId(),
-                user.getName(),
-                user.getGender(),
-                user.getRegion(),
-                user.getIntroduction(),
-                user.getIsVisible(),
-                user.getPhone(),
-                user.getPhoneMessage(),
-                specialties
-        );
+        return new ProfileResponse(user.getId(), user.getName(), user.getGender(), user.getRegion(),
+                user.getIntroduction(), user.getIsVisible(), user.getPhone(), user.getPhoneMessage(), specialties);
     }
 }

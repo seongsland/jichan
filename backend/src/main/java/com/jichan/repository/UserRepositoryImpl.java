@@ -15,9 +15,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.jichan.entity.QSpecialtyDetail.specialtyDetail;
 import static com.jichan.entity.QUser.user;
 import static com.jichan.entity.QUserSpecialty.userSpecialty;
-import static com.jichan.entity.QSpecialtyDetail.specialtyDetail;
 
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepositoryCustom {
@@ -26,18 +26,12 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public Slice<User> findProfiles(ProfileDto.ProfileRequest profileRequest, Pageable pageable) {
-        List<User> content = queryFactory
-                .selectFrom(user)
-                .where(
-                        user.isVisible.isTrue(),
-                        specialtyExists(profileRequest.specialty()),
-                        categoryExists(profileRequest.category(), profileRequest.specialty()),
-                        regionLikes(profileRequest.region())
-                )
-                .orderBy(getOrderSpecifier(profileRequest.sortBy()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
-                .fetch();
+        List<User> content = queryFactory.selectFrom(user)
+                                         .where(user.isVisible.isTrue(), specialtyExists(profileRequest.specialty()),
+                                                 categoryExists(profileRequest.category(), profileRequest.specialty()),
+                                                 regionLikes(profileRequest.region()))
+                                         .orderBy(getOrderSpecifier(profileRequest.sortBy()))
+                                         .offset(pageable.getOffset()).limit(pageable.getPageSize() + 1).fetch();
 
         boolean hasNext = false;
         if (content.size() > pageable.getPageSize()) {
@@ -52,29 +46,19 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         if (specialtyId == null) {
             return null;
         }
-        return JPAExpressions
-                .selectOne()
-                .from(userSpecialty)
-                .where(
-                        userSpecialty.userId.eq(user.id),
-                        userSpecialty.specialtyDetailId.eq(specialtyId)
-                )
-                .exists();
+        return JPAExpressions.selectOne().from(userSpecialty)
+                             .where(userSpecialty.userId.eq(user.id), userSpecialty.specialtyDetailId.eq(specialtyId))
+                             .exists();
     }
 
     private BooleanExpression categoryExists(Long categoryId, Long specialtyId) {
         if (categoryId == null || specialtyId != null) {
             return null;
         }
-        return JPAExpressions
-                .selectOne()
-                .from(userSpecialty)
-                .join(specialtyDetail).on(specialtyDetail.id.eq(userSpecialty.specialtyDetailId))
-                .where(
-                        userSpecialty.userId.eq(user.id),
-                        specialtyDetail.category.id.eq(categoryId)
-                )
-                .exists();
+        return JPAExpressions.selectOne().from(userSpecialty).join(specialtyDetail)
+                             .on(specialtyDetail.id.eq(userSpecialty.specialtyDetailId))
+                             .where(userSpecialty.userId.eq(user.id), specialtyDetail.category.id.eq(categoryId))
+                             .exists();
     }
 
     private BooleanExpression regionLikes(String region) {

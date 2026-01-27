@@ -14,7 +14,9 @@ import java.util.Optional;
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     Optional<Rating> findByUserIdAndExpertId(Long userId, Long expertId);
+
     void deleteByUserIdAndExpertId(Long userId, Long expertId);
+
     List<Rating> findByUserIdAndExpertIdIn(Long userId, List<Long> expertIds);
 
     @Query("SELECT new com.jichan.dto.ContactDto$RatingStatsDto(COALESCE(AVG(r.score), 0.0), COUNT(r)) FROM Rating r WHERE r.expertId = :expertId")
@@ -22,5 +24,5 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
 
     @Modifying
     @Query("delete from Rating r where r.expertId = :userId or r.userId = :userId")
-    void deleteAllByAllUserId(@Param("userId")Long userId);
+    void deleteAllByAllUserId(@Param("userId") Long userId);
 }
