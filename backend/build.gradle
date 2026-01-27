@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.12'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'jacoco'
 }
 
 group = 'com.jichan'
@@ -91,8 +92,34 @@ clean {
 
 test {
     useJUnitPlatform()
-    // 테스트 결과를 터미널에 로그로 남김
-    testLogging {
-        events "passed", "skipped", "failed"
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+    dependsOn test // 리포트 생성을 위해 테스트가 먼저 실행되어야 함
+
+    reports {
+        xml.required = false
+        csv.required = false
+        html.required = true // 우리가 눈으로 볼 HTML 리포트 생성
+    }
+
+    // 리포트에서 제외할 클래스들 (QueryDSL Q클래스 등)
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "**/Q*",
+                    "**/config/**",
+                    "**/dto/**",
+                    "**/entry/**",
+                    "**/exception/**",
+                    "**/repository/**",
+                    "**/security/**"
+            ])
+        }))
     }
 }

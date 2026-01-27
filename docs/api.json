@@ -1,0 +1,1184 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Jichan API 명세서",
+    "description": "Jichan 백엔드 API 문서입니다.",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Profile",
+      "description": "전문가 검색 관련 API"
+    },
+    {
+      "name": "Auth",
+      "description": "인증 관련 API"
+    },
+    {
+      "name": "Specialty",
+      "description": "전문 분야 관련 API"
+    },
+    {
+      "name": "User",
+      "description": "사용자 관련 API"
+    },
+    {
+      "name": "Contact",
+      "description": "지인 관련 API"
+    }
+  ],
+  "paths": {
+    "/api/user/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "프로필 조회",
+        "description": "로그인한 사용자의 프로필 정보를 조회합니다.",
+        "operationId": "getProfile",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "프로필 수정",
+        "description": "로그인한 사용자의 프로필 정보를 수정합니다.",
+        "operationId": "updateProfile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile/contact_view": {
+      "post": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "전문가 연락처 보기",
+        "description": "전문가의 연락처 정보를 조회하고 조회 기록을 남깁니다.",
+        "operationId": "viewContact",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactViewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactViewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contact/rating": {
+      "post": {
+        "tags": [
+          "Contact"
+        ],
+        "summary": "평점 등록/수정",
+        "description": "전문가에 대한 평점을 등록하거나 수정합니다.",
+        "operationId": "createOrUpdateRating",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatingResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token_refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "토큰 갱신",
+        "description": "리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.",
+        "operationId": "refreshToken",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원가입",
+        "description": "새로운 사용자를 등록합니다.",
+        "operationId": "signup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/reset_password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "비밀번호 재설정",
+        "description": "새로운 비밀번호로 변경합니다.",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "로그아웃",
+        "description": "사용자를 로그아웃 처리하고 리프레시 토큰 쿠키를 삭제합니다.",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "로그인",
+        "description": "사용자 로그인을 처리하고 액세스 토큰을 발급합니다.",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/forgot_password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "비밀번호 찾기",
+        "description": "비밀번호 재설정 링크를 이메일로 전송합니다.",
+        "operationId": "forgotPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgetPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/specialty/details": {
+      "get": {
+        "tags": [
+          "Specialty"
+        ],
+        "summary": "세부 분야 목록 조회",
+        "description": "모든 세부 전문 분야 목록을 조회합니다.",
+        "operationId": "getDetails",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DetailResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/specialty/categories": {
+      "get": {
+        "tags": [
+          "Specialty"
+        ],
+        "summary": "카테고리 목록 조회",
+        "description": "모든 전문 분야 카테고리 목록을 조회합니다.",
+        "operationId": "getCategories",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "전문가 프로필 목록 조회",
+        "description": "조건에 맞는 전문가 프로필 목록을 조회합니다.",
+        "operationId": "getProfiles",
+        "parameters": [
+          {
+            "name": "profilesRequest",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProfileRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contact": {
+      "get": {
+        "tags": [
+          "Contact"
+        ],
+        "summary": "지인 목록 조회",
+        "description": "지인의 연락처 목록을 조회합니다. 카테고리 및 전문분야 필터링이 가능합니다.",
+        "operationId": "getContacts",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "specialty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactSliceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/verify_email": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "이메일 인증",
+        "description": "이메일 인증 토큰을 검증합니다.",
+        "operationId": "verifyEmail",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contact/{expertId}": {
+      "delete": {
+        "tags": [
+          "Contact"
+        ],
+        "summary": "연락처 삭제",
+        "description": "특정 전문가를 연락처 목록에서 삭제합니다.",
+        "operationId": "deleteContact",
+        "parameters": [
+          {
+            "name": "expertId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/auth/withdraw": {
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원 탈퇴",
+        "description": "사용자 계정을 삭제합니다.",
+        "operationId": "withdrawUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProfileUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "사용자 이름",
+            "example": "홍길동"
+          },
+          "gender": {
+            "type": "string",
+            "description": "성별",
+            "example": "MALE"
+          },
+          "region": {
+            "type": "string",
+            "description": "지역",
+            "example": "서울"
+          },
+          "introduction": {
+            "maxLength": 200,
+            "minLength": 0,
+            "pattern": "^([^\\n]*\\n){0,4}[^\\n]*$",
+            "type": "string",
+            "description": "자기소개 (최대 200자, 5줄)",
+            "example": "안녕하세요. 5년차 개발자입니다."
+          },
+          "isVisible": {
+            "type": "boolean",
+            "description": "프로필 공개 여부",
+            "example": true
+          },
+          "phone": {
+            "type": "string",
+            "description": "연락처",
+            "example": "010-1234-5678"
+          },
+          "phoneMessage": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^([^\\n]*\\n){0,2}[^\\n]*$",
+            "type": "string",
+            "description": "연락 가능 시간 메모 (최대 100자, 3줄)",
+            "example": "평일 오후 6시 이후 연락 가능합니다."
+          },
+          "specialties": {
+            "type": "array",
+            "description": "특기 목록",
+            "items": {
+              "$ref": "#/components/schemas/SpecialtyRequest"
+            }
+          }
+        },
+        "description": "프로필 수정 요청"
+      },
+      "SpecialtyRequest": {
+        "type": "object",
+        "properties": {
+          "specialtyDetailId": {
+            "type": "integer",
+            "description": "특기 상세 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "hourlyRate": {
+            "type": "integer",
+            "description": "시간당 요금",
+            "format": "int32",
+            "example": 50000
+          }
+        },
+        "description": "특기 요청"
+      },
+      "ProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "사용자 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "사용자 이름",
+            "example": "홍길동"
+          },
+          "gender": {
+            "type": "string",
+            "description": "성별",
+            "example": "MALE"
+          },
+          "region": {
+            "type": "string",
+            "description": "지역",
+            "example": "서울"
+          },
+          "introduction": {
+            "type": "string",
+            "description": "자기소개",
+            "example": "안녕하세요. 5년차 개발자입니다."
+          },
+          "isVisible": {
+            "type": "boolean",
+            "description": "프로필 공개 여부",
+            "example": true
+          },
+          "phone": {
+            "type": "string",
+            "description": "연락처",
+            "example": "010-1234-5678"
+          },
+          "phoneMessage": {
+            "type": "string",
+            "description": "연락 가능 시간 메모",
+            "example": "평일 오후 6시 이후 연락 가능합니다."
+          },
+          "specialties": {
+            "type": "array",
+            "description": "특기 목록",
+            "items": {
+              "$ref": "#/components/schemas/SpecialtyResponse"
+            }
+          }
+        },
+        "description": "프로필 응답"
+      },
+      "SpecialtyResponse": {
+        "type": "object",
+        "properties": {
+          "specialtyDetailId": {
+            "type": "integer",
+            "description": "특기 상세 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "specialtyDetailName": {
+            "type": "string",
+            "description": "특기 상세 이름",
+            "example": "Java 개발"
+          },
+          "specialtyCategoryName": {
+            "type": "string",
+            "description": "특기 카테고리 이름",
+            "example": "IT/프로그래밍"
+          },
+          "hourlyRate": {
+            "type": "integer",
+            "description": "시간당 요금",
+            "format": "int32",
+            "example": 50000
+          }
+        },
+        "description": "특기 응답"
+      },
+      "ContactViewRequest": {
+        "required": [
+          "contactType",
+          "expertId"
+        ],
+        "type": "object",
+        "properties": {
+          "expertId": {
+            "type": "integer",
+            "description": "전문가 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "contactType": {
+            "type": "string",
+            "description": "연락처 타입 (EMAIL/PHONE)",
+            "example": "EMAIL"
+          }
+        },
+        "description": "연락처 조회 요청"
+      },
+      "ContactViewResponse": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "type": "string",
+            "description": "연락처 정보",
+            "example": "expert@example.com"
+          },
+          "phoneMessage": {
+            "type": "string",
+            "description": "연락 가능 시간 메모",
+            "example": "오후 6시 이후"
+          }
+        },
+        "description": "연락처 조회 응답"
+      },
+      "RatingRequest": {
+        "required": [
+          "expertId",
+          "score"
+        ],
+        "type": "object",
+        "properties": {
+          "expertId": {
+            "type": "integer",
+            "description": "전문가 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "score": {
+            "maximum": 5,
+            "minimum": 1,
+            "type": "integer",
+            "description": "점수 (1~5)",
+            "format": "int32",
+            "example": 5
+          }
+        },
+        "description": "평가 요청"
+      },
+      "RatingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "평가 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "expertId": {
+            "type": "integer",
+            "description": "전문가 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "score": {
+            "type": "integer",
+            "description": "점수",
+            "format": "int32",
+            "example": 5
+          }
+        },
+        "description": "평가 응답"
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "액세스 토큰"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "리프레시 토큰"
+          }
+        },
+        "description": "인증 응답"
+      },
+      "SignupRequest": {
+        "required": [
+          "email",
+          "name",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "사용자 이름",
+            "example": "홍길동"
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일 주소",
+            "example": "user@example.com"
+          },
+          "password": {
+            "maxLength": 32,
+            "minLength": 8,
+            "type": "string",
+            "description": "비밀번호 (8~32자)",
+            "example": "password123!"
+          }
+        },
+        "description": "회원가입 요청"
+      },
+      "ApiResponseVoid": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "응답 메시지",
+            "example": "성공하였습니다."
+          },
+          "data": {
+            "type": "object",
+            "description": "응답 데이터"
+          }
+        },
+        "description": "API 공통 응답"
+      },
+      "ResetPasswordRequest": {
+        "required": [
+          "password",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "비밀번호 재설정 토큰"
+          },
+          "password": {
+            "maxLength": 32,
+            "minLength": 8,
+            "type": "string",
+            "description": "새로운 비밀번호 (8~32자)",
+            "example": "newPassword123!"
+          }
+        },
+        "description": "비밀번호 재설정 요청"
+      },
+      "LoginRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "이메일 주소",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "비밀번호",
+            "example": "password123!"
+          }
+        },
+        "description": "로그인 요청"
+      },
+      "ForgetPasswordRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "이메일 주소",
+            "example": "user@example.com"
+          }
+        },
+        "description": "비밀번호 찾기 요청"
+      },
+      "DetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "세부 항목 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "세부 항목 이름",
+            "example": "Java"
+          },
+          "categoryId": {
+            "type": "integer",
+            "description": "카테고리 ID",
+            "format": "int64",
+            "example": 1
+          }
+        },
+        "description": "세부 항목 응답"
+      },
+      "CategoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "카테고리 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "카테고리 이름",
+            "example": "IT/프로그래밍"
+          }
+        },
+        "description": "카테고리 응답"
+      },
+      "ProfileRequest": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "integer",
+            "description": "카테고리 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "specialty": {
+            "type": "integer",
+            "description": "전문 분야 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "sortBy": {
+            "type": "string",
+            "description": "정렬 기준",
+            "example": "rating"
+          },
+          "region": {
+            "type": "string",
+            "description": "지역",
+            "example": "서울"
+          },
+          "page": {
+            "type": "integer",
+            "description": "페이지 번호 (0부터 시작)",
+            "format": "int32",
+            "example": 0
+          }
+        },
+        "description": "프로필 검색 요청"
+      },
+      "ProfileItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "전문가 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "이름",
+            "example": "홍길동"
+          },
+          "gender": {
+            "type": "string",
+            "description": "성별",
+            "example": "MALE"
+          },
+          "region": {
+            "type": "string",
+            "description": "지역",
+            "example": "서울"
+          },
+          "specialties": {
+            "type": "array",
+            "description": "특기 목록",
+            "items": {
+              "$ref": "#/components/schemas/SpecialtyInfo"
+            }
+          },
+          "introduction": {
+            "type": "string",
+            "description": "자기소개",
+            "example": "안녕하세요."
+          },
+          "averageRating": {
+            "type": "number",
+            "description": "평균 평점",
+            "format": "double",
+            "example": 4.5
+          },
+          "reviewCount": {
+            "type": "integer",
+            "description": "리뷰 수",
+            "format": "int32",
+            "example": 10
+          },
+          "isEmailInputted": {
+            "type": "boolean",
+            "description": "이메일 입력 여부",
+            "example": true
+          },
+          "isPhoneInputted": {
+            "type": "boolean",
+            "description": "전화번호 입력 여부",
+            "example": true
+          },
+          "isEmailViewed": {
+            "type": "boolean",
+            "description": "이메일 조회 여부",
+            "example": false
+          },
+          "isPhoneViewed": {
+            "type": "boolean",
+            "description": "전화번호 조회 여부",
+            "example": false
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일",
+            "example": "expert@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "전화번호",
+            "example": "010-1234-5678"
+          },
+          "phoneMessage": {
+            "type": "string",
+            "description": "연락 가능 시간 메모",
+            "example": "오후 6시 이후"
+          }
+        },
+        "description": "프로필 항목"
+      },
+      "ProfileListResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "프로필 목록",
+            "items": {
+              "$ref": "#/components/schemas/ProfileItem"
+            }
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 페이지 존재 여부",
+            "example": true
+          }
+        },
+        "description": "프로필 목록 응답"
+      },
+      "SpecialtyInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "특기 이름",
+            "example": "Java 개발"
+          },
+          "hourlyRate": {
+            "type": "integer",
+            "description": "시간당 금액",
+            "format": "int32",
+            "example": 50000
+          },
+          "specialtyDetailId": {
+            "type": "integer",
+            "description": "특기 상세 ID",
+            "format": "int64",
+            "example": 1
+          }
+        },
+        "description": "특기 정보"
+      },
+      "ContactListResponse": {
+        "type": "object",
+        "properties": {
+          "expertId": {
+            "type": "integer",
+            "description": "전문가 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "expertName": {
+            "type": "string",
+            "description": "전문가 이름",
+            "example": "홍길동"
+          },
+          "gender": {
+            "type": "string",
+            "description": "성별",
+            "example": "MALE"
+          },
+          "region": {
+            "type": "string",
+            "description": "지역",
+            "example": "서울"
+          },
+          "specialties": {
+            "type": "array",
+            "description": "특기 목록",
+            "items": {
+              "$ref": "#/components/schemas/SpecialtyInfo"
+            }
+          },
+          "introduction": {
+            "type": "string",
+            "description": "자기소개",
+            "example": "안녕하세요."
+          },
+          "hasEmailView": {
+            "type": "boolean",
+            "description": "이메일 공개 여부",
+            "example": true
+          },
+          "hasPhoneView": {
+            "type": "boolean",
+            "description": "전화번호 공개 여부",
+            "example": true
+          },
+          "rating": {
+            "type": "integer",
+            "description": "평점",
+            "format": "int32",
+            "example": 5
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일",
+            "example": "expert@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "전화번호",
+            "example": "010-1234-5678"
+          },
+          "phoneMessage": {
+            "type": "string",
+            "description": "연락 가능 시간 메모",
+            "example": "오후 6시 이후"
+          }
+        },
+        "description": "지인 목록 응답"
+      },
+      "ContactSliceResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "연락처 목록",
+            "items": {
+              "$ref": "#/components/schemas/ContactListResponse"
+            }
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 페이지 존재 여부",
+            "example": true
+          }
+        },
+        "description": "지인 목록 슬라이스 응답"
+      }
+    }
+  }
+}
