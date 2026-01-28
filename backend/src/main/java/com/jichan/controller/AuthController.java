@@ -55,7 +55,7 @@ public class AuthController {
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", response.refreshToken()).httpOnly(true)
                                                           .secure(true).path("/")
                                                           .maxAge(refreshTokenExpiration / 1000) // 초 단위로 변환
-                                                          .sameSite("Strict") // SameSite 설정
+                                                          .sameSite("None") // SameSite 설정
                                                           .build();
 
         // 응답에서 refreshToken 제거 (쿠키로만 전송)
@@ -92,7 +92,7 @@ public class AuthController {
         // refreshToken 쿠키 삭제
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
                                                           .path("/").maxAge(0) // 즉시 만료
-                                                          .sameSite("Strict").build();
+                                                          .sameSite("None").build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                              .body(new ApiResponse<>("로그아웃되었습니다.", null));

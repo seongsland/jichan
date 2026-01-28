@@ -1,15 +1,16 @@
 package com.jichan.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "contact_log", uniqueConstraints = {@UniqueConstraint(columnNames = {"viewer_id", "expert_id", "contact_type"})})
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ContactLog {
 
@@ -29,4 +30,12 @@ public class ContactLog {
 
     @Column(name = "viewed_at", nullable = false)
     private LocalDateTime viewedAt;
+
+    @Builder
+    public ContactLog(Long viewerId, Long expertId, ContactType contactType) {
+        this.viewerId = viewerId;
+        this.expertId = expertId;
+        this.contactType = contactType;
+        this.viewedAt = LocalDateTime.now();
+    }
 }
