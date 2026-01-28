@@ -90,6 +90,10 @@ clean {
     delete querydslDir
 }
 
+jar {
+    enabled = false
+}
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
