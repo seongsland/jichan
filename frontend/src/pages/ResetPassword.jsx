@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import { validatePassword } from '../utils/validation';
 import Message from '../components/Message';
@@ -7,14 +7,13 @@ import { useLoading } from '../context/LoadingContext';
 import './Auth.css';
 
 const ResetPassword = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const [formData, setFormData] = useState({
     password: '',
     passwordConfirm: '',
   });
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: '', text: '', navigateTo: null });
   const { showLoading, hideLoading } = useLoading();
 
   const handleChange = (e) => {
@@ -26,7 +25,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: '', text: '' });
+    setMessage({ type: '', text: '', navigateTo: null });
 
     const passwordError = validatePassword(formData.password);
     if (passwordError) {
@@ -46,10 +45,8 @@ const ResetPassword = () => {
       setMessage({
         type: 'success',
         text: '비밀번호가 성공적으로 재설정되었습니다. 로그인 페이지로 이동합니다.',
+        navigateTo: '/login',
       });
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
     } catch (error) {
       setMessage({
         type: 'error',
@@ -67,7 +64,8 @@ const ResetPassword = () => {
         <Message
           type={message.type}
           message={message.text}
-          onClose={() => setMessage({ type: '', text: '' })}
+          onClose={() => setMessage({ type: '', text: '', navigateTo: null })}
+          navigateTo={message.navigateTo}
         />
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -82,6 +80,10 @@ const ResetPassword = () => {
               minLength={8}
               maxLength={32}
             />
+            <div className="password-rules">
+              <p>비밀번호는 8~32자여야 합니다.</p>
+              <p>영문 대/소문자, 숫자, 특수문자 중 3가지 이상을 조합해야 합니다.</p>
+            </div>
           </div>
           <div className="form-group">
             <label htmlFor="passwordConfirm">새 비밀번호 확인</label>

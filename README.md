@@ -48,6 +48,7 @@ jichan/
 
 ```properties
 # Database Configuration
+MYSQL_ROOT_PW=root 비밀번호 (docker 세팅시 사용)
 MYSQL_USERNAME=사용자명
 MYSQL_PASSWORD=비밀번호
 # Mail Configuration (gmail 발송 기능)
@@ -60,6 +61,8 @@ ENC_KEY=암호화키
 # local: 로컬 개발 환경
 # prod: 라이브 환경
 SPRING_PROFILES_ACTIVE=local
+# Frontend Address
+FRONTEND_ADDRESS=프론트엔드 주소
 ```
 
 ## 시작하기

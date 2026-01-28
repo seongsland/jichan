@@ -1,16 +1,15 @@
 import {useEffect, useState} from 'react';
-import {useNavigate, useSearchParams} from 'react-router-dom';
+import {useSearchParams} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
 import {useLoading} from '../context/LoadingContext';
 import './Auth.css';
 
 const VerifyEmail = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const { showLoading, hideLoading } = useLoading();
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: '', text: '', navigateTo: null });
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -29,10 +28,8 @@ const VerifyEmail = () => {
         setMessage({
           type: 'success',
           text: '이메일 인증이 완료되었습니다.',
+          navigateTo: '/login',
         });
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
       } catch (error) {
         setMessage({
           type: 'error',
@@ -44,16 +41,17 @@ const VerifyEmail = () => {
     };
 
     verifyEmail();
-  }, [token]);
+  }, [token, showLoading, hideLoading]);
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>이메일 인증</h2>
+        <h2>이메밀 인증</h2>
         <Message
           type={message.type}
           message={message.text}
-          onClose={() => setMessage({ type: '', text: '' })}
+          onClose={() => setMessage({ type: '', text: '', navigateTo: null })}
+          navigateTo={message.navigateTo}
         />
       </div>
     </div>

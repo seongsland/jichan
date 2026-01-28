@@ -45,6 +45,16 @@
   border-color: #007bff;
 }
 
+.password-rules {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.password-rules p {
+  margin: 0.2rem 0;
+}
+
 .btn-block {
   width: 100%;
   padding: 0.75rem;

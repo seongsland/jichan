@@ -3,6 +3,9 @@
 /.idea/
 qodana.yaml
 
+frontend/.env
+backend/.env
+
 # ========= Backend-specific ignores =========
 backend/HELP.md
 backend/.gradle
@@ -10,7 +13,6 @@ backend/build/
 !backend/gradle/wrapper/gradle-wrapper.jar
 !backend/**/src/main/**/build/
 !backend/**/src/test/**/build/
-backend/.env
 
 ### STS ###
 backend/.apt_generated
@@ -53,7 +55,6 @@ frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 frontend/lerna-debug.log*
 
-frontend/.env
 
 frontend/node_modules
 frontend/dist

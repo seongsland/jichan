@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { validatePassword, validateName } from '../utils/validation';
 import Message from '../components/Message';
@@ -7,7 +7,6 @@ import { useLoading } from '../context/LoadingContext';
 import './Auth.css';
 
 const Signup = () => {
-  const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState({
     name: '',
@@ -16,7 +15,7 @@ const Signup = () => {
     passwordConfirm: '',
   });
   const [agreed, setAgreed] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [message, setMessage] = useState({ type: '', text: '', navigateTo: null });
 
   const handleChange = (e) => {
     setFormData({
@@ -31,7 +30,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage({ type: '', text: '' });
+    setMessage({ type: '', text: '', navigateTo: null });
 
     const nameError = validateName(formData.name);
     if (nameError) {
@@ -66,10 +65,8 @@ const Signup = () => {
       setMessage({
         type: 'success',
         text: '회원가입이 완료되었습니다. 이메일을 확인해주세요.',
+        navigateTo: '/login',
       });
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
     } catch (error) {
       setMessage({
         type: 'error',
@@ -87,7 +84,8 @@ const Signup = () => {
         <Message
           type={message.type}
           message={message.text}
-          onClose={() => setMessage({ type: '', text: '' })}
+          onClose={() => setMessage({ type: '', text: '', navigateTo: null })}
+          navigateTo={message.navigateTo}
         />
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -125,6 +123,10 @@ const Signup = () => {
               minLength={8}
               maxLength={32}
             />
+            <div className="password-rules">
+              <p>비밀번호는 8~32자여야 합니다.</p>
+              <p>영문 대/소문자, 숫자, 특수문자 중 3가지 이상을 조합해야 합니다.</p>
+            </div>
           </div>
           <div className="form-group">
             <label htmlFor="passwordConfirm">비밀번호 확인</label>
