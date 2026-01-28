@@ -40,7 +40,7 @@ jwt:
 
 jichan:
   server:
-    address: http://localhost:3000
+    address: ${FRONTEND_ADDRESS}
 
 encryption:
   key: ${ENC_KEY}

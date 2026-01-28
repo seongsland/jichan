@@ -22,6 +22,7 @@ const api = axios.create({
     baseURL: BASE_URL + '/api',
     headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
     },
     withCredentials: true, // 쿠키 전송을 위해 추가 (httpOnly 쿠키 자동 전송)
 });
