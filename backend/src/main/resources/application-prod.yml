@@ -13,9 +13,10 @@ springdoc:
 
 logging:
   level:
-    com.jichan: INFO
+    com.jichan: DEBUG
     org.springframework.web: INFO
-    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
-    org.hibernate.SQL: INFO
+    org.springframework.boot.context.config: DEBUG
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.stat: INFO
+    org.hibernate.stat: DEBUG

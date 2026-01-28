@@ -39,7 +39,6 @@ jichan/
 
 - **Framework**: React 18
 - **Build Tool**: Vite
-- **Deployment**: Vercel
 
 ## 환경 변수 설정
 
@@ -49,15 +48,12 @@ jichan/
 # Database Configuration
 MYSQL_USERNAME=사용자명
 MYSQL_PASSWORD=비밀번호
-
-# Mail Configuration (이메일 발송 기능)
-MAIL_USERNAME=이메일계정
-MAIL_PASSWORD=이메일비밀번호(또는 앱비밀번호)
-
+# Mail Configuration (gmail 발송 기능)
+MAIL_USERNAME=gmail 계정
+MAIL_PASSWORD=gmail 앱 비밀번호
 # Security Configuration
 JWT_SECRET=JWT시크릿키(충분히 긴 문자열)
 ENC_KEY=암호화키
-
 # Spring Profile
 # local: 로컬 개발 환경
 # prod: 라이브 환경
@@ -99,4 +95,5 @@ npm run dev
 ## 테스트 및 코드 커버리지
 
 - **테스트 실행**: `./gradlew test`
-- **Jacoco 리포트 생성**: 테스트 실행 시 `backend/build/reports/jacoco/test/html/index.html` 경로에 리포트가 생성됩니다. 이 리포트를 통해 테스트 코드 커버리지를 확인할 수 있습니다.
+- **Jacoco 리포트 생성**: 테스트 실행 시 `backend/build/reports/jacoco/test/html/index.html` 경로에 리포트가 생성됩니다. 이 리포트를 통해 테스트 코드 커버리지를
+  확인할 수 있습니다.
