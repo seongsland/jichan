@@ -31,9 +31,11 @@ jichan/
     - `spring-boot-starter-security`
     - `spring-boot-starter-mail`
     - `spring-boot-starter-cache`
-    - `jjwt` (0.12.3)
+    - `jjwt-(api, impl, jackson)`
     - `mysql-connector-j`
     - `lombok`
+    - `querydsl-jpa`
+    - `springdoc-openapi-starter-webmvc-ui`
 
 ### Frontend
 
