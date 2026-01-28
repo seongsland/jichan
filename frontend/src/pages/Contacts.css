@@ -1,380 +1,380 @@
 .contacts {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
 .contacts .page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 2rem;
-  text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 .contacts .empty-state {
-  text-align: center;
-  padding: 3rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+    text-align: center;
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
 }
 
 .contacts .empty-state p {
-  margin-bottom: 1rem;
-  color: #666;
+    margin-bottom: 1rem;
+    color: #666;
 }
 
 /* Profile Grid */
 .contacts .profile-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
 .contacts .profile-card {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  display: flex;
-  flex-direction: column;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .contacts .profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .contacts .delete-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: #fff0f0;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 5;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #fff0f0;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 5;
 }
 
 .contacts .delete-btn svg {
-  stroke: #fa5252;
-  transition: stroke 0.2s;
+    stroke: #fa5252;
+    transition: stroke 0.2s;
 }
 
 .contacts .delete-btn:hover {
-  background-color: #fa5252;
-  transform: scale(1.1) rotate(90deg);
+    background-color: #fa5252;
+    transform: scale(1.1) rotate(90deg);
 }
 
 .contacts .delete-btn:hover svg {
-  stroke: white;
+    stroke: white;
 }
 
 .contacts .profile-header {
-  margin-bottom: 1rem;
-  padding-right: 30px; /* Space for delete button */
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    padding-right: 30px; /* Space for delete button */
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 1rem;
 }
 
 .contacts .profile-header h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
 }
 
 .contacts .profile-info {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.2rem;
-  color: #666;
-  font-size: 0.95rem;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    color: #666;
+    font-size: 0.95rem;
+    flex-wrap: wrap;
 }
 
 .contacts .profile-info .info-badge {
-  background-color: #f1f3f5;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  color: #495057;
-  font-weight: 500;
+    background-color: #f1f3f5;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
 }
 
 .contacts .specialties {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .contacts .specialty {
-  padding: 0.4rem 0.8rem;
-  background-color: #e7f5ff;
-  color: #007bff;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  position: relative;
-  width: 100%;
+    padding: 0.4rem 0.8rem;
+    background-color: #e7f5ff;
+    color: #007bff;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+    width: 100%;
 }
 
 .contacts .specialty:hover {
-  background-color: #d0ebff;
+    background-color: #d0ebff;
 }
 
 .contacts .specialty-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  font-weight: bold;
-  z-index: 10;
-  text-align: center;
-  padding: 0.5rem;
-  box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+    text-align: center;
+    padding: 0.5rem;
+    box-sizing: border-box;
 }
 
 .contacts .introduction {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  flex-grow: 1;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
 }
 
 .contacts .contact-info-item {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 0.8rem;
-  font-size: 0.95rem;
-  border-left: 4px solid #007bff;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    border-left: 4px solid #007bff;
 }
 
 .contacts .phone-message {
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid #b3d9ff;
-  color: #666;
-  font-style: italic;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #b3d9ff;
+    color: #666;
+    font-style: italic;
 }
 
 .contacts .contact-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid #f1f3f5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f3f5;
 }
 
 .contacts .rating-label {
-  font-weight: 500;
-  color: #495057;
+    font-weight: 500;
+    color: #495057;
 }
 
 .contacts .star-rating-inline {
-  display: flex;
-  gap: 4px;
-  cursor: pointer;
+    display: flex;
+    gap: 4px;
+    cursor: pointer;
 }
 
 .contacts .star-rating-inline .star {
-  font-size: 1.5rem;
-  color: #dee2e6;
-  transition: color 0.2s;
-  line-height: 1;
+    font-size: 1.5rem;
+    color: #dee2e6;
+    transition: color 0.2s;
+    line-height: 1;
 }
 
 .contacts .star-rating-inline .star.filled {
-  color: #ffc107;
+    color: #ffc107;
 }
 
 .contacts .star-rating-inline .star:hover,
 .contacts .star-rating-inline .star:hover ~ .star {
-  color: #dee2e6;
+    color: #dee2e6;
 }
 
 .contacts .star-rating-inline:hover .star {
-  color: #ffc107;
+    color: #ffc107;
 }
 
 .contacts .empty-state .btn {
-  border: 0;
-  cursor: pointer;
+    border: 0;
+    cursor: pointer;
 }
 
 /* Filters Section */
 .contacts .profile-filters {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  border: 1px solid #f0f0f0;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    border: 1px solid #f0f0f0;
 }
 
 .contacts .filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-  min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
 }
 
 .contacts .filter-label {
-  font-weight: 600;
-  color: #2c3e50;
-  font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95rem;
 }
 
 .contacts .filter-row {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .contacts .filter-group select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-  cursor: pointer;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    cursor: pointer;
 }
 
 .contacts .filter-group select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .contacts .filter-actions {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 /* Buttons (Global Style Match) */
 .contacts .btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
 }
 
 .contacts .btn-primary {
-  background-color: #007bff;
-  color: white;
-  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
 }
 
 .contacts .btn-primary:hover {
-  background-color: #0069d9;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
+    background-color: #0069d9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
 }
 
 .contacts .btn-outline {
-  background-color: transparent;
-  color: #007bff;
-  border: 2px solid #007bff;
-  padding: 0.6rem 1.4rem;
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    padding: 0.6rem 1.4rem;
 }
 
 .contacts .btn-outline:hover {
-  background-color: #007bff;
-  color: white;
-  transform: translateY(-2px);
+    background-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
 }
 
 .contacts .btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .contacts .load-more {
-  text-align: center;
-  margin-top: 2rem;
+    text-align: center;
+    margin-top: 2rem;
 }
 
 .contacts .load-more .btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  padding: 0.8rem 3rem;
+    background-color: #6c757d;
+    color: white;
+    padding: 0.8rem 3rem;
 }
 
 .contacts .load-more .btn-secondary:hover {
-  background-color: #5a6268;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .contacts .load-more .btn-secondary:disabled {
-  background-color: #f1f3f5;
-  color: #adb5bd;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
+    background-color: #f1f3f5;
+    color: #adb5bd;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 @media (max-width: 768px) {
-  .contacts {
-    padding: 0.5rem;
-  }
+    .contacts {
+        padding: 0.5rem;
+    }
 
-  .contacts .page-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+    .contacts .page-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 
-  .contacts .profile-filters {
-    padding: 1rem;
-    gap: 1rem;
-  }
+    .contacts .profile-filters {
+        padding: 1rem;
+        gap: 1rem;
+    }
 
-  .contacts .profile-card {
-    padding: 1rem;
-  }
+    .contacts .profile-card {
+        padding: 1rem;
+    }
 
-  .contacts .profile-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+    .contacts .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
 
-  .contacts .filter-row {
-    flex-direction: column;
-  }
+    .contacts .filter-row {
+        flex-direction: column;
+    }
 }

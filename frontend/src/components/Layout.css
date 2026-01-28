@@ -1,201 +1,201 @@
 .layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .layout .header {
-  background-color: #ffffff;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .layout .logo {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #2c3e50;
-  text-decoration: none;
-  letter-spacing: -0.5px;
-  display: flex;
-  align-items: center;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
 }
 
 .layout .logo-mark {
-  vertical-align: text-bottom;
-  margin-right: 0.3rem;
+    vertical-align: text-bottom;
+    margin-right: 0.3rem;
 }
 
 .layout .logo-highlight {
-  color: #007bff;
-  margin-left: 0.5rem;
+    color: #007bff;
+    margin-left: 0.5rem;
 }
 
 .layout .nav {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
 
 .layout .nav-link {
-  color: #555;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
+    color: #555;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .layout .nav-link:hover {
-  color: #007bff;
+    color: #007bff;
 }
 
 .layout .nav-link.active {
-  color: #007bff;
-  font-weight: 700;
+    color: #007bff;
+    font-weight: 700;
 }
 
 .layout .nav-btn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 50px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  font-size: 0.95rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 0.95rem;
 }
 
 .layout .btn-signup {
-  background-color: #007bff;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
 
 .layout .btn-signup:hover {
-  background-color: #0069d9;
-  transform: translateY(-1px);
+    background-color: #0069d9;
+    transform: translateY(-1px);
 }
 
 .layout .btn-logout {
-  background-color: #f1f3f5;
-  color: #495057;
+    background-color: #f1f3f5;
+    color: #495057;
 }
 
 .layout .btn-logout:hover {
-  background-color: #e9ecef;
-  color: #212529;
+    background-color: #e9ecef;
+    color: #212529;
 }
 
 .layout .main-content {
-  flex: 1;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 /* Footer Styles */
 .layout .footer {
-  background-color: #f8f9fa;
-  padding: 3rem 2rem 1rem;
-  margin-top: auto;
-  border-top: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    padding: 3rem 2rem 1rem;
+    margin-top: auto;
+    border-top: 1px solid #e9ecef;
 }
 
 .layout .footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
 .layout .footer-section h3 {
-  font-size: 1.2rem;
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  font-weight: 700;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-weight: 700;
 }
 
 .layout .footer-section h4 {
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 1rem;
-  font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: 600;
 }
 
 .layout .footer-section p {
-  color: #666;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  line-height: 1.6;
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
 }
 
 .layout .footer-section a {
-  display: block;
-  color: #666;
-  text-decoration: none;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  transition: color 0.2s;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    transition: color 0.2s;
 }
 
 .layout .footer-section a:hover {
-  color: #007bff;
+    color: #007bff;
 }
 
 .layout .footer-bottom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 1.5rem;
-  border-top: 1px solid #dee2e6;
-  text-align: center;
-  color: #868e96;
-  font-size: 0.85rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+    color: #868e96;
+    font-size: 0.85rem;
 }
 
 @media (max-width: 768px) {
-  .layout .header {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.8rem 1rem;
-    position: relative;
-  }
+    .layout .header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.8rem 1rem;
+        position: relative;
+    }
 
-  .layout .logo {
-    width: 100%;
-    justify-content: center; /* 모바일에서 로고 중앙 정렬 */
-    padding: 1rem;
-    box-sizing: border-box;
-  }
+    .layout .logo {
+        width: 100%;
+        justify-content: center; /* 모바일에서 로고 중앙 정렬 */
+        padding: 1rem;
+        box-sizing: border-box;
+    }
 
-  .layout .nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 1rem 0.5rem;
-    width: 100%;
-    background-color: #fafafa;
-    box-sizing: border-box;
-    gap: 0.5rem;
-  }
+    .layout .nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1rem 0.5rem;
+        width: 100%;
+        background-color: #fafafa;
+        box-sizing: border-box;
+        gap: 0.5rem;
+    }
 
-  .layout .main-content {
-    padding: 1rem 0.5rem;
-  }
+    .layout .main-content {
+        padding: 1rem 0.5rem;
+    }
 
-  .layout .footer {
-    padding: 2rem 1rem 1rem;
-  }
+    .layout .footer {
+        padding: 2rem 1rem 1rem;
+    }
 
-  .layout .footer-content {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 1.5rem;
-  }
+    .layout .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.5rem;
+    }
 }
