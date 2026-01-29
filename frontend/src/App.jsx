@@ -15,6 +15,7 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
+import {Analytics} from '@vercel/analytics/react';
 
 function App() {
     return (
@@ -58,6 +59,7 @@ function App() {
                             />
                         </Routes>
                     </Layout>
+                    <Analytics/>
                 </Router>
             </LoadingProvider>
         </AuthProvider>
