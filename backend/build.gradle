@@ -94,6 +94,10 @@ jar {
     enabled = false
 }
 
+bootJar {
+    archiveFileName = 'app.jar'
+}
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
