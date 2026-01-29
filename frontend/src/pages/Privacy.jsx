@@ -80,7 +80,7 @@ const Privacy = () => {
             </p>
             <ul>
                 <li>개인정보 보호책임자: (운영자 이름 또는 직책)</li>
-                <li>이메일: jichan.help@gmail.com</li>
+                <li>이메일: help@jichan.site</li>
             </ul>
 
             <p>부칙: 본 방침은 2026년 1월 1일부터 시행합니다.</p>

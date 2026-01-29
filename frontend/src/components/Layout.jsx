@@ -83,7 +83,7 @@ const Layout = ({children}) => {
                     </div>
                     <div className="footer-section">
                         <h4>서비스 문의</h4>
-                        <p>이메일: jichan.help@gmail.com</p>
+                        <p>이메일: help@jichan.site</p>
                         <p>문의 확인 후 순차적으로 답변드립니다.</p>
                     </div>
                     <div className="footer-section">
