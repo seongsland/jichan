@@ -5,9 +5,13 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import {useLoading} from '../context/LoadingContext';
 import './Profile.css';
 import sidoData from '../utils/sido.json';
+import {useAuth} from "../context/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
     const {loading, showLoading, hideLoading} = useLoading();
+    const {isLoggedIn} = useAuth();
+    const navigate = useNavigate();
 
     const [profileData, setProfileData] = useState({
         content: [],
@@ -33,7 +37,8 @@ const Profile = () => {
         isOpen: false,
         expertId: null,
         contactType: null,
-        message: ''
+        message: '',
+        action: null // 'VIEW_CONTACT' or 'LOGIN_REDIRECT'
     });
 
     const [categories, setCategories] = useState([]);
@@ -112,6 +117,15 @@ const Profile = () => {
     };
 
     const handleContactViewClick = (expertId, contactType) => {
+        if (!isLoggedIn) {
+            setConfirmDialog({
+                isOpen: true,
+                message: '로그인 후 보실 수 있습니다.\n로그인 페이지로 이동하시겠습니까?',
+                action: 'LOGIN_REDIRECT'
+            });
+            return;
+        }
+
         const message = contactType === 'EMAIL'
             ? '이메일을 확인 하시겠습니까?'
             : '핸드폰 번호를 확인 하시겠습니까?';
@@ -120,8 +134,18 @@ const Profile = () => {
             isOpen: true,
             expertId,
             contactType,
-            message
+            message,
+            action: 'VIEW_CONTACT'
         });
+    };
+
+    const handleConfirm = () => {
+        if (confirmDialog.action === 'LOGIN_REDIRECT') {
+            navigate('/login');
+            setConfirmDialog({isOpen: false, expertId: null, contactType: null, message: '', action: null});
+        } else {
+            void executeContactView();
+        }
     };
 
     const executeContactView = async () => {
@@ -148,7 +172,7 @@ const Profile = () => {
                 text: error.response?.data?.message || '연락처를 불러오는데 실패했습니다.',
             });
         } finally {
-            setConfirmDialog({isOpen: false, expertId: null, contactType: null, message: ''});
+            setConfirmDialog({isOpen: false, expertId: null, contactType: null, message: '', action: null});
         }
     };
 
@@ -192,8 +216,8 @@ const Profile = () => {
             <ConfirmDialog
                 isOpen={confirmDialog.isOpen}
                 message={confirmDialog.message}
-                onConfirm={executeContactView}
-                onCancel={() => setConfirmDialog({isOpen: false, expertId: null, contactType: null, message: ''})}
+                onConfirm={handleConfirm}
+                onCancel={() => setConfirmDialog({isOpen: false, expertId: null, contactType: null, message: '', action: null})}
                 confirmText="확인"
                 cancelText="취소"
             />

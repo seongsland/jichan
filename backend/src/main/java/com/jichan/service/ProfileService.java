@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,17 +55,24 @@ public class ProfileService {
                                                                                          UserSpecialty::getUserId));
 
         // ContactLog 조회 (현재 사용자가 본 기록)
-        List<ContactLog> viewerContactLogs = contactLogRepository.findByViewerIdAndExpertIdIn(viewerId, userIds);
-        Set<Long> emailViewedExperts = viewerContactLogs.stream()
-                                                        .filter(log -> log.getContactType() == ContactType.EMAIL)
-                                                        .map(ContactLog::getExpertId).collect(Collectors.toSet());
-        Set<Long> phoneViewedExperts = viewerContactLogs.stream()
-                                                        .filter(log -> log.getContactType() == ContactType.PHONE)
-                                                        .map(ContactLog::getExpertId).collect(Collectors.toSet());
+        Set<Long> emailViewedExperts = Collections.emptySet();
+        Set<Long> phoneViewedExperts = Collections.emptySet();
 
+        if (viewerId != null) {
+            List<ContactLog> viewerContactLogs = contactLogRepository.findByViewerIdAndExpertIdIn(viewerId, userIds);
+            emailViewedExperts = viewerContactLogs.stream()
+                                                  .filter(log -> log.getContactType() == ContactType.EMAIL)
+                                                  .map(ContactLog::getExpertId).collect(Collectors.toSet());
+            phoneViewedExperts = viewerContactLogs.stream()
+                                                  .filter(log -> log.getContactType() == ContactType.PHONE)
+                                                  .map(ContactLog::getExpertId).collect(Collectors.toSet());
+        }
+
+        Set<Long> finalEmailViewedExperts = emailViewedExperts;
+        Set<Long> finalPhoneViewedExperts = phoneViewedExperts;
         List<ProfileItem> content = users.stream().map(user -> convertToProfileItem(user,
-                userSpecialtyMap.getOrDefault(user.getId(), List.of()), emailViewedExperts.contains(user.getId()),
-                phoneViewedExperts.contains(user.getId()))).collect(Collectors.toList());
+                userSpecialtyMap.getOrDefault(user.getId(), List.of()), finalEmailViewedExperts.contains(user.getId()),
+                finalPhoneViewedExperts.contains(user.getId()))).collect(Collectors.toList());
 
         return new ProfileListResponse(content, hasNext);
     }

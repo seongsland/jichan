@@ -26,7 +26,7 @@ public class ProfileController {
     @Operation(summary = "전문가 프로필 목록 조회", description = "조건에 맞는 전문가 프로필 목록을 조회합니다.")
     public ResponseEntity<ProfileListResponse> getProfiles(Authentication authentication,
                                                            ProfileRequest profilesRequest) {
-        Long viewerId = Long.valueOf(authentication.getName());
+        Long viewerId = (authentication != null) ? Long.valueOf(authentication.getName()) : null;
         ProfileListResponse response = profileService.getProfiles(viewerId, profilesRequest);
         return ResponseEntity.ok(response);
     }

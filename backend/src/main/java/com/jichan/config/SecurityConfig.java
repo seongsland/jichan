@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -49,15 +50,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**",
-
-                    "/v3/api-docs/**",          // OpenAPI 명세서 JSON 경로
-                    "/swagger-ui/**",           // Swagger UI 리소스
-                    "/swagger-ui.html"         // Swagger UI 진입 페이지
-            ).permitAll().anyRequest().authenticated())
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                                                       "/api/auth/**")
+                                               .permitAll()
+                                               .requestMatchers(HttpMethod.GET, "/api/profile",
+                                                       "/api/specialty/categories", "/api/specialty/details")
+                                               .permitAll()
+                                               .anyRequest()
+                                               .authenticated())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
-
