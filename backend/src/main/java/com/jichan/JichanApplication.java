@@ -10,6 +10,7 @@ public class JichanApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(JichanApplication.class, args);
+        System.out.println("JichanApplication START!");
     }
 
 }
