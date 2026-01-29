@@ -36,14 +36,6 @@ const User = () => {
         void fetchSpecialties();
     }, []);
 
-    useEffect(() => {
-        if (sido) {
-            setFormData(prev => ({...prev, region: sigungu ? `${sido} ${sigungu}` : sido}));
-        } else {
-            setFormData(prev => ({...prev, region: ''}));
-        }
-    }, [sido, sigungu]);
-
     const fetchSpecialties = async () => {
         try {
             const [categoriesResponse, detailsResponse] = await Promise.all([
@@ -133,12 +125,16 @@ const User = () => {
     };
 
     const handleSidoChange = (e) => {
-        setSido(e.target.value);
+        const newSido = e.target.value;
+        setSido(newSido);
         setSigungu('');
+        setFormData(prev => ({...prev, region: newSido}));
     };
 
     const handleSigunguChange = (e) => {
-        setSigungu(e.target.value);
+        const newSigungu = e.target.value;
+        setSigungu(newSigungu);
+        setFormData(prev => ({...prev, region: `${sido} ${newSigungu}`}));
     };
 
     // Format number with commas for Korean currency

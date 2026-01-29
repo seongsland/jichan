@@ -5,7 +5,7 @@ import './Message.css';
 const Message = ({type, message, onClose, navigateTo}) => {
     const navigate = useNavigate();
 
-    const handleInteraction = useCallback(() => {
+    const closeMessage = useCallback(() => {
         onClose();
         if (navigateTo) {
             navigate(navigateTo);
@@ -13,17 +13,28 @@ const Message = ({type, message, onClose, navigateTo}) => {
     }, [onClose, navigateTo, navigate]);
 
     useEffect(() => {
-        document.addEventListener('keydown', handleInteraction);
+        if (!message) {
+            return;
+        }
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+                e.preventDefault();
+                closeMessage();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
 
         return () => {
-            document.removeEventListener('keydown', handleInteraction);
+            document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [handleInteraction]);
+    }, [message, closeMessage]);
 
     if (!message) return null;
 
     return (
-        <div className="message-overlay" onClick={handleInteraction}>
+        <div className="message-overlay" onClick={closeMessage}>
             <div className={`message-box message-${type}`}>
                 <span>{message}</span>
             </div>

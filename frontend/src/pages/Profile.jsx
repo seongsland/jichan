@@ -44,12 +44,6 @@ const Profile = () => {
         void fetchProfiles(0, true);
     }, []);
 
-    useEffect(() => {
-        const region = sigungu ? `${sido} ${sigungu}` : sido;
-        setFilters(prev => ({...prev, region}));
-    }, [sido, sigungu]);
-
-
     const fetchSpecialties = async () => {
         try {
             const [categoriesResponse, detailsResponse] = await Promise.all([
@@ -172,12 +166,16 @@ const Profile = () => {
     };
 
     const handleSidoChange = (e) => {
-        setSido(e.target.value);
+        const newSido = e.target.value;
+        setSido(newSido);
         setSigungu('');
+        setFilters(prev => ({...prev, region: newSido}));
     };
 
     const handleSigunguChange = (e) => {
-        setSigungu(e.target.value);
+        const newSigungu = e.target.value;
+        setSigungu(newSigungu);
+        setFilters(prev => ({...prev, region: newSigungu ? `${sido} ${newSigungu}` : sido}));
     };
 
     const filteredDetails = details.filter(detail => !filters.category || detail.categoryId === parseInt(filters.category));

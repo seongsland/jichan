@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import api from '../utils/api';
 import Message from '../components/Message';
@@ -10,7 +10,12 @@ const VerifyEmail = () => {
     const token = searchParams.get('token');
     const {showLoading, hideLoading} = useLoading();
     const [message, setMessage] = useState({type: '', text: '', navigateTo: null});
+    const hasFetched = useRef(false);
+
     useEffect(() => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
         const verifyEmail = async () => {
             showLoading();
             if (!token) {
