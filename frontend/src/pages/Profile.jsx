@@ -32,7 +32,6 @@ const Profile = () => {
 
     const [message, setMessage] = useState({type: '', text: ''});
     const [contactViews, setContactViews] = useState({});
-    const [visibleCategories, setVisibleCategories] = useState({});
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
         expertId: null,
@@ -362,33 +361,21 @@ const Profile = () => {
                                 {profile.specialties && profile.specialties.length > 0 && (
                                     <div className="specialties">
                                         {profile.specialties.map((spec, idx) => {
-                                            let name = spec.name;
-                                            let categoryName = "";
                                             const detail = details.find(d => d.id === spec.specialtyDetailId);
-                                            if (detail) {
-                                                const category = categories.find(c => c.id === detail.categoryId);
-                                                categoryName = category.name;
-                                            }
-
-                                            const specialtyKey = `${profile.id}-${idx}`;
+                                            const category = detail ? categories.find(c => c.id === detail.categoryId) : null;
+                                            const categoryName = category ? category.name : '';
 
                                             return (
-                                                <div
-                                                    key={idx}
-                                                    className="specialty"
-                                                    title={categoryName}
-                                                    onClick={() => setVisibleCategories(prev => ({
-                                                        ...prev,
-                                                        [specialtyKey]: !prev[specialtyKey]
-                                                    }))}
-                                                    style={{cursor: 'pointer', position: 'relative'}}
-                                                >
-                                                    {name} - {spec.hourlyRate?.toLocaleString()}원/시간
-                                                    {visibleCategories[specialtyKey] && categoryName && (
-                                                        <div className="specialty-overlay">
-                                                            {categoryName}
-                                                        </div>
-                                                    )}
+                                                <div key={idx} className="specialty">
+                                                    <span className="specialty-content">
+                                                        {categoryName && (
+                                                            <span className="specialty-category">{categoryName} &gt; </span>
+                                                        )}
+                                                        {spec.name}
+                                                    </span>
+                                                    <span className="specialty-price">
+                                                        {spec.hourlyRate?.toLocaleString()}원/시간
+                                                    </span>
                                                 </div>
                                             );
                                         })}

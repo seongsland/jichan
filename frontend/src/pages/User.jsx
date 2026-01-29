@@ -26,7 +26,6 @@ const User = () => {
     const [selectedDetail, setSelectedDetail] = useState('');
     const [hourlyRate, setHourlyRate] = useState('');
     const [message, setMessage] = useState({type: '', text: ''});
-    const [visibleCategories, setVisibleCategories] = useState({});
 
     const [sido, setSido] = useState('');
     const [sigungu, setSigungu] = useState('');
@@ -448,22 +447,18 @@ const User = () => {
                                 <div
                                     key={specialtyKey}
                                     className="specialty-item"
-                                    title={category?.name}
-                                    onClick={() => setVisibleCategories(prev => ({
-                                        ...prev,
-                                        [specialtyKey]: !prev[specialtyKey]
-                                    }))}
                                 >
                                     <div className="specialty-text">
-                                        <span className="name">{detail?.name}</span>
-                                        <span className="separator">: </span>
-                                        <span className="price">{formatCurrency(specialty.hourlyRate)}원/시간</span>
+                                        <span className="specialty-content">
+                                            {category?.name && (
+                                                <span className="category-name">{category.name} &gt; </span>
+                                            )}
+                                            <span className="name">{detail?.name}</span>
+                                        </span>
+                                        <span className="specialty-price">
+                                            {formatCurrency(specialty.hourlyRate)}원/시간
+                                        </span>
                                     </div>
-                                    {visibleCategories[specialtyKey] && category?.name && (
-                                        <div className="specialty-overlay">
-                                            {category.name}
-                                        </div>
-                                    )}
                                     <button
                                         type="button"
                                         onClick={(e) => handleRemoveSpecialty(specialty.specialtyDetailId, e)}

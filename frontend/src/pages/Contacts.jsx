@@ -33,7 +33,6 @@ const Contacts = () => {
     });
     const [categories, setCategories] = useState([]);
     const [details, setDetails] = useState([]);
-    const [visibleCategories, setVisibleCategories] = useState({});
 
     useEffect(() => {
         void fetchSpecialties();
@@ -233,37 +232,29 @@ const Contacts = () => {
                                     {contact.region && <span className="info-badge">{contact.region}</span>}
                                     {contact.gender && <span className="info-badge">{contact.gender}</span>}
                                 </div>
-                                {contact.specialties && contact.specialties.length > 0 && (<div className="specialties">
+                                {contact.specialties && contact.specialties.length > 0 && (
+                                    <div className="specialties">
                                         {contact.specialties.map((spec, idx) => {
-                                            let name = spec.name;
-                                            let categoryName = "";
-                                            if (spec.specialtyDetailId) {
-                                                const detail = details.find(d => d.id === spec.specialtyDetailId);
-                                                if (detail) {
-                                                    const category = categories.find(c => c.id === detail.categoryId);
-                                                    categoryName = category.name;
-                                                }
-                                            }
+                                            const detail = details.find(d => d.id === spec.specialtyDetailId);
+                                            const category = detail ? categories.find(c => c.id === detail.categoryId) : null;
+                                            const categoryName = category ? category.name : '';
 
-                                            const specialtyKey = `${contact.expertId}-${idx}`;
-
-                                            return (<div
-                                                    key={idx}
-                                                    className="specialty"
-                                                    title={categoryName}
-                                                    onClick={() => setVisibleCategories(prev => ({
-                                                        ...prev, [specialtyKey]: !prev[specialtyKey]
-                                                    }))}
-                                                    style={{cursor: 'pointer', position: 'relative'}}
-                                                >
-                                                    {name} - {spec.hourlyRate?.toLocaleString()}원/시간
-                                                    {visibleCategories[specialtyKey] && categoryName && (
-                                                        <div className="specialty-overlay">
-                                                            {categoryName}
-                                                        </div>)}
-                                                </div>);
+                                            return (
+                                                <div key={idx} className="specialty">
+                                                    <span className="specialty-content">
+                                                        {categoryName && (
+                                                            <span className="specialty-category">{categoryName} &gt; </span>
+                                                        )}
+                                                        {spec.name}
+                                                    </span>
+                                                    <span className="specialty-price">
+                                                        {spec.hourlyRate?.toLocaleString()}원/시간
+                                                    </span>
+                                                </div>
+                                            );
                                         })}
-                                    </div>)}
+                                    </div>
+                                )}
                                 {contact.introduction && (<p className="introduction" style={{whiteSpace: 'pre-line'}}>
                                         {contact.introduction.split('\n').map((line, i) => (<span key={i}>
                         {line}
