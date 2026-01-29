@@ -20,13 +20,13 @@ class PasswordValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"password", "PASSWORD", "12345678", "!!@@##$$", "pass1234", "PASS1234", "pass!!@@"})
+    @ValueSource(strings = {"password", "PASSWORD", "12345678", "!!@@##$$"})
     void invalidPasswords(String password) {
         assertFalse(passwordValidator.isValid(password, context));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Password123", "Password!@#", "password123!", "PASSWORD123!"})
+    @ValueSource(strings = {"Password123", "Password!@#", "password123!", "PASSWORD123!", "pass1234", "PASS1234", "pass!!@@"})
     void validPasswords(String password) {
         assertTrue(passwordValidator.isValid(password, context));
     }

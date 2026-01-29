@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useRef, useState} from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const LoadingContext = createContext(null);
@@ -13,17 +13,21 @@ export const useLoading = () => {
 
 export const LoadingProvider = ({children}) => {
     const [loading, setLoading] = useState(false);
+    const timerRef = useRef(null);
 
     const showLoading = () => {
-        setLoading(true);
+        timerRef.current = setTimeout(() => {
+            setLoading(true);
+        }, 500);
     };
 
     const hideLoading = () => {
+        clearTimeout(timerRef.current);
         setLoading(false);
     };
 
     return (<LoadingContext.Provider value={{loading, showLoading, hideLoading}}>
-            {loading && <LoadingSpinner message="Loading..."/>}
-            {children}
-        </LoadingContext.Provider>);
+        {loading && <LoadingSpinner message="Loading..."/>}
+        {children}
+    </LoadingContext.Provider>);
 };

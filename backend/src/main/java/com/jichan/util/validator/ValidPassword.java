@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPassword {
-    String message() default "비밀번호는 영문 대/소문자, 숫자, 특수문자 중 3가지 이상을 조합해야 합니다.";
+    String message() default "비밀번호는 영문 대/소문자, 숫자, 특수문자 중 2가지 이상을 조합해야 합니다.";
 
     Class<?>[] groups() default {};
 

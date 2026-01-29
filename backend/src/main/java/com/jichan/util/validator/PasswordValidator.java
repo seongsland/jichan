@@ -25,6 +25,6 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
             typesCount++;
         }
 
-        return typesCount >= 3;
+        return typesCount >= 2;
     }
 }

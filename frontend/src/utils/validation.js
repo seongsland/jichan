@@ -13,8 +13,8 @@ export const validatePassword = (password) => {
 
     const typesCount = [hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar].filter(Boolean).length;
 
-    if (typesCount < 3) {
-        return '비밀번호는 영문 대/소문자, 숫자, 특수문자 중 3가지 이상을 조합해야 합니다.';
+    if (typesCount < 2) {
+        return '비밀번호는 영문 대/소문자, 숫자, 특수문자 중 2가지 이상을 조합해야 합니다.';
     }
 
     return null; // 유효성 검사 통과
