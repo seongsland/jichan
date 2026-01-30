@@ -49,7 +49,7 @@ public class User extends BaseTimeEntity {
 
     @Builder.Default
     @Column(name = "average_rating", nullable = false)
-    private double averageRating = 0.0; // Changed to double
+    private int averageRating = 0; // Changed to double
 
     @Builder.Default
     @Column(name = "review_count", nullable = false)
@@ -75,7 +75,7 @@ public class User extends BaseTimeEntity {
         this.emailVerified = true;
     }
 
-    public void updateRating(double averageRating) {
+    public void updateRating(int averageRating) {
         this.averageRating = averageRating;
     }
 

@@ -54,10 +54,9 @@ public class ContactDto {
             @Schema(description = "점수", example = "5") Integer score) {
     }
 
-    @Schema(description = "평가 통계")
     public record RatingStatsDto(
-            @Schema(description = "평균 점수", example = "4.5") Double average,
-            @Schema(description = "평가 수", example = "10") Long count) {
+            Double average,
+            Long count) {
     }
 
 }

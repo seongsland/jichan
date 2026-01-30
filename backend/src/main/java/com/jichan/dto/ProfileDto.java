@@ -47,7 +47,7 @@ public class ProfileDto {
             @Schema(description = "지역", example = "서울") String region,
             @Schema(description = "특기 목록") List<SpecialtyInfo> specialties,
             @Schema(description = "자기소개", example = "안녕하세요.") String introduction,
-            @Schema(description = "평균 평점", example = "4.5") Double averageRating,
+            @Schema(description = "평균 평점", example = "4") Integer averageRating,
             @Schema(description = "리뷰 수", example = "10") Integer reviewCount,
             @Schema(description = "이메일 입력 여부", example = "true") boolean isEmailInputted,
             @Schema(description = "전화번호 입력 여부", example = "true") boolean isPhoneInputted,

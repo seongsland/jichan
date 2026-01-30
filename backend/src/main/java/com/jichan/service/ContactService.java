@@ -111,7 +111,7 @@ public class ContactService {
                                     .orElseThrow(() -> new IllegalArgumentException("전문가를 찾을 수 없습니다."));
 
         RatingStatsDto stats = ratingRepository.findStatsByExpertId(expertId);
-        expert.updateRating(stats.average());
+        expert.updateRating((int) Math.round(stats.average()));
         expert.updateReviewCount(stats.count().intValue());
         userRepository.save(expert);
     }
