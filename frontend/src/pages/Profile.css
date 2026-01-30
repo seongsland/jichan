@@ -449,6 +449,7 @@
     }
 
     .profile .filter-actions {
+        justify-content: flex-end;
         flex: 1;
     }
 

@@ -42,6 +42,10 @@
     flex-wrap: wrap;
 }
 
+.home .hero-actions .btn {
+    width: 250px;
+}
+
 /* Features Section */
 .home .home-features {
     max-width: 1200px;
