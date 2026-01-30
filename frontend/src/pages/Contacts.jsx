@@ -4,6 +4,7 @@ import api from '../utils/api';
 import Message from '../components/Message';
 import ConfirmDialog from '../components/ConfirmDialog';
 import {useLoading} from '../context/LoadingContext';
+import {useSpecialty} from '../context/SpecialtyContext';
 import './Contacts.css';
 
 const StarRating = ({score, onRate}) => {
@@ -21,6 +22,7 @@ const StarRating = ({score, onRate}) => {
 const Contacts = () => {
     const navigate = useNavigate();
     const {loading, showLoading, hideLoading} = useLoading();
+    const {categories, details, fetchSpecialties} = useSpecialty();
 
     const [contactData, setContactData] = useState({
         content: [], hasNext: false, page: 0
@@ -32,24 +34,12 @@ const Contacts = () => {
         category: '', specialty: '',
     });
     const [appliedFilters, setAppliedFilters] = useState(null);
-    const [categories, setCategories] = useState([]);
-    const [details, setDetails] = useState([]);
 
     useEffect(() => {
         void fetchSpecialties();
         const initialFilters = {category: '', specialty: ''};
         void fetchContacts(0, true, initialFilters);
     }, []);
-
-    const fetchSpecialties = async () => {
-        try {
-            const [categoriesResponse, detailsResponse] = await Promise.all([api.get('/specialty/categories'), api.get('/specialty/details')]);
-            setCategories(categoriesResponse.data);
-            setDetails(detailsResponse.data);
-        } catch (error) {
-            console.error('특기 정보를 불러오는데 실패했습니다.', error);
-        }
-    };
 
     const fetchContacts = async (pageNum, reset = false, filtersToApply) => {
         showLoading();

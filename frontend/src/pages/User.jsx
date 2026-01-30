@@ -5,11 +5,13 @@ import {useLoading} from '../context/LoadingContext';
 import {validateName} from '../utils/validation';
 import './User.css';
 import sidoData from '../utils/sido.json';
-import {useAuth} from '../context/AuthContext'; // Import useAuth
+import {useAuth} from '../context/AuthContext';
+import {useSpecialty} from '../context/SpecialtyContext';
 
 const User = () => {
     const {showLoading, hideLoading} = useLoading();
-    const {logout} = useAuth(); // Use the useAuth hook
+    const {logout} = useAuth();
+    const {categories, details, fetchSpecialties} = useSpecialty();
     const [formData, setFormData] = useState({
         name: '',
         gender: '',
@@ -21,8 +23,6 @@ const User = () => {
         specialties: [],
     });
     const [originalFormData, setOriginalFormData] = useState(null);
-    const [categories, setCategories] = useState([]);
-    const [details, setDetails] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedDetail, setSelectedDetail] = useState('');
     const [hourlyRate, setHourlyRate] = useState('');
@@ -32,22 +32,9 @@ const User = () => {
     const [sigungu, setSigungu] = useState('');
 
     useEffect(() => {
-        void fetchProfile();
         void fetchSpecialties();
+        void fetchProfile();
     }, []);
-
-    const fetchSpecialties = async () => {
-        try {
-            const [categoriesResponse, detailsResponse] = await Promise.all([
-                api.get('/specialty/categories'),
-                api.get('/specialty/details')
-            ]);
-            setCategories(categoriesResponse.data);
-            setDetails(detailsResponse.data);
-        } catch (error) {
-            console.error('특기 정보를 불러오는데 실패했습니다.', error);
-        }
-    };
 
     const fetchProfile = async () => {
         showLoading();

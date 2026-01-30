@@ -7,11 +7,13 @@ import './Profile.css';
 import sidoData from '../utils/sido.json';
 import {useAuth} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
+import {useSpecialty} from "../context/SpecialtyContext.jsx";
 
 const Profile = () => {
     const {loading, showLoading, hideLoading} = useLoading();
     const {isAuthenticated} = useAuth();
     const navigate = useNavigate();
+    const {categories, details, fetchSpecialties} = useSpecialty();
 
     const [profileData, setProfileData] = useState({
         content: [],
@@ -41,27 +43,11 @@ const Profile = () => {
         action: null // 'VIEW_CONTACT' or 'LOGIN_REDIRECT'
     });
 
-    const [categories, setCategories] = useState([]);
-    const [details, setDetails] = useState([]);
-
     useEffect(() => {
         void fetchSpecialties();
         const initialFilters = {category: '', specialty: '', sortBy: '', region: ''};
         void fetchProfiles(0, true, initialFilters);
     }, []);
-
-    const fetchSpecialties = async () => {
-        try {
-            const [categoriesResponse, detailsResponse] = await Promise.all([
-                api.get('/specialty/categories'),
-                api.get('/specialty/details')
-            ]);
-            setCategories(categoriesResponse.data);
-            setDetails(detailsResponse.data);
-        } catch (error) {
-            console.error('특기 정보를 불러오는데 실패했습니다.', error);
-        }
-    };
 
     const fetchProfiles = async (pageNum, reset = false, filtersToApply) => {
         showLoading();
