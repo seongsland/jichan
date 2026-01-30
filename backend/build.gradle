@@ -64,6 +64,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+    runtimeOnly 'com.h2database:h2'
 }
 
 tasks.withType(Test).configureEach {
