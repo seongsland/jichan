@@ -39,7 +39,7 @@ const User = () => {
     const fetchProfile = async () => {
         showLoading();
         try {
-            const response = await api.get('/user/profile');
+            const response = await api.get('/user');
             const data = response.data;
 
             if (data.region) {
@@ -250,7 +250,7 @@ const User = () => {
         showLoading();
 
         try {
-            await api.put('/user/profile', formData);
+            await api.put('/user', formData);
             setOriginalFormData(formData); // Update original data on successful save
             setMessage({
                 type: 'success',

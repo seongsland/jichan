@@ -19,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/profile")
+    @GetMapping()
     @Operation(summary = "프로필 조회", description = "로그인한 사용자의 프로필 정보를 조회합니다.")
     public ResponseEntity<ProfileResponse> getProfile(Authentication authentication) {
         Long userId = Long.valueOf(authentication.getName());
@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/profile")
+    @PutMapping()
     @Operation(summary = "프로필 수정", description = "로그인한 사용자의 프로필 정보를 수정합니다.")
     public ResponseEntity<ProfileResponse> updateProfile(Authentication authentication,
                                                          @Valid @RequestBody ProfileUpdateRequest request) {
