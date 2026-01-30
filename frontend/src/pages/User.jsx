@@ -20,6 +20,7 @@ const User = () => {
         phoneMessage: '',
         specialties: [],
     });
+    const [originalFormData, setOriginalFormData] = useState(null);
     const [categories, setCategories] = useState([]);
     const [details, setDetails] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -62,7 +63,7 @@ const User = () => {
                 setSigungu(initialSigungu);
             }
 
-            setFormData({
+            const fetchedData = {
                 name: data.name || '',
                 gender: data.gender || '',
                 region: data.region || '',
@@ -74,7 +75,9 @@ const User = () => {
                     specialtyDetailId: s.specialtyDetailId,
                     hourlyRate: s.hourlyRate
                 })) : [],
-            });
+            };
+            setFormData(fetchedData);
+            setOriginalFormData(fetchedData);
         } catch (error) {
             setMessage({
                 type: 'error',
@@ -209,6 +212,14 @@ const User = () => {
         e.preventDefault();
         setMessage({type: '', text: ''});
 
+        if (JSON.stringify(formData) === JSON.stringify(originalFormData)) {
+            setMessage({
+                type: 'info',
+                text: '변경된 내용이 없습니다.',
+            });
+            return;
+        }
+
         const nameError = validateName(formData.name);
         if (nameError) {
             setMessage({type: 'error', text: nameError});
@@ -253,6 +264,7 @@ const User = () => {
 
         try {
             await api.put('/user/profile', formData);
+            setOriginalFormData(formData); // Update original data on successful save
             setMessage({
                 type: 'success',
                 text: '프로필이 업데이트되었습니다.',

@@ -25,6 +25,7 @@ const Profile = () => {
         sortBy: '',
         region: ''
     });
+    const [appliedFilters, setAppliedFilters] = useState(null);
 
     const [isDetailSearchVisible, setIsDetailSearchVisible] = useState(false);
     const [sido, setSido] = useState('');
@@ -45,7 +46,8 @@ const Profile = () => {
 
     useEffect(() => {
         void fetchSpecialties();
-        void fetchProfiles(0, true);
+        const initialFilters = {category: '', specialty: '', sortBy: '', region: ''};
+        void fetchProfiles(0, true, initialFilters);
     }, []);
 
     const fetchSpecialties = async () => {
@@ -61,16 +63,15 @@ const Profile = () => {
         }
     };
 
-    const fetchProfiles = async (pageNum, reset = false, currentFilters = null) => {
+    const fetchProfiles = async (pageNum, reset = false, filtersToApply) => {
         showLoading();
         try {
-            const activeFilters = currentFilters || filters;
             const params = {
                 page: pageNum,
-                ...(activeFilters.category && {category: activeFilters.category}),
-                ...(activeFilters.specialty && {specialty: activeFilters.specialty}),
-                ...(activeFilters.sortBy && {sortBy: activeFilters.sortBy}),
-                ...(activeFilters.region && {region: activeFilters.region}),
+                ...(filtersToApply.category && {category: filtersToApply.category}),
+                ...(filtersToApply.specialty && {specialty: filtersToApply.specialty}),
+                ...(filtersToApply.sortBy && {sortBy: filtersToApply.sortBy}),
+                ...(filtersToApply.region && {region: filtersToApply.region}),
             };
             const response = await api.get('/profile', {params});
             const data = response.data;
@@ -81,6 +82,10 @@ const Profile = () => {
                 hasNext: data.hasNext,
                 page: pageNum
             }));
+
+            if (reset) {
+                setAppliedFilters(filtersToApply);
+            }
 
             // 이미 본 연락처 정보가 있다면 상태 업데이트
             const newContactViews = {};
@@ -112,7 +117,7 @@ const Profile = () => {
     };
 
     const handleLoadMore = () => {
-        void fetchProfiles(profileData.page + 1, false);
+        void fetchProfiles(profileData.page + 1, false, appliedFilters);
     };
 
     const handleContactViewClick = (expertId, contactType) => {
@@ -176,15 +181,23 @@ const Profile = () => {
     };
 
     const handleSearch = () => {
-        void fetchProfiles(0, true);
+        if (JSON.stringify(filters) === JSON.stringify(appliedFilters)) {
+            return;
+        }
+        void fetchProfiles(0, true, filters);
     };
 
     const handleReset = () => {
         const resetFilters = {category: '', specialty: '', sortBy: '', region: ''};
+
         setFilters(resetFilters);
         setSido('');
         setSigungu('');
         setIsDetailSearchVisible(false);
+
+        if (JSON.stringify(resetFilters) === JSON.stringify(appliedFilters)) {
+            return;
+        }
         void fetchProfiles(0, true, resetFilters);
     };
 

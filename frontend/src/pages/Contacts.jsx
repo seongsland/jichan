@@ -31,12 +31,14 @@ const Contacts = () => {
     const [filters, setFilters] = useState({
         category: '', specialty: '',
     });
+    const [appliedFilters, setAppliedFilters] = useState(null);
     const [categories, setCategories] = useState([]);
     const [details, setDetails] = useState([]);
 
     useEffect(() => {
         void fetchSpecialties();
-        void fetchContacts(0, true);
+        const initialFilters = {category: '', specialty: ''};
+        void fetchContacts(0, true, initialFilters);
     }, []);
 
     const fetchSpecialties = async () => {
@@ -49,12 +51,11 @@ const Contacts = () => {
         }
     };
 
-    const fetchContacts = async (pageNum, reset = false, currentFilters = null) => {
+    const fetchContacts = async (pageNum, reset = false, filtersToApply) => {
         showLoading();
         try {
-            const activeFilters = currentFilters || filters;
             const params = {
-                page: pageNum, ...(activeFilters.category && {category: activeFilters.category}), ...(activeFilters.specialty && {specialty: activeFilters.specialty}),
+                page: pageNum, ...(filtersToApply.category && {category: filtersToApply.category}), ...(filtersToApply.specialty && {specialty: filtersToApply.specialty}),
             };
             const response = await api.get('/contact', {params});
             const data = response.data;
@@ -62,6 +63,10 @@ const Contacts = () => {
             setContactData(prev => ({
                 content: reset ? data.content : [...prev.content, ...data.content], hasNext: data.hasNext, page: pageNum
             }));
+
+            if (reset) {
+                setAppliedFilters(filtersToApply);
+            }
         } catch (error) {
             setMessage({
                 type: 'error', text: '전문가 목록을 불러오는데 실패했습니다.',
@@ -72,7 +77,7 @@ const Contacts = () => {
     };
 
     const handleLoadMore = () => {
-        void fetchContacts(contactData.page + 1, false);
+        void fetchContacts(contactData.page + 1, false, appliedFilters);
     };
 
     const handleRatingSubmit = async (expertId, score) => {
@@ -123,12 +128,19 @@ const Contacts = () => {
     };
 
     const handleSearch = () => {
+        if (JSON.stringify(filters) === JSON.stringify(appliedFilters)) {
+            return;
+        }
         void fetchContacts(0, true, filters);
     };
 
     const handleReset = () => {
         const resetFilters = {category: '', specialty: ''};
         setFilters(resetFilters);
+
+        if (JSON.stringify(resetFilters) === JSON.stringify(appliedFilters)) {
+            return;
+        }
         void fetchContacts(0, true, resetFilters);
     };
 
