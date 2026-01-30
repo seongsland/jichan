@@ -81,6 +81,11 @@ const Contacts = () => {
     };
 
     const handleRatingSubmit = async (expertId, score) => {
+        const contact = contactData.content.find(c => c.expertId === expertId);
+        if (contact && contact.rating === score) {
+            return;
+        }
+
         try {
             await api.post('/contact/rating', {
                 expertId: expertId, score: score,
