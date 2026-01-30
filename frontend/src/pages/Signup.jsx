@@ -2,12 +2,13 @@ import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import api from '../utils/api';
 import {validateName, validatePassword} from '../utils/validation';
-import Message from '../components/Message';
+import {useMessage} from '../context/MessageContext';
 import {useLoading} from '../context/LoadingContext';
 import './Auth.css';
 
 const Signup = () => {
     const {showLoading, hideLoading} = useLoading();
+    const {showMessage} = useMessage();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -15,7 +16,6 @@ const Signup = () => {
         passwordConfirm: '',
     });
     const [agreed, setAgreed] = useState(false);
-    const [message, setMessage] = useState({type: '', text: '', navigateTo: null});
 
     const handleChange = (e) => {
         setFormData({
@@ -30,30 +30,29 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage({type: '', text: '', navigateTo: null});
 
         const nameError = validateName(formData.name);
         if (nameError) {
-            setMessage({type: 'error', text: nameError});
+            showMessage('error', nameError);
             return;
         }
 
         const passwordError = validatePassword(formData.password);
         if (passwordError) {
-            setMessage({type: 'error', text: passwordError});
+            showMessage('error', passwordError);
             return;
         }
 
         if (formData.password !== formData.passwordConfirm) {
-            setMessage({type: 'error', text: '비밀번호가 일치하지 않습니다.'});
+            showMessage('error', '비밀번호가 일치하지 않습니다.');
             return;
         }
 
         if (!agreed) {
-            setMessage({
-                type: 'error',
-                text: '이용약관 및 개인정보 처리방침에 동의해야 합니다.',
-            });
+            showMessage(
+                'error',
+                '이용약관 및 개인정보 처리방침에 동의해야 합니다.',
+            );
             return;
         }
 
@@ -62,16 +61,16 @@ const Signup = () => {
         try {
             const {passwordConfirm, ...signupData} = formData;
             await api.post('/auth/signup', signupData);
-            setMessage({
-                type: 'success',
-                text: '회원가입이 완료되었습니다.\n이메일을 확인해주세요.',
-                navigateTo: '/login',
-            });
+            showMessage(
+                'success',
+                '회원가입이 완료되었습니다.\n이메일을 확인해주세요.',
+                '/login',
+            );
         } catch (error) {
-            setMessage({
-                type: 'error',
-                text: error.response?.data?.message || '회원가입에 실패했습니다.',
-            });
+            showMessage(
+                'error',
+                error.response?.data?.message || '회원가입에 실패했습니다.',
+            );
         } finally {
             hideLoading();
         }
@@ -81,12 +80,6 @@ const Signup = () => {
         <div className="auth-container">
             <div className="auth-card">
                 <h2>회원가입</h2>
-                <Message
-                    type={message.type}
-                    message={message.text}
-                    onClose={() => setMessage({type: '', text: '', navigateTo: null})}
-                    navigateTo={message.navigateTo}
-                />
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="name">이름 (닉네임)</label>

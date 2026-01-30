@@ -301,9 +301,16 @@
     line-height: 1;
 }
 
-.contacts .star:hover,
 .contacts .star.filled {
     color: #ffc107;
+}
+
+.contacts .star-rating-inline:hover .star {
+    color: #ffc107;
+}
+
+.contacts .star-rating-inline .star:hover ~ .star {
+    color: #dee2e6;
 }
 
 .contacts .load-more {

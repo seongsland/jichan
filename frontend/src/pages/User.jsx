@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import api from '../utils/api';
-import Message from '../components/Message';
+import {useMessage} from '../context/MessageContext';
 import {useLoading} from '../context/LoadingContext';
 import {validateName} from '../utils/validation';
 import './User.css';
@@ -11,6 +11,7 @@ import {useSpecialty} from '../context/SpecialtyContext';
 const User = () => {
     const {showLoading, hideLoading} = useLoading();
     const {logout} = useAuth();
+    const {showMessage} = useMessage();
     const {categories, details, fetchSpecialties} = useSpecialty();
     const [formData, setFormData] = useState({
         name: '',
@@ -26,7 +27,6 @@ const User = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedDetail, setSelectedDetail] = useState('');
     const [hourlyRate, setHourlyRate] = useState('');
-    const [message, setMessage] = useState({type: '', text: ''});
 
     const [sido, setSido] = useState('');
     const [sigungu, setSigungu] = useState('');
@@ -66,10 +66,10 @@ const User = () => {
             setFormData(fetchedData);
             setOriginalFormData(fetchedData);
         } catch (error) {
-            setMessage({
-                type: 'error',
-                text: '프로필을 불러오는데 실패했습니다.',
-            });
+            showMessage(
+                'error',
+                '프로필을 불러오는데 실패했습니다.',
+            );
         } finally {
             hideLoading();
         }
@@ -147,10 +147,10 @@ const User = () => {
 
     const handleAddSpecialty = () => {
         if (!selectedDetail || !hourlyRate) {
-            setMessage({
-                type: 'error',
-                text: '카테고리, 세부항목, 시간당 금액을 모두 입력해주세요.',
-            });
+            showMessage(
+                'error',
+                '카테고리, 세부항목, 시간당 금액을 모두 입력해주세요.',
+            );
             return;
         }
 
@@ -158,19 +158,19 @@ const User = () => {
         const rate = parseCurrency(hourlyRate);
 
         if (isNaN(rate) || rate <= 0) {
-            setMessage({
-                type: 'error',
-                text: '유효한 시간당 금액을 입력해주세요.',
-            });
+            showMessage(
+                'error',
+                '유효한 시간당 금액을 입력해주세요.',
+            );
             return;
         }
 
         // Check if already exists
         if (formData.specialties.some(s => s.specialtyDetailId === detailId)) {
-            setMessage({
-                type: 'error',
-                text: '이미 추가된 전문 분야입니다.',
-            });
+            showMessage(
+                'error',
+                '이미 추가된 전문 분야입니다.',
+            );
             return;
         }
 
@@ -182,7 +182,6 @@ const User = () => {
         setSelectedCategory('');
         setSelectedDetail('');
         setHourlyRate('');
-        setMessage({type: '', text: ''});
     };
 
     const handleRemoveSpecialty = (detailId, e) => {
@@ -197,52 +196,51 @@ const User = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage({type: '', text: ''});
 
         if (JSON.stringify(formData) === JSON.stringify(originalFormData)) {
-            setMessage({
-                type: 'info',
-                text: '변경된 내용이 없습니다.',
-            });
+            showMessage(
+                'info',
+                '변경된 내용이 없습니다.',
+            );
             return;
         }
 
         const nameError = validateName(formData.name);
         if (nameError) {
-            setMessage({type: 'error', text: nameError});
+            showMessage('error', nameError);
             return;
         }
 
         if (formData.phone && !/^\d{3}-\d{4}-\d{4}$/.test(formData.phone)) {
-            setMessage({
-                type: 'error',
-                text: '핸드폰 번호 형식이 올바르지 않습니다. (예: 010-1234-5678)',
-            });
+            showMessage(
+                'error',
+                '핸드폰 번호 형식이 올바르지 않습니다. (예: 010-1234-5678)',
+            );
             return;
         }
 
         if (formData.isVisible) {
             if (!formData.name || !formData.gender || !formData.region || !formData.introduction) {
-                setMessage({
-                    type: 'error',
-                    text: '프로필을 공개하려면 이름, 성별, 지역, 소개글을 모두 입력해야 합니다.',
-                });
+                showMessage(
+                    'error',
+                    '프로필을 공개하려면 이름, 성별, 지역, 소개글을 모두 입력해야 합니다.',
+                );
                 return;
             }
 
             if (formData.phone && !formData.phoneMessage) {
-                setMessage({
-                    type: 'error',
-                    text: '핸드폰 번호를 입력한 경우 연락 가능 시간 메모를 입력해야 합니다.',
-                });
+                showMessage(
+                    'error',
+                    '핸드폰 번호를 입력한 경우 연락 가능 시간 메모를 입력해야 합니다.',
+                );
                 return;
             }
 
             if (!formData.specialties || formData.specialties.length === 0) {
-                setMessage({
-                    type: 'error',
-                    text: '프로필을 공개하려면 최소 1개 이상의 특기를 등록해야 합니다.',
-                });
+                showMessage(
+                    'error',
+                    '프로필을 공개하려면 최소 1개 이상의 특기를 등록해야 합니다.',
+                );
                 return;
             }
         }
@@ -252,19 +250,19 @@ const User = () => {
         try {
             await api.put('/user', formData);
             setOriginalFormData(formData); // Update original data on successful save
-            setMessage({
-                type: 'success',
-                text: '프로필이 업데이트되었습니다.',
-            });
+            showMessage(
+                'success',
+                '프로필이 업데이트되었습니다.',
+            );
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
         } catch (error) {
-            setMessage({
-                type: 'error',
-                text: error.response?.data?.message || '프로필 업데이트에 실패했습니다.',
-            });
+            showMessage(
+                'error',
+                error.response?.data?.message || '프로필 업데이트에 실패했습니다.',
+            );
         } finally {
             hideLoading();
         }
@@ -279,10 +277,10 @@ const User = () => {
                 await logout();
                 window.location.href = '/';
             } catch (error) {
-                setMessage({
-                    type: 'error',
-                    text: error.response?.data?.message || '탈퇴 처리에 실패했습니다.',
-                });
+                showMessage(
+                    'error',
+                    error.response?.data?.message || '탈퇴 처리에 실패했습니다.',
+                );
             } finally {
                 hideLoading();
             }
@@ -292,11 +290,6 @@ const User = () => {
     return (
         <div className="user">
             <h2 className="page-title">프로필 관리</h2>
-            <Message
-                type={message.type}
-                message={message.text}
-                onClose={() => setMessage({type: '', text: ''})}
-            />
             <form onSubmit={handleSubmit} className="profile-form">
                 <div className="form-group checkbox-group">
                     <label>

@@ -2,6 +2,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {AuthProvider} from './context/AuthContext';
 import {LoadingProvider} from './context/LoadingContext';
 import {SpecialtyProvider} from './context/SpecialtyContext';
+import {MessageProvider} from "./context/MessageContext";
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
@@ -22,32 +23,34 @@ function App() {
         <LoadingProvider>
             <SpecialtyProvider>
                 <Router>
-                    <ScrollToTop/>
-                    <Layout>
-                        <Routes>
-                            <Route path="/" element={<Home/>}/>
-                            <Route path="/signup" element={<Signup/>}/>
-                            <Route path="/login" element={<Login/>}/>
-                            <Route path="/forgot_password" element={<ForgotPassword/>}/>
-                            <Route path="/reset_password" element={<ResetPassword/>}/>
-                            <Route path="/verify_email" element={<VerifyEmail/>}/>
-                            <Route path="/terms" element={<Terms/>}/>
-                            <Route path="/privacy" element={<Privacy/>}/>
-                            <Route
-                                path="/user"
-                                element={<ProtectedRoute>
-                                    <User/>
-                                </ProtectedRoute>}
-                            />
-                            <Route path="/profile" element={<Profile/>}/>
-                            <Route
-                                path="/contacts"
-                                element={<ProtectedRoute>
-                                    <Contacts/>
-                                </ProtectedRoute>}
-                            />
-                        </Routes>
-                    </Layout>
+                    <MessageProvider>
+                        <ScrollToTop/>
+                        <Layout>
+                            <Routes>
+                                <Route path="/" element={<Home/>}/>
+                                <Route path="/signup" element={<Signup/>}/>
+                                <Route path="/login" element={<Login/>}/>
+                                <Route path="/forgot_password" element={<ForgotPassword/>}/>
+                                <Route path="/reset_password" element={<ResetPassword/>}/>
+                                <Route path="/verify_email" element={<VerifyEmail/>}/>
+                                <Route path="/terms" element={<Terms/>}/>
+                                <Route path="/privacy" element={<Privacy/>}/>
+                                <Route
+                                    path="/user"
+                                    element={<ProtectedRoute>
+                                        <User/>
+                                    </ProtectedRoute>}
+                                />
+                                <Route path="/profile" element={<Profile/>}/>
+                                <Route
+                                    path="/contacts"
+                                    element={<ProtectedRoute>
+                                        <Contacts/>
+                                    </ProtectedRoute>}
+                                />
+                            </Routes>
+                        </Layout>
+                    </MessageProvider>
                 </Router>
             </SpecialtyProvider>
         </LoadingProvider>

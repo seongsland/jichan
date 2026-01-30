@@ -2,18 +2,18 @@ import {useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import api from '../utils/api';
 import {validatePassword} from '../utils/validation';
-import Message from '../components/Message';
+import {useMessage} from '../context/MessageContext';
 import {useLoading} from '../context/LoadingContext';
 import './Auth.css';
 
 const ResetPassword = () => {
     const [searchParams] = useSearchParams();
     const token = searchParams.get('token');
+    const {showMessage} = useMessage();
     const [formData, setFormData] = useState({
         password: '',
         passwordConfirm: '',
     });
-    const [message, setMessage] = useState({type: '', text: '', navigateTo: null});
     const {showLoading, hideLoading} = useLoading();
 
     const handleChange = (e) => {
@@ -25,16 +25,15 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage({type: '', text: '', navigateTo: null});
 
         const passwordError = validatePassword(formData.password);
         if (passwordError) {
-            setMessage({type: 'error', text: passwordError});
+            showMessage('error', passwordError);
             return;
         }
 
         if (formData.password !== formData.passwordConfirm) {
-            setMessage({type: 'error', text: '비밀번호가 일치하지 않습니다.'});
+            showMessage('error', '비밀번호가 일치하지 않습니다.');
             return;
         }
 
@@ -42,16 +41,16 @@ const ResetPassword = () => {
 
         try {
             await api.post('/auth/reset_password', {token, password: formData.password});
-            setMessage({
-                type: 'success',
-                text: '비밀번호가 성공적으로 재설정되었습니다.\n로그인 화면으로 이동합니다.',
-                navigateTo: '/login',
-            });
+            showMessage(
+                'success',
+                '비밀번호가 성공적으로 재설정되었습니다.\n로그인 화면으로 이동합니다.',
+                '/login',
+            );
         } catch (error) {
-            setMessage({
-                type: 'error',
-                text: error.response?.data?.message || '비밀번호 재설정에 실패했습니다.',
-            });
+            showMessage(
+                'error',
+                error.response?.data?.message || '비밀번호 재설정에 실패했습니다.',
+            );
         } finally {
             hideLoading();
         }
@@ -61,12 +60,6 @@ const ResetPassword = () => {
         <div className="auth-container">
             <div className="auth-card">
                 <h2>비밀번호 재설정</h2>
-                <Message
-                    type={message.type}
-                    message={message.text}
-                    onClose={() => setMessage({type: '', text: '', navigateTo: null})}
-                    navigateTo={message.navigateTo}
-                />
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="password">새 비밀번호</label>

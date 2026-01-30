@@ -2,11 +2,13 @@ import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {useAuth} from '../context/AuthContext';
 import './Layout.css';
 import logo_mark from '../assets/logo_mark.gif';
+import {useMessage} from "../context/MessageContext";
 
 const Layout = ({children}) => {
     const {isAuthenticated, logout} = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const {showMessage} = useMessage();
 
     const handleLogout = async () => {
         await logout();
@@ -28,11 +30,11 @@ const Layout = ({children}) => {
     const handleEmailClick = (email) => {
         navigator.clipboard.writeText(email)
             .then(() => {
-                alert('이메일 주소가 클립보드에 복사되었습니다.');
+                showMessage('success', '이메일 주소가 클립보드에 복사되었습니다.');
             })
             .catch(err => {
                 console.error('이메일 복사 실패:', err);
-                alert('이메일 복사에 실패했습니다.');
+                showMessage('error', '이메일 복사에 실패했습니다.');
             });
     };
 

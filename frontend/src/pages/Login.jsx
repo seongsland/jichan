@@ -2,16 +2,16 @@ import {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import api from '../utils/api';
 import {useAuth} from '../context/AuthContext';
-import Message from '../components/Message';
+import {useMessage} from "../context/MessageContext";
 import './Auth.css';
 
 const Login = () => {
     const navigate = useNavigate();
     const {login} = useAuth();
+    const {showMessage} = useMessage();
     const [formData, setFormData] = useState({
         email: '', password: '',
     });
-    const [message, setMessage] = useState({type: '', text: ''});
 
     const handleChange = (e) => {
         setFormData({
@@ -29,20 +29,13 @@ const Login = () => {
             login(accessToken);
             navigate('/profile');
         } catch (error) {
-            setMessage({
-                type: 'error', text: error.response?.data?.message || '로그인에 실패했습니다.',
-            });
+            showMessage('error', error.response?.data?.message || '로그인에 실패했습니다.');
         }
     };
 
     return (<div className="auth-container">
         <div className="auth-card">
             <h2>로그인</h2>
-            <Message
-                type={message.type}
-                message={message.text}
-                onClose={() => setMessage({type: '', text: ''})}
-            />
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="email">이메일</label>
