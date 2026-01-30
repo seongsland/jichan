@@ -25,6 +25,17 @@ const Layout = ({children}) => {
         }
     };
 
+    const handleEmailClick = (email) => {
+        navigator.clipboard.writeText(email)
+            .then(() => {
+                alert('이메일 주소가 클립보드에 복사되었습니다.');
+            })
+            .catch(err => {
+                console.error('이메일 복사 실패:', err);
+                alert('이메일 복사에 실패했습니다.');
+            });
+    };
+
     return (
         <div className="layout">
             <header className="header">
@@ -83,7 +94,15 @@ const Layout = ({children}) => {
                     </div>
                     <div className="footer-section">
                         <h4>서비스 문의</h4>
-                        <p>이메일: help@jichan.site</p>
+                        <p>
+                            이메일: <span
+                            onClick={() => handleEmailClick('help@jichan.site')}
+                            style={{cursor: 'pointer', textDecoration: 'underline'}}
+                            title="클릭하여 이메일 주소 복사"
+                        >
+                            help@jichan.site
+                        </span>
+                        </p>
                         <p>문의 확인 후 순차적으로 답변드립니다.</p>
                     </div>
                     <div className="footer-section">
