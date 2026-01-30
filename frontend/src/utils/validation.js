@@ -3,7 +3,7 @@ export const validatePassword = (password) => {
     const maxLength = 32;
 
     if (password.length < minLength || password.length > maxLength) {
-        return `비밀번호는 ${minLength}자 이상 ${maxLength}자 이하이어야 합니다.`;
+        return `비밀번호는 ${minLength}자 이상 ${maxLength}자 이하여야 합니다.`;
     }
 
     const hasUpperCase = /[A-Z]/.test(password);
@@ -14,7 +14,7 @@ export const validatePassword = (password) => {
     const typesCount = [hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar].filter(Boolean).length;
 
     if (typesCount < 2) {
-        return '비밀번호는 영문 대/소문자, 숫자, 특수문자 중 2가지 이상을 조합해야 합니다.';
+        return '비밀번호는 영문 대/소문자, 숫자, 특수문자 중 2종류 이상을 혼합하여 설정해 주세요.';
     }
 
     return null; // 유효성 검사 통과

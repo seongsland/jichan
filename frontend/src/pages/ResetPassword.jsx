@@ -44,7 +44,7 @@ const ResetPassword = () => {
             await api.post('/auth/reset_password', {token, password: formData.password});
             setMessage({
                 type: 'success',
-                text: '비밀번호가 성공적으로 재설정되었습니다. 로그인 페이지로 이동합니다.',
+                text: '비밀번호가 성공적으로 재설정되었습니다.\n로그인 화면으로 이동합니다.',
                 navigateTo: '/login',
             });
         } catch (error) {
@@ -82,7 +82,7 @@ const ResetPassword = () => {
                         />
                         <div className="password-rules">
                             <p>비밀번호는 8~32자로 설정해 주세요.</p>
-                            <p>영문 대/소문자, 숫자, 특수문자 중 2가지 이상을 조합해야 합니다.</p>
+                            <p>영문 대/소문자, 숫자, 특수문자 중 2종류 이상을 혼합하여 설정해 주세요.</p>
                         </div>
                     </div>
                     <div className="form-group">

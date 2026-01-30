@@ -140,23 +140,33 @@
 
 .contacts .delete-btn {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
+    top: 15px;
+    right: 15px;
+    background: #fff0f0;
     border: none;
-    color: #adb5bd;
-    cursor: pointer;
-    padding: 0.4rem;
     border-radius: 50%;
-    transition: all 0.2s;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 5;
+}
+
+.contacts .delete-btn svg {
+    stroke: #fa5252;
+    transition: stroke 0.2s;
 }
 
 .contacts .delete-btn:hover {
-    background-color: #ffe3e3;
-    color: #ff6b6b;
+    background-color: #fa5252;
+    transform: scale(1.1) rotate(90deg);
+}
+
+.contacts .delete-btn:hover svg {
+    stroke: white;
 }
 
 .contacts .profile-header {

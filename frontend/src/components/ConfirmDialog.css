@@ -19,10 +19,11 @@
     min-width: 300px;
     max-width: 80%;
     text-align: center;
+    white-space: pre-line;
 }
 
 .confirm-message {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-bottom: 1.5rem;
     color: #333;
 }
@@ -62,8 +63,12 @@
 
 @media (max-width: 768px) {
     .confirm-box {
-        padding: 1.5rem;
+        padding: 1.3rem;
         max-width: 90%;
         min-width: 280px;
+    }
+
+    .confirm-message {
+        font-size: 1.1rem;
     }
 }

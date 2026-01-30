@@ -1,8 +1,37 @@
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
+import {useAuth} from '../context/AuthContext';
+import Message from '../components/Message';
 import './Home.css';
 
 const Home = () => {
+    const { isAuthenticated } = useAuth();
+    const [message, setMessage] = useState(null);
+
+    const handleRegisterClick = (e) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            setMessage({
+                type: 'info',
+                text: "로그인 후 지인으로 등록할 수 있습니다.\n로그인 화면으로 이동합니다.",
+                navigateTo: '/login'
+            });
+        }
+    };
+
+    const closeMessage = () => {
+        setMessage(null);
+    };
+
     return (<div className="home">
+            {message && (
+                <Message
+                    type={message.type}
+                    message={message.text}
+                    onClose={closeMessage}
+                    navigateTo={message.navigateTo}
+                />
+            )}
             <section className="home-hero">
                 <div className="hero-content">
                     <h1>아는 사람 없을 때, <br/>당황하지 말고 <span className="highlight">지인찬스</span></h1>
@@ -16,8 +45,8 @@ const Home = () => {
                             <Link to="/profile" className="btn btn-primary btn-lg">
                                 내게 필요한 지인 찾기
                             </Link>
-                            <Link to="/user" className="btn btn-secondary btn-lg">
-                                나도 지인으로 등록하기
+                            <Link to="/user" className="btn btn-secondary btn-lg" onClick={handleRegisterClick}>
+                                나도 전문가로 등록하기
                             </Link>
                         </>
                     </div>

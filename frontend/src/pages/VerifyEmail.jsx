@@ -50,7 +50,7 @@ const VerifyEmail = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <h2>이메밀 인증</h2>
+                <h2>이메일 인증</h2>
                 <Message
                     type={message.type}
                     message={message.text}

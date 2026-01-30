@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
     const {loading, showLoading, hideLoading} = useLoading();
-    const {isLoggedIn} = useAuth();
+    const {isAuthenticated} = useAuth();
     const navigate = useNavigate();
 
     const [profileData, setProfileData] = useState({
@@ -116,18 +116,18 @@ const Profile = () => {
     };
 
     const handleContactViewClick = (expertId, contactType) => {
-        if (!isLoggedIn) {
+        if (!isAuthenticated) {
             setConfirmDialog({
                 isOpen: true,
-                message: '로그인 후 보실 수 있습니다.\n로그인 페이지로 이동하시겠습니까?',
+                message: '로그인 후 확인하실 수 있습니다.\n로그인 화면으로 이동하시겠습니까?',
                 action: 'LOGIN_REDIRECT'
             });
             return;
         }
 
         const message = contactType === 'EMAIL'
-            ? '이메일을 확인 하시겠습니까?'
-            : '핸드폰 번호를 확인 하시겠습니까?';
+            ? '이메일을 확인하시겠습니까?'
+            : '핸드폰 번호를 확인하시겠습니까?';
 
         setConfirmDialog({
             isOpen: true,
@@ -216,7 +216,13 @@ const Profile = () => {
                 isOpen={confirmDialog.isOpen}
                 message={confirmDialog.message}
                 onConfirm={handleConfirm}
-                onCancel={() => setConfirmDialog({isOpen: false, expertId: null, contactType: null, message: '', action: null})}
+                onCancel={() => setConfirmDialog({
+                    isOpen: false,
+                    expertId: null,
+                    contactType: null,
+                    message: '',
+                    action: null
+                })}
                 confirmText="확인"
                 cancelText="취소"
             />
@@ -369,7 +375,8 @@ const Profile = () => {
                                                 <div key={idx} className="specialty">
                                                     <span className="specialty-content">
                                                         {categoryName && (
-                                                            <span className="specialty-category">{categoryName} &gt; </span>
+                                                            <span
+                                                                className="specialty-category">{categoryName} &gt; </span>
                                                         )}
                                                         {spec.name}
                                                     </span>

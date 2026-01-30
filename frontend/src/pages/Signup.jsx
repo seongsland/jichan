@@ -64,7 +64,7 @@ const Signup = () => {
             await api.post('/auth/signup', signupData);
             setMessage({
                 type: 'success',
-                text: '회원가입이 완료되었습니다. 이메일을 확인해주세요.',
+                text: '회원가입이 완료되었습니다.\n이메일을 확인해주세요.',
                 navigateTo: '/login',
             });
         } catch (error) {
@@ -125,7 +125,7 @@ const Signup = () => {
                         />
                         <div className="password-rules">
                             <p>비밀번호는 8~32자로 설정해 주세요.</p>
-                            <p>영문 대/소문자, 숫자, 특수문자 중 2가지 이상을 조합해야 합니다.</p>
+                            <p>영문 대/소문자, 숫자, 특수문자 중 2종류 이상을 혼합하여 설정해 주세요.</p>
                         </div>
                     </div>
                     <div className="form-group">

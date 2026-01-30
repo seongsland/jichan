@@ -36,7 +36,7 @@
 .user .form-group select,
 .user .form-group textarea {
     width: 100%;
-    padding: 0.8rem 1rem;
+    padding: 0.75rem 1rem;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     font-size: 1rem;
@@ -67,12 +67,6 @@
     cursor: pointer;
     width: 1.2rem;
     height: 1.2rem;
-}
-
-.user .loading {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
 }
 
 .user .specialty-input-group {
@@ -110,7 +104,6 @@
 }
 
 .user .specialty-item:hover {
-    transform: translateX(5px);
     background-color: #f1f3f5;
 }
 
@@ -162,7 +155,7 @@
 }
 
 .user .btn-sm {
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
 }
 

@@ -20,6 +20,7 @@
     max-width: 80%;
     text-align: center;
     font-size: 1.2rem;
+    white-space: pre-line;
 }
 
 .message-success {
@@ -32,4 +33,16 @@
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+}
+
+.message-info {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+@media (max-width: 768px) {
+    .message-box {
+        font-size: 1.1rem;
+    }
 }
