@@ -44,5 +44,6 @@
 @media (max-width: 768px) {
     .message-box {
         font-size: 1.1rem;
+        padding: 2rem;
     }
 }

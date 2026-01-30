@@ -32,9 +32,8 @@ const Layout = ({children}) => {
             .then(() => {
                 showMessage('success', '이메일 주소가 클립보드에 복사되었습니다.');
             })
-            .catch(err => {
-                console.error('이메일 복사 실패:', err);
-                showMessage('error', '이메일 복사에 실패했습니다.');
+            .catch(() => {
+                showMessage('error', '이메일 주소 복사에 실패했습니다.');
             });
     };
 
