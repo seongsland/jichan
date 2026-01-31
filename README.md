@@ -65,6 +65,13 @@ SPRING_PROFILES_ACTIVE=local
 FRONTEND_ADDRESS=프론트엔드 주소
 ```
 
+프론트엔드 실행을 위해 `frontend` 디렉토리 내에 `.env` 파일(또는 시스템 환경 변수) 설정이 필요합니다. 다음 변수들을 설정해주세요.
+
+```properties
+# Frontend Configuration
+VITE_API_URL=백엔드 API URL
+```
+
 ## 시작하기
 
 ### 백엔드 실행
