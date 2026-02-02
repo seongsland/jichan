@@ -11,6 +11,7 @@ backend/HELP.md
 backend/.gradle
 backend/build/
 backend/data/
+backend/logs/
 !backend/gradle/wrapper/gradle-wrapper.jar
 !backend/**/src/main/**/build/
 !backend/**/src/test/**/build/

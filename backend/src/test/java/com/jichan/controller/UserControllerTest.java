@@ -34,9 +34,9 @@ class UserControllerTest extends ControllerTestSupport {
         given(userService.getProfile(1L)).willReturn(response);
 
         // when & then
-        mockMvc.perform(get("/api/user/profile"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("test"));
+        mockMvc.perform(get("/api/user"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.name").value("test"));
     }
 
     @Test
@@ -50,9 +50,9 @@ class UserControllerTest extends ControllerTestSupport {
         given(userService.updateProfile(eq(1L), any(ProfileUpdateRequest.class))).willReturn(response);
 
         // when & then
-        mockMvc.perform(put("/api/user/profile").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("newName"));
+        mockMvc.perform(put("/api/user").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(request)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.name").value("newName"));
     }
 }
