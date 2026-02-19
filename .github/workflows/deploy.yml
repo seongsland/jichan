@@ -2,17 +2,17 @@ name: Deploy to Amazon ECS
 
 on:
   push:
-    branches: [ "master" ] # 브랜치명이 main이라면 main으로 수정하세요
+    branches: [ "master" ]
     paths:
       - 'backend/**'
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: jichan-be       # ECR 리포지토리 이름 확인
-  ECS_SERVICE: jichan-task-service-9ujkrh9f       # ECS 서비스 이름 확인
-  ECS_CLUSTER: jichan-cluster       # ECS 클러스터 이름 확인
-  ECS_TASK_DEFINITION: task-definition.json # 파일이 루트에 있을 경우
-  CONTAINER_NAME: jichan-container  # 작업 정의 내 컨테이너 이름
+  ECR_REPOSITORY: jichan-be
+  ECS_SERVICE: jichan-task-service-9ujkrh9f
+  ECS_CLUSTER: jichan-cluster
+  ECS_TASK_DEFINITION_NAME: jichan-task  # AWS 콘솔에서 확인한 Task Definition 이름(Family)
+  CONTAINER_NAME: jichan-container
 
 jobs:
   deploy:
@@ -53,11 +53,16 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+      - name: Download Task Definition from AWS
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          # 위에서 다운로드받은 파일을 사용합니다.
+          task-definition: task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
