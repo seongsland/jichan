@@ -2,16 +2,17 @@ name: Deploy to Amazon ECS
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" ] # 브랜치명이 main이라면 main으로 수정하세요
     paths:
       - 'backend/**'
 
 env:
-  AWS_REGION: ap-northeast-2                   # 설정한 리전
-  ECR_REPOSITORY: jichan-be                     # 생성한 ECR 리포지토리 이름
-  ECS_SERVICE: jichan-be-service                # 나중에 만들 ECS 서비스 이름
-  ECS_CLUSTER: jichan-cluster                   # 나중에 만들 ECS 클러스터 이름
-  ECS_TASK_DEFINITION: .aws/task-definition.json # 작업 정의 파일 경로
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: jichan-be       # ECR 리포지토리 이름 확인
+  ECS_SERVICE: jichan-task-service-9ujkrh9f       # ECS 서비스 이름 확인
+  ECS_CLUSTER: jichan-cluster       # ECS 클러스터 이름 확인
+  ECS_TASK_DEFINITION: task-definition.json # 파일이 루트에 있을 경우
+  CONTAINER_NAME: jichan-container  # 작업 정의 내 컨테이너 이름
 
 jobs:
   deploy:
@@ -31,7 +32,6 @@ jobs:
         run: ./gradlew build -x test
         working-directory: ./backend
 
-      # 1. AWS 자격 증명 설정 (Secrets에 ACCESS_KEY, SECRET_KEY 등록 필요)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -39,32 +39,28 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 2. Amazon ECR 로그인
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 3. Docker 이미지 빌드 및 ECR 푸시
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }} # 커밋 해시를 태그로 사용하여 버전 관리
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      # 4. ECS 작업 정의 파일의 이미지 주소 업데이트
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: spring-boot-container # 작업 정의에 설정할 컨테이너 이름
+          container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
-      # 5. ECS 서비스 배포 (새로운 이미지로 컨테이너 교체)
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
