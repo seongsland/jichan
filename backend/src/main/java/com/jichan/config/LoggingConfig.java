@@ -14,13 +14,13 @@ public class LoggingConfig {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter() {
             @Override
             protected void beforeRequest(@NonNull HttpServletRequest request, @NonNull String message) {
-                logger.debug(message);
+                logger.info(message);
             }
 
             @Override
             protected void afterRequest(@NonNull HttpServletRequest request, @NonNull String message) {
                 if (!request.getMethod().equals("GET")) {
-                    logger.debug(message);
+                    logger.info(message);
                 }
             }
         };
@@ -28,7 +28,7 @@ public class LoggingConfig {
         filter.setIncludeHeaders(true);
         filter.setIncludeQueryString(true);   // 쿼리스트링 찍기
         filter.setIncludePayload(true);       // body 찍기
-        filter.setMaxPayloadLength(10000);    // body 최대 길이
+        filter.setMaxPayloadLength(1000);    // body 최대 길이
 
         return filter;
     }

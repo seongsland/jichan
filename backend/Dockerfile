@@ -6,4 +6,4 @@ WORKDIR /app
 COPY build/libs/*.jar app.jar
 
 # 3. 실행
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xmx384m", "-Xms384m", "-jar", "app.jar"]

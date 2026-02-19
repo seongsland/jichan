@@ -10,4 +10,4 @@ services:
 #    environment:
 #      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_USERNAME}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     volumes:
-      - ./logs:/logs
+      - ./logs:/app/logs

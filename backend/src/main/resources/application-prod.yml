@@ -6,7 +6,6 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
 
@@ -14,8 +13,8 @@ logging:
   level:
     com.jichan: DEBUG
     org.springframework.web: INFO
-    org.springframework.boot.context.config: DEBUG
-    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.springframework.boot.context.config: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
     org.hibernate.SQL: off
     org.hibernate.orm.jdbc.bind: off
     p6spy: info
