@@ -55,7 +55,8 @@ jobs:
 
       - name: Download Task Definition from AWS
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > raw-task-def.json
+          cat raw-task-def.json | jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy, .enableFaultInjection)' > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
