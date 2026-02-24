@@ -30,7 +30,7 @@ public class User extends BaseTimeEntity {
 
     private String region;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String introduction;
 
     @Builder.Default
@@ -44,7 +44,7 @@ public class User extends BaseTimeEntity {
     @Pattern(regexp = "^$|^\\d{3}-\\d{4}-\\d{4}$", message = "핸드폰 번호 형식이 올바르지 않습니다.")
     private String phone;
 
-    @Column(name = "phone_message", columnDefinition = "TEXT")
+    @Column(name = "phone_message", columnDefinition = "text")
     private String phoneMessage;
 
     @Builder.Default
