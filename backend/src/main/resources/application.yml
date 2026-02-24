@@ -10,6 +10,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
+        globally_quoted_identifiers: true
         format_sql: false
         use_sql_comments: false
     open-in-view: false
