@@ -9,10 +9,10 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: jichan-be
-  ECS_SERVICE: jichan-task-service-9ujkrh9f
-  ECS_CLUSTER: jichan-cluster
-  ECS_TASK_DEFINITION_NAME: jichan-task  # AWS 콘솔에서 확인한 Task Definition 이름(Family)
-  CONTAINER_NAME: jichan-container
+  ECS_SERVICE: default-task-service
+  ECS_CLUSTER: default 
+  ECS_TASK_DEFINITION_NAME: default-task
+  CONTAINER_NAME: default-contrainer
 
 jobs:
   deploy:
@@ -55,6 +55,7 @@ jobs:
 
       - name: Download Task Definition from AWS
         run: |
+          # 현재 실행 중인 작업 정의를 가져와서 불필요한 필드를 제거합니다.
           aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > raw-task-def.json
           cat raw-task-def.json | jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy, .enableFaultInjection)' > task-definition.json
 
@@ -62,7 +63,6 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          # 위에서 다운로드받은 파일을 사용합니다.
           task-definition: task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
@@ -73,4 +73,5 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
+          # EC2 타입은 Fargate보다 배포 속도가 빠를 수 있지만, 안정성 확인을 위해 true 유지 권장
           wait-for-service-stability: true
