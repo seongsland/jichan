@@ -75,4 +75,4 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           # EC2 타입은 Fargate보다 배포 속도가 빠를 수 있지만, 안정성 확인을 위해 true 유지 권장
-          wait-for-service-stability: true
+          wait-for-service-stability: false
