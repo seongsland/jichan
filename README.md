@@ -17,7 +17,7 @@ jichan/
 
 - **Framework**: Spring Boot 3.2.12
 - **Language**: Java 17 (Toolchain 21)
-- **Database**: MySQL
+- **Database**: MySQL -> PostgreSQL
 - **ORM**: Spring Data JPA
 - **Query Language**: QueryDSL 5.6.1
 - **Authentication**: Spring Security, JWT (JSON Web Token)
@@ -32,10 +32,11 @@ jichan/
     - `spring-boot-starter-mail`
     - `spring-boot-starter-cache`
     - `jjwt-(api, impl, jackson)`
-    - `mysql-connector-j`
     - `lombok`
     - `querydsl-jpa`
     - `springdoc-openapi-starter-webmvc-ui`
+    - `com.h2database:h2`
+    - `mysql-connector-j` -> `org.postgresql:postgresql`
 
 ### Frontend
 
@@ -48,9 +49,8 @@ jichan/
 
 ```properties
 # Database Configuration
-MYSQL_ROOT_PW=root 비밀번호 (docker 세팅시 사용)
-MYSQL_USERNAME=사용자명
-MYSQL_PASSWORD=비밀번호
+DB_USERNAME=사용자명
+DB_PASSWORD=비밀번호
 # Mail Configuration (gmail 발송 기능)
 MAIL_USERNAME=gmail 계정
 MAIL_PASSWORD=gmail 앱 비밀번호
